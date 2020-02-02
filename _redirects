@@ -6,7 +6,6 @@
 /class              https://end-to-end-machine-learning.teachable.com/courses
 /topics             https://end-to-end-machine-learning.teachable.com/courses
 /curriculum         https://end-to-end-machine-learning.teachable.com/courses
-/catalog            https://end-to-end-machine-learning.teachable.com/courses
 /all                https://end-to-end-machine-learning.teachable.com/courses
 
 # Research page aliases
@@ -17,4 +16,21 @@
 /experimental       https://e2eml.school/laboratory.html
 
 # Course page aliases
-/course-314
+/complete           https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/complete-course-catalog    https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/course-catalog     https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/complete-catalog   https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/catalog            https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/all-access         https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+
+/course-314         https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
+/course314          https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
+/314                https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
+
+/course-313         https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
+/course313         https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
+/313         https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
+
+/course-312         https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
+/course312         https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
+/312         https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
