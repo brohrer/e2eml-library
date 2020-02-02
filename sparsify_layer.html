@@ -30,7 +30,7 @@
           experimental class.
         </p>
         <p>
-          The aparsification layer is initialized with a set number
+          The sparsification layer is initialized with a set number
           of active notes, N. On each forward pass, the N nodes with
           the highest activity are left unchanged, and all other node
           activities are set to zero. Then forward propagation
@@ -93,7 +93,14 @@
           low.
         </p>
 
-        <h3>Considerations</h3>
+        <h3>Implementation considerations</h3>
+        <p>
+          There are a couple of things to keep in mind when using
+          a sparsification layer in a neural network &mdash how to
+          initialize the weights of the next layer and how to
+          modify the gradient during backpropagation.
+        </p>
+
         <h4>Initialization</h4>
         <p>
           Some weight initialization
@@ -143,12 +150,16 @@
           previous sensitivity, s_old:
         </p>
         <p>
-          s_new = (s_max - s_old) / tau
+          &nbsp &nbsp &nbsp &nbsp s_new = s_old + (s_max - s_old) / tau
         </p>
         <p>
           Empirically, s_max = 10 and tau = 100 have proven to work well,
           but it's possible that other values may work even better.
         </p>
+
+        <h3>Example implementation</h3>
+        <p>
+          
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>

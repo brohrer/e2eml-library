@@ -1,0 +1,12 @@
+# Redirects for inbound queries
+/courses            https://end-to-end-machine-learning.teachable.com/courses
+/classes            https://end-to-end-machine-learning.teachable.com/courses
+/course             https://end-to-end-machine-learning.teachable.com/courses
+/curriculum         https://end-to-end-machine-learning.teachable.com/courses
+/catalog            https://end-to-end-machine-learning.teachable.com/courses
+/all                https://end-to-end-machine-learning.teachable.com/courses
+/lab                https://e2eml.school/laboratory.html
+/laboratory         https://e2eml.school/laboratory.html
+/research           https://e2eml.school/laboratory.html
+/experiments        https://e2eml.school/laboratory.html
+/experimental       https://e2eml.school/laboratory.html
