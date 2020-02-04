@@ -38,7 +38,7 @@
           <a href="http://e2eml.school">the e2eML Course Catalog</a>.
         <hr>
 	      
-        <h3>Sparsifying neural network layer</h3>
+        <h3><em>k</em>-sparse neural network layer</h3>
         <p style="text-align:center;">
           <img title="The output representation of a few nodes from the hidden sparse layer"
             src="images/sparsify/sparse_hidden_layer.png"
@@ -46,11 +46,18 @@
             style="height: 320px;">
         </p>
         <p>
-          In an L0 sparsifying layer, only the N nodes with highest
+          <a href="https://arxiv.org/pdf/1312.5663.pdf">
+            <em>k</em>-sparse autoencoders</a>
+          were originally developed and presented by Alireza Makhzani
+          and Brendan Frey.
+          In a <em>k</em>-sparse layer, only the <em>k</em> nodes with highest
           magnitude activity are allowed to keep their activity on a given
           iteration. All others are set to zero. It results in hidden
           nodes with identifiable structure.
-          <a href="https://e2eml.school/sparsify_layer.html">
+          The only part of my implementation
+          I believe is new is the addition of
+          an adaptive sensitivity term to facilitate training.
+          <a href="https://e2eml.school/k_sparse_layer.html">
             Here's more on how it works and how to use it.
           </a>
 	    </p>

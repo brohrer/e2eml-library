@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <script type="text/javascript">var blog_title = "Sparsifying neural network node activity";</script>
+  <script type="text/javascript">var blog_title = "k-sparse autoencoder";</script>
   <script type="text/javascript">var publication_date = "January 29, 2020";</script>
   <head>
     <link rel="icon" href="images/ml_logo.png">
@@ -17,23 +17,35 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Sparsifying layer for neural networks</h3>
+        <h3><em>k</em>-sparse layer for neural networks</h3>
         <p>
           This layer type enforces L0 sparsity in node activities
-          by setting all but N node activities to zero.
+          by setting all but <em>k</em> node activities to zero.
+          <a href="https://arxiv.org/pdf/1312.5663.pdf">
+            <em>k</em>-sparse autoencoders
+            were originally developed and presented by Alireza Makhzani
+            and Brendan Frey.</a>
+          This implementation differs in some small ways. I use
+          <em>alpha = 1</em>, rather than the 2 or 3 used by the authors.
+          I tried a variation of their <em>k</em> scheduling and
+          found that it didn't work well for my application.
+          Instead I used adaptive sensitivity, a mechanism
+          for rarely selected nodes to learn more rapidly when given the
+          opportunity. As far as I can tell, sensitivity is a
+          a new contribution.
         </p>
 
         <h3>Method</h3>
         <p>
-          The mechanism for doing this is a Sparsification layer,
+          The mechanism for doing this is a <em>k</em>-sparse layer,
           implemented in the
           <a href="https://e2eml.school/cottonwood">
             Cottonwood machine learning framework</a>
           as an experimental class.
         </p>
         <p>
-          The sparsification layer is initialized with a set number
-          of active notes, <em>N</em>. On each forward pass, the <em>N</em>
+          The <em>k</em>sparse layer is initialized with a set number
+          of active notes, <em>k</em>. On each forward pass, the <em>k</em>
           nodes with
           the highest activity are left unchanged, and all other node
           activities are set to zero. Then forward propagation
@@ -49,6 +61,8 @@
           a sparsification layer in a neural network &mdash how to
           initialize the weights of the next layer and how to
           modify the gradient during backpropagation.
+          I didn't come across these in the original paper,
+          but in my work they proved important.
         </p>
 
         <h4>Initialization</h4>
@@ -58,19 +72,19 @@
           choose appropriate values. If the full number of inputs is
           <em>M</em>,
           a sparsification layer effectively
-          reduces the number of inputs to <em>N</em>,
+          reduces the number of inputs to <em>k</em>,
           the number of non-zero inputs.
           Initialization methods work best when they account for this.
         </p>
         <p>
           In He and Glorot initializers, this means adjusting the parameters
           of the distribution from which the weights are drawn to use
-          <em>N</em>
+          <em>k</em>
           instead of <em>M</em>.
         </p>
         <p>
           Similarly in the LSUV initializer, this means scaling
-          the distribution by <em>sqrt(M/N)</em>.
+          the distribution by <em>sqrt(M/k)</em>.
           This ensures that with the reduced number of non-zero inputs,
           the variance of the output nodes will still be near 1.
         </p>
@@ -109,6 +123,8 @@
           Empirically, <em>s_max = 10</em> and <em>tau = 100</em>
           have proven to work well,
           but it's possible that other values may work even better.
+          Sensitivity is the piece of this work that is novel,
+          as far as I can tell.
         </p>
 
         <h3>Example implementation</h3>
@@ -212,8 +228,8 @@
           of many weights and previous layers' activities.
         </p>
         <p>
-          L1 and L2 node activity sparsity regular station has been
-          presented previously. Here, I propose a method for
+          L1 and L2 node activity sparsity regularization have been
+          presented previously. The <em>k</em>-sparse layer is a method for
           L0 node sparsity, that is, keeping the number of active nodes
           low.
         </p>
