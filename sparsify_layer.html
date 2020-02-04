@@ -159,19 +159,54 @@
 
         <h3>Example implementation</h3>
         <p>
+          We can see qualitatively how the sparse layer changes the features
+          that a network learns by looking at an autoencoder. In
+          <a href="https://gitlab.com/brohrer/study-mars-images">
+            a case study using an autoencoder to compress images from Mars</a>,
+          there is a ready-made testbed. The file
+          <a href="https://gitlab.com/brohrer/study-mars-images/-/blob/master/sparse_compressor.py">
+            sparse_compressor.py</a> has the code used for this demonstration.
         </p>
-          
+
+        <p>
+          The autoencoder used takes an 11 x 11 pixel patch (121 pixels), and
+          passes it through 2-layers, a 256-node hidden layer and a 121-node
+          output layer. The representation of each hidden node was found
+          by setting its activity to 1, and the activity of all other hidden
+          nodes to 0, and observing the output pixel activity that resulted.
+          For more details on the architecture and its implementation,
+          please refer to the README in the case study code.
+        </p>
+        
+        <p>
+          The autoencoder was trained on 10 million image patches under two
+          different conditions. In the dense condition,
+          all 256 of the hidden nodes were
+          updated on every iteration. This is standard procedure.
+          In the sparse condition, only the 9 nodes with the highest magnitude
+          activities were allowed to stay active. The rest were set to zero.
+        </p>
         <p style="text-align:center;">
           <img title="The output representation of a few nodes from the hidden dense layer"
             src="images/sparsify/dense_hidden_layer.png"
             alt="The output representation of a few nodes from the hidden dense layer"
             style="height: 320px;">
+          The output representation of a few nodes from the hidden dense layer.
+          The nodes are information-dense, but visually indistinct.
+          They look like static.
         </p>
         <p style="text-align:center;">
           <img title="The output representation of a few nodes from the hidden sparse layer"
             src="images/sparsify/sparse_hidden_layer.png"
             alt="The output representation of a few nodes from the hidden sparse layer"
             style="height: 320px;">
+          The output representation of a few nodes from the hidden sparse layer.
+          Many of the hidden nodes took on clear spatial patterns.
+        </p>
+        <p>
+          The differences between the two sets of hidden node representations
+          is striking. In the sparse layer, the patterns became identifiable
+          and varied in spatial frequency, complexity, and orientation.
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
