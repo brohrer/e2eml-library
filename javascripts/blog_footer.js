@@ -4,7 +4,7 @@ document.write('\
       <footer class="inner">\
         <section class="clearfix">\
           <h4><a id="project_tagline" href="http://e2eml.school/courses">\
-            Come visit the complete e2eML course library</a></h4>\
+            Visit the e2eML course catalog</a></h4>\
           <p>\
             <br>\
             <a href="https://creativecommons.org/publicdomain/zero/1.0/">\

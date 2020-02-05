@@ -5,7 +5,7 @@ document.write('\
           <h1 id="project_title">' + blog_title + '</h1>\
             <h4>\
               <a id="project_tagline" href="blog.html">\
-                part of the e2eML library\
+                Part of the e2eML library\
               </a>\
             </h4>\
         </header>\
