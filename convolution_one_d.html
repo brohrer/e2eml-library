@@ -218,6 +218,8 @@
           a similar process for any differential computation that you
           would like to build into a neural network layer.
         </p>
+
+        <h4>Input gradient</h4>
         <p>
           By the chain rule,
         </p>
@@ -257,7 +259,7 @@
         </p>
 
         <p>
-          With some rearrnging, we can group the terms by input.
+          With some rearranging, we can group the terms by input.
         </p>
 
         <p style="text-align:center;">
@@ -265,6 +267,87 @@
             src="images/conv1d/input_grad_4_eq.png"
             alt="Even more calulation of the input gradient"
             style="width: 600px;">
+        </p>
+
+        <p>
+          At this point a neat pattern appears. We can use this to re-write
+          the full expression for the input gradient from above.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Simplified calculation of the input gradient"
+            src="images/conv1d/input_grad_5_eq.png"
+            alt="Simplified calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          If we adopt the notation of a left-facing arrow over an array to
+          indicate that it has been reversed, left-to-right, then we can
+          rewrite the input gradient as another convoltion with the reversed
+          kernel.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Concise calculation of the input gradient"
+            src="images/conv1d/input_grad_6_eq.png"
+            alt="Concise calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <h4>Parameter gradient</h4>
+        <p>
+          As with inputs, the goal is to find the partial derivative
+          of the loss function with respect to each of the parameters, that is,
+          each of the element values within the kernel.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient"
+            src="images/conv1d/param_grad_1_eq.png"
+            alt="Calulation of the parameter gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          We can make use of the expanded formulas for the outputs above
+          to calculate the components of the parameter gradients too.
+          Each of these expressions can be differentiated with respect
+          to the parameters:
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Expanded calculation of the parameter gradient"
+            src="images/conv1d/param_grad_2_eq.png"
+            alt="Expanded calulation of the parameter gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          yielding 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, derivatives"
+            src="images/conv1d/param_grad_3_eq.png"
+            alt="Calulation of the parameter gradient, derivatives"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Now that we have some practice, we can pull out a similar pattern
+          and simplify the expressions.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, simplified"
+            src="images/conv1d/param_grad_4_eq.png"
+            alt="Calulation of the parameter gradient, simplified"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          The final result is almost like a convolution. 
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
@@ -278,7 +361,7 @@
     <script type="text/javascript">
       try {
         var pageTracker = _gat._getTracker("UA-10180621-3");
-      pageTracker._trackPageview();
+      pageTracker._trackPageview();     
       } catch(err) {}
     </script>
   </body>
