@@ -179,7 +179,94 @@
             style="width: 600px;">
         </p>
 
+        <h3>Differentiation</h3>
         
+        <p>
+          Since we are planning to use convolution in our network,
+          we are only halfway done. Neural networks rely on backpropagation
+          to learn their parameters, and backpropagation needs every step
+          of the computation to be differentiable. We can stack any
+          type of layer we want in a neural network, as long as we can
+          take its derivative.
+        </p>
+        <p>
+          The process for setting up a layer for backpropagation is similar
+          no matter what that layer does. The output gradient
+          (the partial derivative of the loss function with respect
+          to each of the layer's outputs) is the starting point.
+        </p>
+        <p>
+          To make backpropagation work, we have to calculate two groups
+          of derivatives, the input gradient 
+          (the partial derivative of each of the layer's inputs
+          with respect to the loss function), and the parameter gradient
+          (the partial derivative
+          of each or of the layer's adjustable parameters with respect
+          to the loss function).
+        </p>
+        <p>
+          The input gradient is passed back to the previous layer
+          in the network, which continues the process on up the line.
+          The parameter gradient is used with an optimizer, like stochastic
+          gradient descent, to adjust parameter values in an effort
+          to get value of the loss function as low as possible.
+        </p>
+        <p>
+          Here we will step through the process of calculating
+          the input gradient and the parameter gradient
+          for one dimensional convolution. Keep in mind that you can follow
+          a similar process for any differential computation that you
+          would like to build into a neural network layer.
+        </p>
+        <p>
+          By the chain rule,
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the input gradient"
+            src="images/conv1d/input_grad_1_eq.png"
+            alt="Calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          To find the input gradient we'll have to find the derivative of
+          every input with respect to every output. To get at that, we
+          can go back to one of our outputs at position <em>j</em>, not too
+          close to either end of the array and write out the convolution
+          equation for it.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="More calculation of the input gradient"
+            src="images/conv1d/input_grad_2_eq.png"
+            alt="More calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          In this form, we can take the derivative of each input with
+          respect to the outputs it contributes to.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Yet more calculation of the input gradient"
+            src="images/conv1d/input_grad_3_eq.png"
+            alt="Yet more calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          With some rearrnging, we can group the terms by input.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Even more calculation of the input gradient"
+            src="images/conv1d/input_grad_4_eq.png"
+            alt="Even more calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
     </div>
