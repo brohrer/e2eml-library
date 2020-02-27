@@ -95,8 +95,11 @@
           convolution values where the kernel completely overlaps the signal.
           You can also choose a compromise, which is to trim the convolution
           result to be the same length as the signal.
-          For simplicity of implementation, we'll use option number three
-          for neural networks. These three options are all available
+          For simplicity of implementation, we'll use this last option
+          for neural networks.
+        </p>
+        <p>
+          These three options are all available
           using numpy‘s <code>convolve()</code> function. You can specify
           <code>mode="full"</code> to keep all the non-zero values,
           <code>mode="valid"</code> to only keep the completely overlapping
@@ -106,13 +109,16 @@
         </p>
         <p>
           We can rewrite this visualization as a sequence of equations.
-          We will start by specifying that our signal, $x$ is of length $m$,
-          our kernel, $w$, is of length $n$ and both are made up of
+          We will start by specifying that our signal, <em>x</em>
+          is of length </em>m</em>,
+          our kernel, <em>w</em>, is of length <em>n</em>
+          and both are made up of
           real values. To simplify the notation for ourselves later, we will
-          add the additional constraint that $n$ is odd, and that the
-          length of our kernel can also be expressed as $2p+1$.
-          $p$ in this case is a little less than half the length of the kernel.
-          For a kernel with $n=5$, $p$ would be $2$. 
+          add the additional constraint that <em>n</em> is odd, and that the
+          length of our kernel can also be expressed as <em>2p+1</em>.
+          <em>p</em> in this case is a little less
+          than half the length of the kernel.
+          For a kernel with <em>n=5</em>,<em>p</em> would be 2. 
         </p>
 
 
