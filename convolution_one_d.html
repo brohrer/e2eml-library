@@ -113,7 +113,8 @@
           is of length </em>m</em>,
           our kernel, <em>w</em>, is of length <em>n</em>
           and both are made up of
-          real values. The result, <em>y</em> will look just like <em>x</em>.
+          real values. The result, <em>y</em> will be the same size as
+          <em>x</em>.
         <p>
 
         <p style="text-align:center;">
@@ -139,6 +140,12 @@
             style="width: 600px;">
         </p>
 
+        <p>
+          Then, by walking through the recipe for convolution for a few
+          steps, we can write out longhand the equations for each
+          value of <em>y</em>, using the signal <em>x</em> and the kernel
+          <em>w</em>.
+        </p>
 
         <p style="text-align:center;">
           <img title="Convolution calculations, longhand"
@@ -147,6 +154,32 @@
             style="width: 600px;">
         </p>
 
+        <p>
+          Thankfully we can use the summation shorthand to represent this
+          more concisely. In this formulation, any time we refer to a
+          signal value outside the non-zero range of [0, <em>m</em>-1],
+          we substitute in a zero. 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution calculations, with summations"
+            src="images/conv1d/conv_sum_eq.png"
+            alt="Convolution calculations, with summations"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          And we can shorten it further by indexing on the signal position.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution definition"
+            src="images/conv1d/conv_1_eq.png"
+            alt="Convolution definition"
+            style="width: 600px;">
+        </p>
+
+        
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
     </div>
