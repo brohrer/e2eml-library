@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Convolution in one dimension for neural networks";</script>
+  <script type="text/javascript">var publication_date = "February 29, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p style="text-align:center;">
+          <img title="Convolution showing kernel being reproduced by delta function"
+            src="images/conv1d/aa_copy.gif"
+            alt="Convolution showing kernel being reproduced by delta function"
+            style="height: 300px;">
+        </p>
+        <p>
+          Neural networks can now tell
+          with reasonable accuracy whether a photo contains a dog. Not only
+          that, but it can tell you what breed of dog it is more accurately
+          than most humans. The mathematical magic that makes this possible
+          is convolution. It endows the neural network with the ability 
+          to recognize
+          particular patterns within the pixels so that it can
+          distinguish a dalmatian from a dachshund.
+        </p>
+        <p>
+          Convolution is a good way to identify patterns in data that is
+          directly tied to space or time.
+          Adjacent pixels in an image are adjacent for a reason.
+          In the physical world, they collect light from neighboring locations.
+          Time series data has a similar structure.
+          Neighboring data points were produced close together in time
+          and are much more likely to be related then points far apart.
+          This inherent structure is what convolution exploits.
+          It finds local patterns that reoccur in the data.
+          It would not be effective, for instance, if we first
+          scrambled the pixels in an image.
+          That would hide the patterns, the spatial relationships,
+          that convolution tries to learn.
+        </p>
+        <p>
+          The math behind convolution is an artful combination of
+          multiplication and addition. 
+          We can best get a feel for convolution by looking at a
+          one dimensional signal. In this animation, we see
+          a shorter sequence, the kernel, being convolved with a
+          longer sequence, the signal. The math behind convolution
+          doesn’t actually care which of these is longer, but it is
+          convenient for us to assign this convention as we develop
+          them for neural networks.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution showing kernel being reproduced by several delta functions"
+            src="images/conv1d/bb_copy.gif"
+            alt="Convolution showing kernel being reproduced by several delta functions"
+            style="height: 300px;">
+        </p>
+
+        <p>
+          The recipe for convolution is surprisingly short:
+          <ol>
+            <li>Flip the kernel left to right</li>
+            <li>Step the kernel along the signal one data point at a time</li>
+            <li>At each position, calculate the dot product of the two</li>
+              <ul>
+                <li>3.1 Multiply each pair of aligned values together</li>
+                <li>3.2 Add up those products</li>
+              </ul>
+            <li>The resulting sequence of dot products is the convolution
+              of the kernel with the signal</li>
+          </ol>
+        </p>
+        <p>
+          The formal definition of convolution extends from minus infinity
+          to plus infinity. You can imagine both the signal and the kernel
+          being padded with zeros out forever in both directions.
+          The only non-zero values come when there is any overlap between
+          the non-zero parts of the signal and the kernel.
+        </p>
+        <p>
+          In practice, you can choose to keep every part of the convolution
+          that is non-zero, or you can limit your results to just those
+          convolution values where the kernel completely overlaps the signal.
+          You can also choose a compromise, which is to trim the convolution
+          result to be the same length as the signal.
+          For simplicity of implementation, we'll use option number three
+          for neural networks. These three options are all available
+          using numpy‘s <code>convolve()</code> function. You can specify
+          <code>mode="full"</code> to keep all the non-zero values,
+          <code>mode="valid"</code> to only keep the completely overlapping
+          values, or <code>mode="same"</code> to ensure the result is the
+          sampe length as the signal.
+          We will be working with the <code>mode="same"</code> condition.
+
+We can rewrite this visualization as a sequence of equations. We will start by specifying that our signal, X is of length M and made up of real values. Our Colonel, W, of length end is as well. To simplify the notation for ourselves later, we will add the additional constraint that in is odd, and that the length of our kernel can also be expressed as to P +1. P in this case is a little less than half the length of the kernel. For a kernel of length five, P would be two. 
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-10180621-3");
+      pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>
