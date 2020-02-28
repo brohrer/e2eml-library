@@ -283,7 +283,8 @@
 
         <p>
           If we adopt the notation of a left-facing arrow over an array to
-          indicate that it has been reversed, left-to-right, then we can
+          indicate that it has been reversed, left-to-right, pivoting
+          about zero, then we can
           rewrite the input gradient as another convoltion with the reversed
           kernel. Note that <em>i</em> here varies between 0 and <em>m</em>-1,
           and that any values outside the range of the output
@@ -349,11 +350,21 @@
         </p>
 
         <p>
-          The final result can be massaged into convolution if we again
-          flip the array of input values left-to-right. 
+          In this form, it is amenable to translating to computer code.
+          However, for you who enjoy the mathematical pleasures of
+          symmetry,
+          the final result can be massaged into convolution if we again
+          flip the array of input values left-to-right, pivoting around zero. 
           Note that <em>k</em> here varies between <em>-p</em>,and <em>p</em>,
           and that any values outside the range of the output
           gradient are assumed to be zero.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, concise"
+            src="images/conv1d/param_grad_5_eq.png"
+            alt="Calulation of the parameter gradient, concise"
+            style="width: 600px;">
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
