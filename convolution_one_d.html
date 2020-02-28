@@ -29,7 +29,13 @@
           with reasonable accuracy whether a photo contains a dog. Not only
           that, but it can tell you what breed of dog it is more accurately
           than most humans. The mathematical magic that makes this possible
-          is convolution. It endows the neural network with the ability 
+          is
+          <a href="
+            https://en.wikipedia.org/wiki/Convolution
+          ">convolution</a>. It
+          <a href="
+            https://e2eml.school/how_convolutional_neural_networks_work.html
+          ">endows the neural network</a> with the ability 
           to recognize
           particular patterns within the pixels so that it can
           distinguish a dalmatian from a dachshund.
@@ -97,15 +103,6 @@
           result to be the same length as the signal.
           For simplicity of implementation, we'll use this last option
           for neural networks.
-        </p>
-        <p>
-          These three options are all available
-          using numpy‘s <code>convolve()</code> function. You can specify
-          <code>mode="full"</code> to keep all the non-zero values,
-          <code>mode="valid"</code> to only keep the completely overlapping
-          values, or <code>mode="same"</code> to ensure the result is the
-          sampe length as the signal.
-          We will be working with the <code>mode="same"</code> condition.
         </p>
         <p>
           We can rewrite this visualization as a sequence of equations.
@@ -365,6 +362,18 @@
             src="images/conv1d/param_grad_5_eq.png"
             alt="Calulation of the parameter gradient, concise"
             style="width: 600px;">
+        </p>
+
+        <h3>Python implementation</h3>
+        <p>
+          Numpy‘s <code>convolve()</code> function handles one dimensional
+          convolution seamlessly. You can specify
+          <code>mode="full"</code> to keep all the non-zero values,
+          <code>mode="valid"</code> to only keep the completely overlapping
+          values, or <code>mode="same"</code> to ensure the result is the
+          sampe length as the signal.
+          What we described here is equivalent to working
+          with the <code>mode="same"</code> condition.
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
