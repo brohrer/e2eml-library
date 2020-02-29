@@ -101,8 +101,7 @@
           convolution values where the kernel completely overlaps the signal.
           You can also choose a compromise, which is to trim the convolution
           result to be the same length as the signal.
-          For simplicity of implementation, we'll use this last option
-          for neural networks.
+          For simplicity, we'll use this last option to start with.
         </p>
         <p>
           We can rewrite this visualization as a sequence of equations.
@@ -364,7 +363,124 @@
             style="width: 600px;">
         </p>
 
+        <h3>Handling the beginning and the end</h3>
+        <p>
+          In order to make our output array <em>y</em> the same size as our
+          input array <em>x</em>, we added a few extra zeros to each end of
+          our input array. This practice is called padding.
+          It’s pretty helpful when you need an array that’s a different
+          size than the one you have.
+        </p>
+        <p>
+          The downside of padding an array with zeros is that we are actually
+          fabricating data, and when we do this it’s possible to corrupt our
+          signal. For instance, if our one dimensional data was
+          a sequence of stock prices, adding zeros at the beginning
+          and the end might make investors nervous.
+          They don’t reflect reality. The desire is to extend the data
+          with neutral points. In this case, zeros would be
+          anything but neutral.
+        </p>
+        <p>
+          Another option for padding that can be quite benign is
+          padding wtih non-zero constant values. We can choose some constant,
+          such as the median of the array, or the average of the first
+          six data points, or even the value of the first point, and pad
+          the array with that.
+        </p>
+        <p>
+          Another option is mirror padding. In this case, we take whatever
+          the length of the additional pad needs to be, pull that many values
+          off the beginning (or the end), flip them around left-to-right,
+          and attach them as the pad. This results in a short tail that is
+          the mirror image of the original beginning (and end) of the data.
+          For some data sets this creates a nice neutral set of data points
+          that doesn’t change the meaning of the data. However, consider
+          the case for you have daily time series data and a very
+          big difference between weekday values and weekend values.
+          In this case, taking a mirror image of the last few data points
+          may get you two weekends in a row, or no weekends at all for
+          10 days. This would not result in a neutral extension of the data.
+        </p>
+        <p>
+          Yet another trick is circular padding. In this case, the last
+          few elements are taken off the end of the array and copied over
+          and tacked onto the beginning. Similarly, a copy of the first
+          few elements is tacked onto the end. This makes the array appear
+          as if it was part of a circular, repeating pattern. This can make
+          good sense for time series data that is chopped into
+          an whole number of weeks, or of years, or of whatever
+          time interval is fundamental to the process being measured.
+        </p>
+        <p>
+          There’s nothing that says that our output array needs to be
+          the same size as our input array. One very safe way to make sure
+          all of our data is valid is to limit our convolutions to the
+          positions in which the kernel is completely supported by the input.
+          When we do this, our output is shorter than our input by the
+          length of our kernel minus one. It also gives us
+          peace of mind that every single output point is the result of
+          a valid convolution. It frees us up from having to
+          invent plausible data.
+        </p>
+        <p>
+          When we limit ourselves to valid convolutions, the math changes
+          only superficially. Instead of both the input and output having
+          the same length <em>m</em>, our input will have length <em>m_x</em>,
+          and our output will have length <em>m_y</em>, equal to
+          <em>m_x - n + 1</em>, where <em>n</em>  is the length of the kernel.
+          In the equations above where we calculate <em>y</em> all we have
+          to do is limit our <em>y</em> indices to the valid positions.
+        </p>
+        <p>
+          Another way to think about this is that we still start
+          with a <em>y</em> array the same size as our <em>x</em> array,
+          but the only values we calculate are the valid,
+          fully supported ones. The others
+          stay empty and don’t get passed on to the next layer as outputs.
+        </p>
+        <p>
+          When calculating gradients, we can do the reverse. We track the
+          valid values for <em>dL/dy</em>, and
+          if the equation asks for any not-valid value it gets a zero instead.
+          This helps it to ignore all of the locations that don’t have an
+          output gradient associated with them.
+        </p>
+
+        <h3>Stride</h3>
+        <p>
+          Another useful trick in calculating convolutions for neural networks
+          is to not calculate them for every pixel, but to skip to every
+          second or third value. This skip is called a stride. Calculating
+          the convolution at every location corresponds to a stride of one.
+          Skipping every second value is a stride of two, and so forth.
+          The number of calculations that you have to do for one dimensional
+          convolution is one over the stride, so you can see the
+          efficiency motivator behind it.
+        </p>
+        <p>
+          When we go to implement a stride convolution, we can use
+          the same trick of initializing an output array the same size as
+          our input array, then step through it and only calculate
+          convolutions for the locations that match our stride.
+          Then when we’re done, we pull out and condense just the calculated
+          convolutions and pass them on as the output.
+        </p>
+        <p>
+          Then when we go to backpropagate the output gradient,
+          we can create a full array of zeros that matches the size if the
+          input array, and we can populate it with all of the strided
+          output gradient values. Then, it will look like a complete,
+          dense set of output gradients, but with all of the skipped values
+          as zeros. From there, we can treat it as we would any other
+          complete set of output gradients, and the zeros in the skipped
+          positions will ensure that they get handled appropriately.
+        </p>
+        <p>
+        The fastest computations are the ones you never have to do,
+        so introducing a stride can speed up a neural network considerably.
         <h3>Python implementation</h3>
+
         <p>
           Numpy‘s <code>convolve()</code> function handles one dimensional
           convolution seamlessly. You can specify
@@ -374,6 +490,12 @@
           sampe length as the signal.
           What we described here is equivalent to working
           with the <code>mode="same"</code> condition.
+        </p>
+        <p>
+          To take advantage of Numpy's full collection of padding tools,
+          <a href="
+            https://docs.scipy.org/doc/numpy/reference/generated/numpy.pad.html
+          ">check out the documention for the pad() function</a>.
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
