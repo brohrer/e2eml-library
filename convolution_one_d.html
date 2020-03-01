@@ -363,7 +363,7 @@
             style="width: 600px;">
         </p>
 
-        <h3>Handling the beginning and the end</h3>
+        <h3 id="padding">Handling the beginning and the end</h3>
         <p>
           In order to make our output array <em>y</em> the same size as our
           input array <em>x</em>, we added a few extra zeros to each end of
@@ -371,6 +371,14 @@
           It’s pretty helpful when you need an array that’s a different
           size than the one you have.
         </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with zeroes"
+            src="images/conv1d/pad_zeros.png"
+            alt="Convolution signal padded with zeroes"
+            style="width: 600px;">
+        </p>
+
         <p>
           The downside of padding an array with zeros is that we are actually
           fabricating data, and when we do this it’s possible to corrupt our
@@ -388,6 +396,14 @@
           six data points, or even the value of the first point, and pad
           the array with that.
         </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with constant values"
+            src="images/conv1d/pad_const.png"
+            alt="Convolution signal padded with constant values"
+            style="width: 600px;">
+        </p>
+
         <p>
           Another option is mirror padding. In this case, we take whatever
           the length of the additional pad needs to be, pull that many values
@@ -402,6 +418,14 @@
           may get you two weekends in a row, or no weekends at all for
           10 days. This would not result in a neutral extension of the data.
         </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with mirrored values"
+            src="images/conv1d/pad_mirror.png"
+            alt="Convolution signal padded with with mirrored values"
+            style="width: 600px;">
+        </p>
+
         <p>
           Yet another trick is circular padding. In this case, the last
           few elements are taken off the end of the array and copied over
@@ -412,6 +436,14 @@
           an whole number of weeks, or of years, or of whatever
           time interval is fundamental to the process being measured.
         </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with circular shifting"
+            src="images/conv1d/pad_circular.png"
+            alt="Convolution signal padded with circular shifting"
+            style="width: 600px;">
+        </p>
+
         <p>
           There’s nothing that says that our output array needs to be
           the same size as our input array. One very safe way to make sure
