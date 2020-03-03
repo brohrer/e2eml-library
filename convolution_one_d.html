@@ -445,7 +445,15 @@
         </p>
 
         <p>
-          There’s nothing that says that our output array needs to be
+          If you look carefully, all these different padding strategies
+          generate different results. Padding is a fine idea as long
+          as you have a good feeling for how to extend the data set
+          in a way that doesn't corrupt it or change its meaning
+          dramatically.
+        </p>
+        <p>
+          In a convolutional neural network, 
+          there’s nothing that says that our output array needs to be
           the same size as our input array. One very safe way to make sure
           all of our data is valid is to limit our convolutions to the
           positions in which the kernel is completely supported by the input.
@@ -455,6 +463,14 @@
           a valid convolution. It frees us up from having to
           invent plausible data.
         </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal unpadded"
+            src="images/conv1d/no_pad.png"
+            alt="Convolution signal unpadded"
+            style="width: 600px;">
+        </p>
+
         <p>
           When we limit ourselves to valid convolutions, the math changes
           only superficially. Instead of both the input and output having
