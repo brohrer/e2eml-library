@@ -562,14 +562,14 @@
             https://en.wikipedia.org/wiki/Cross-correlation
           ">cross-correlation</a>. For discrete arrays of values,
           like we are showing
-          here, and like what would be used in any neural network,
-          they are identical except that in cross-corrlation the
-          kernel is not flipped left-to-right before the sliding
-          dot product is calculated.  
+          here and like what would be used in any neural network,
+          they are identical except that in cross-correlation the
+          kernel is not flipped left-to-right before calculating the sliding
+          dot product.  
         </p>
         <p>
           The distinction gets blurrier if you simply store and
-          hand the
+          handle the
           convolution kernel in its pre-flipped state. Then it looks
           <em>exactly</em> like cross-correlation. Avoiding the kernel
           flip every time through the network may save some
