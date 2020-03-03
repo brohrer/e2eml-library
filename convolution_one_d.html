@@ -552,6 +552,42 @@
         so introducing a stride can speed up a neural network considerably.
         </p>
 
+        <h3 id="xcorr">Convolution vs. cross-correlation</h3>
+        <p>
+          There is understandable confusion between
+          <a href="
+            https://en.wikipedia.org/wiki/Convolution
+          ">convolution</a> and
+          <a href="
+            https://en.wikipedia.org/wiki/Cross-correlation
+          ">cross-correlation</a>. For discrete arrays of values,
+          like we are showing
+          here, and like what would be used in any neural network,
+          they are identical except that in cross-corrlation the
+          kernel is not flipped left-to-right before the sliding
+          dot product is calculated.  
+        </p>
+        <p>
+          The distinction gets blurrier if you simply store and
+          hand the
+          convolution kernel in its pre-flipped state. Then it looks
+          <em>exactly</em> like cross-correlation. Avoiding the kernel
+          flip every time through the network may save some
+          computation time. My understanding is that this is what
+          PyTorch and TensorFlow do under the hood.
+        </p>
+        <p>
+          As a side note, you can cross-correlate a signal
+          with itself, and the result is called an autocorrelation.
+          (
+          <a href="
+            https://youtu.be/ZjaBn93YPWo
+          ">An alternative interpretation of autocorrelation</a> is
+          that is shows how well
+          a signal correlates with itself when shifted by a certain number
+          of time steps.)
+        </p>
+
         <h3>Python implementation</h3>
 
         <p>
