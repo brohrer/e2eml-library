@@ -506,6 +506,29 @@
           convolution is one over the stride, so you can see the
           efficiency motivator behind it.
         </p>
+
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 1"
+            src="images/conv1d/stride_1.gif"
+            alt="Convolution with stride 1"
+            style="width: 400px;">
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 2"
+            src="images/conv1d/stride_2.gif"
+            alt="Convolution with stride 2"
+            style="width: 400px;">
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 4"
+            src="images/conv1d/stride_4.gif"
+            alt="Convolution with stride 4"
+            style="width: 400px;">
+        </p>
+
         <p>
           When we go to implement a stride convolution, we can use
           the same trick of initializing an output array the same size as
@@ -527,6 +550,8 @@
         <p>
         The fastest computations are the ones you never have to do,
         so introducing a stride can speed up a neural network considerably.
+        </p>
+
         <h3>Python implementation</h3>
 
         <p>
