@@ -618,12 +618,12 @@
           at the same intervals. Weather data can be organized as
           hourly temperature
           measurements collected at different locations.
-          Electroencephalographic comes in a bundle of 128 channels.
+          Electroencephalographic recordings come in a bundle of 128 channels.
         </p>
         <p>
           What defines a multichannel signal
           is that the signals within it share a common axis &mdash;
-          in these cases, all measurements were made at the same times.
+          in these examples, all measurements were made at the same times.
           The order of events on this organizaing axis matters.
           Rearranging the items in a time sequence scrambles the meaning
           out of it. What makes these different than a true two dimensional
@@ -657,7 +657,9 @@
         <p>
           The math for multi-channel convolution looks almost the same
           as for single channel, except for an additional summation
-          over all the channels.
+          over all the channels. For gradient calculations it's even
+          more similar. You just have to work with one channel at a time.
+          In the equations below, <em>c</em> is the channel index.
         </p>
 
         <p style="text-align:center;">
