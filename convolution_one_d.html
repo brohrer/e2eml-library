@@ -175,6 +175,42 @@
             style="width: 600px;">
         </p>
 
+        <h4 id="xcorr">Convolution vs. cross-correlation</h4>
+        <p>
+          There is understandable confusion between
+          <a href="
+            https://en.wikipedia.org/wiki/Convolution
+          ">convolution</a> and
+          <a href="
+            https://en.wikipedia.org/wiki/Cross-correlation
+          ">cross-correlation</a>. For discrete arrays of values,
+          like we are showing
+          here and like what would be used in any neural network,
+          they are identical except that in cross-correlation the
+          kernel is not flipped left-to-right before calculating the sliding
+          dot product.  
+        </p>
+        <p>
+          The distinction gets blurrier if you simply store and
+          handle the
+          convolution kernel in its pre-flipped state. Then it looks
+          <em>exactly</em> like cross-correlation. Avoiding the kernel
+          flip every time through the network may save some
+          computation time. My understanding is that this is what
+          PyTorch and TensorFlow do under the hood.
+        </p>
+        <p>
+          As a side note, you can cross-correlate a signal
+          with itself, and the result is called an autocorrelation.
+          (
+          <a href="
+            https://youtu.be/ZjaBn93YPWo
+          ">An alternative interpretation of autocorrelation</a> is
+          that is shows how well
+          a signal correlates with itself when shifted by a certain number
+          of time steps.)
+        </p>
+
         <h3>Differentiation</h3>
         
         <p>
@@ -495,6 +531,25 @@
           output gradient associated with them.
         </p>
 
+        <h4>Python implementation</h4>
+
+        <p>
+          Numpy‘s <code>convolve()</code> function handles one dimensional
+          convolution seamlessly. You can specify
+          <code>mode="full"</code> to keep all the non-zero values,
+          <code>mode="valid"</code> to only keep the completely overlapping
+          values, or <code>mode="same"</code> to ensure the result is the
+          sampe length as the signal.
+          What we described here is equivalent to working
+          with the <code>mode="same"</code> condition.
+        </p>
+        <p>
+          To take advantage of Numpy's full collection of padding tools,
+          <a href="
+            https://docs.scipy.org/doc/numpy/reference/generated/numpy.pad.html
+          ">check out the documention for the pad() function</a>.
+        </p>
+
         <h3 id="stride">Stride</h3>
         <p>
           Another useful trick in calculating convolutions for neural networks
@@ -552,60 +607,94 @@
         so introducing a stride can speed up a neural network considerably.
         </p>
 
-        <h3 id="xcorr">Convolution vs. cross-correlation</h3>
+
+        <h3> Multiple channels </h3>
         <p>
-          There is understandable confusion between
-          <a href="
-            https://en.wikipedia.org/wiki/Convolution
-          ">convolution</a> and
-          <a href="
-            https://en.wikipedia.org/wiki/Cross-correlation
-          ">cross-correlation</a>. For discrete arrays of values,
-          like we are showing
-          here and like what would be used in any neural network,
-          they are identical except that in cross-correlation the
-          kernel is not flipped left-to-right before calculating the sliding
-          dot product.  
+          One dimensional data often comes in the form of
+          several parallel channels or streams.
+          Economic data can be collected as many different indices
+          (say, the price of a barrel of oil, the gross domestic product,
+          and the unemployment rate) collected over the same time period
+          at the same intervals. Weather data can be organized as
+          hourly temperature
+          measurements collected at different locations.
+          Electroencephalographic comes in a bundle of 128 channels.
         </p>
         <p>
-          The distinction gets blurrier if you simply store and
-          handle the
-          convolution kernel in its pre-flipped state. Then it looks
-          <em>exactly</em> like cross-correlation. Avoiding the kernel
-          flip every time through the network may save some
-          computation time. My understanding is that this is what
-          PyTorch and TensorFlow do under the hood.
+          What defines a multichannel signal
+          is that the signals within it share a common axis &mdash;
+          in these cases, all measurements were made at the same times.
+          The order of events on this organizaing axis matters.
+          Rearranging the items in a time sequence scrambles the meaning
+          out of it. What makes these different than a true two dimensional
+          signal is that the order of the channels themselves doesn't matter.
+          You can re-order the list of cities in a set of temperature
+          measurements and it doesn't change what the data means.
+          If the temperature-by-city data were represented in a table,
+          with each row being a city and each column being an hourly
+          measurement, then we can see how rearranging the rows
+          wouldn't mess up the data set, but rearranging the columns would
+          make it much harder to interpret. Another way to say that is
+          that the row order doesn't contain any information, but
+          the column ordering does.
         </p>
         <p>
-          As a side note, you can cross-correlate a signal
-          with itself, and the result is called an autocorrelation.
-          (
-          <a href="
-            https://youtu.be/ZjaBn93YPWo
-          ">An alternative interpretation of autocorrelation</a> is
-          that is shows how well
-          a signal correlates with itself when shifted by a certain number
-          of time steps.)
+          In a multichannel signal, we can treat teach channel independently,
+          as its own flavor or color of data, not to be mingled with
+          the others. Because of this, we can't expect that the same
+          kernel structure will be meaningful across different channels.
+          To handle this, we instead create and learn multi-channel kernels
+          &mdash; a stack of kernels bound together, one for each channel.
         </p>
 
-        <h3>Python implementation</h3>
+        <p style="text-align:center;">
+          <img title="Multi-channel convolution"
+            src="images/conv1d/multichannel.gif"
+            alt="Multi-channel convolution"
+            style="width: 400px;">
+        </p>
 
         <p>
-          Numpy‘s <code>convolve()</code> function handles one dimensional
-          convolution seamlessly. You can specify
-          <code>mode="full"</code> to keep all the non-zero values,
-          <code>mode="valid"</code> to only keep the completely overlapping
-          values, or <code>mode="same"</code> to ensure the result is the
-          sampe length as the signal.
-          What we described here is equivalent to working
-          with the <code>mode="same"</code> condition.
+          The math for multi-channel convolution looks almost the same
+          as for single channel, except for an additional summation
+          over all the channels.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Multichannel convolution equations"
+            src="images/conv1d/conv_multichannel_eq.png"
+            alt="Multichannel convolution equations"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          The result of a multichannel convolution is a single channel
+          output. Because the sliding dot product covers all the channels
+          at once, they all get summed together and reduced down to a
+          single channel. 
+          However, a convolutional layer will have several kernels.
+          Each kernel acts as a feature detector, so the result
+          of the convolution is sometimes called a <em>feature map</em>,
+          a map that shows where in the signal the kernel occurred.
+          The combined result of a set of kernels is a collection
+          of feature maps. For one dimensional data, this is a
+          multichannel one dimensional signal.
+          (Typically the number of kernels in a layer is a small exponent
+          of two, like 16 or 64.
+          The exact number is a hyperparameter that can be adjusted
+          based on the particular problem you are working on.)
         </p>
         <p>
-          To take advantage of Numpy's full collection of padding tools,
-          <a href="
-            https://docs.scipy.org/doc/numpy/reference/generated/numpy.pad.html
-          ">check out the documention for the pad() function</a>.
+          Now we've closed the circle on
+          one dimensional convolution layers.
+          A convolution layer accepts a multichannel one dimensional signal,
+          convolves it with each of its multichannel kernels, and
+          stacks the results together into a new multichannel signal
+          that it passes on to the next layer. Because its outputs
+          look like its inputs, it means we can stack as many of them together
+          as we like, just like Lego bricks.
         </p>
+
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
