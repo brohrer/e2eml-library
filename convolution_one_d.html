@@ -697,6 +697,31 @@
           as we like, just like Lego bricks.
         </p>
 
+        <h3 id="bias">Bias</h3>
+        <p>
+          The only piece we are missing now is the bias. Each output
+          has a learned bias value that is added in to the result of
+          the convolution. It’s a constant value, <em>b</em>.
+          It is similar to the bias node in a dense neural network.
+          It provides a constant offset to a given output whenever
+          it's advantageous to do so.
+        </p>
+        <p>
+          Because the bias stands alone, it doesn’t show up anywhere
+          in the input gradient. The derivative of the output with
+          respect to a constant bias is always one, making a
+          trivial addition to the collection of parameter gradients.
+        </p>
+        <p>
+          The final set of equations look like this: 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution equations with bias"
+            src="images/conv1d/conv_bias_eq.png"
+            alt="Convolution equations with bias"
+            style="width: 600px;">
+        </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
