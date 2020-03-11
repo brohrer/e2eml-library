@@ -1,133 +1,133 @@
 # Redirects for inbound queries
 # Course catalog aliases
-/courses            https://end-to-end-machine-learning.teachable.com/courses
-/course             https://end-to-end-machine-learning.teachable.com/courses
-/classes            https://end-to-end-machine-learning.teachable.com/courses
-/class              https://end-to-end-machine-learning.teachable.com/courses
-/topics             https://end-to-end-machine-learning.teachable.com/courses
-/curriculum         https://end-to-end-machine-learning.teachable.com/courses
-/all                https://end-to-end-machine-learning.teachable.com/courses
+/courses            https://end-to-end-machine-learning.teachable.com/courses    301!
+/course             https://end-to-end-machine-learning.teachable.com/courses    301!
+/classes            https://end-to-end-machine-learning.teachable.com/courses    301!
+/class              https://end-to-end-machine-learning.teachable.com/courses    301!
+/topics             https://end-to-end-machine-learning.teachable.com/courses    301!
+/curriculum         https://end-to-end-machine-learning.teachable.com/courses    301!
+/all                https://end-to-end-machine-learning.teachable.com/courses    301!
 
 # Library aliases
-/                   https://e2eml.school/blog.html
-/lib                https://e2eml.school/blog.html
-/library            https://e2eml.school/blog.html
-/reference          https://e2eml.school/blog.html
-/restricted-area    https://e2eml.school/blog.html
-/posts              https://e2eml.school/blog.html
+/                   https://e2eml.school/blog.html    301!
+/lib                https://e2eml.school/blog.html    301!
+/library            https://e2eml.school/blog.html    301!
+/reference          https://e2eml.school/blog.html    301!
+/restricted-area    https://e2eml.school/blog.html    301!
+/posts              https://e2eml.school/blog.html    301!
 
 
 # Research page aliases
-/lab                https://e2eml.school/laboratory.html
-/laboratory         https://e2eml.school/laboratory.html
-/research           https://e2eml.school/laboratory.html
-/experiments        https://e2eml.school/laboratory.html
-/experimental       https://e2eml.school/laboratory.html
+/lab                https://e2eml.school/laboratory.html    301!
+/laboratory         https://e2eml.school/laboratory.html    301!
+/research           https://e2eml.school/laboratory.html    301!
+/experiments        https://e2eml.school/laboratory.html    301!
+/experimental       https://e2eml.school/laboratory.html    301!
 
 # GitLab projects aliases
-/code               https://gitlab.com/brohrer/
-/proj               https://gitlab.com/brohrer/
-/projects           https://gitlab.com/brohrer/
-/repos              https://gitlab.com/brohrer/
-/repostories        https://gitlab.com/brohrer/
+/code               https://gitlab.com/brohrer/    301!
+/proj               https://gitlab.com/brohrer/    301!
+/projects           https://gitlab.com/brohrer/    301!
+/repos              https://gitlab.com/brohrer/    301!
+/repostories        https://gitlab.com/brohrer/    301!
 
-/cottonwood         https://gitlab.com/brohrer/cottonwood/
-/cw                 https://gitlab.com/brohrer/cottonwood/
-/ponderosa          https://gitlab.com/brohrer/ponderosa/
-/pon                https://gitlab.com/brohrer/ponderosa/
-/lodgepole          https://gitlab.com/brohrer/lodgepole/
-/lp                 https://gitlab.com/brohrer/lodgepole/
+/cottonwood         https://gitlab.com/brohrer/cottonwood/    301!
+/cw                 https://gitlab.com/brohrer/cottonwood/    301!
+/ponderosa          https://gitlab.com/brohrer/ponderosa/    301!
+/pon                https://gitlab.com/brohrer/ponderosa/    301!
+/lodgepole          https://gitlab.com/brohrer/lodgepole/    301!
+/lp                 https://gitlab.com/brohrer/lodgepole/    301!
 
 # Office Hours blog aliases
-/blog               https://end-to-end-machine-learning.teachable.com/blog
-/office-hours-blog  https://end-to-end-machine-learning.teachable.com/blog
-/office-hours       https://end-to-end-machine-learning.teachable.com/blog
-/posts              https://end-to-end-machine-learning.teachable.com/blog
+/blog               https://end-to-end-machine-learning.teachable.com/blog    301!
+/office-hours-blog  https://end-to-end-machine-learning.teachable.com/blog    301!
+/office-hours       https://end-to-end-machine-learning.teachable.com/blog    301!
+/posts              https://end-to-end-machine-learning.teachable.com/blog    301!
 
 # Course page aliases
-/complete           https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
-/complete-course-catalog    https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
-/course-catalog     https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
-/complete-catalog   https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
-/catalog            https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
-/all-access         https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog
+/complete           https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
+/complete-course-catalog    https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
+/course-catalog     https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
+/complete-catalog   https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
+/catalog            https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
+/all-access         https://end-to-end-machine-learning.teachable.com/p/complete-course-library-full-end-to-end-machine-learning-catalog    301!
 
-/course-321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks
-/course321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks
-/321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks
+/course-321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks    301!
+/course321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks    301!
+/321         https://end-to-end-machine-learning.teachable.com/p/321-convolutional-neural-networks    301!
 
-/course-314         https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
-/course314          https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
-/314                https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization
+/course-314         https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization    301!
+/course314          https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization    301!
+/314                https://end-to-end-machine-learning.teachable.com/p/314-neural-network-optimization    301!
 
-/course-313         https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
-/course313          https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
-/313                https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods
+/course-313         https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods    301!
+/course313          https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods    301!
+/313                https://end-to-end-machine-learning.teachable.com/p/advanced-neural-network-methods    301!
 
-/course-312         https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
-/course312          https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
-/312                https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework
+/course-312         https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework    301!
+/course312          https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework    301!
+/312                https://end-to-end-machine-learning.teachable.com/p/write-a-neural-network-framework    301!
 
-/course-311         https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization
-/course311          https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization
-/311                https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization
+/course-311         https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization    301!
+/course311          https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization    301!
+/311                https://end-to-end-machine-learning.teachable.com/p/neural-network-visualization    301!
     
-/course-213         https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization
-/course213          https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization
-/213                https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization
+/course-213         https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization    301!
+/course213          https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization    301!
+/213                https://end-to-end-machine-learning.teachable.com/p/polynomial-regression-optimization    301!
 
-/course-212         https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor 
-/course212          https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor 
-/212                https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor 
+/course-212         https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor     301!
+/course212          https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor     301!
+/212                https://end-to-end-machine-learning.teachable.com/p/time-series-analysis-weather-predictor     301!
 
-/course-211         https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas
-/course211          https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas
-/211                https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas
+/course-211         https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas    301!
+/course211          https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas    301!
+/211                https://end-to-end-machine-learning.teachable.com/p/decision-trees-with-python-and-pandas    301!
 
-/course-193         https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work
-/course193          https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work
-/193                https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work
+/course-193         https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work    301!
+/course193          https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work    301!
+/193                https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work    301!
 
-/course-191         https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts
-/course191          https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts
-/191                https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts
+/course-191         https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts    301!
+/course191          https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts    301!
+/191                https://end-to-end-machine-learning.teachable.com/p/machine-learning-signal-processing-statistics-concepts    301!
 
-/course-173         https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works
-/course173          https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works
-/173                https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works
+/course-173         https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works    301!
+/course173          https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works    301!
+/173                https://end-to-end-machine-learning.teachable.com/p/building-blocks-how-optimization-works    301!
 
-/course-171         https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model
-/course171          https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model
-/171                https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model
+/course-171         https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model    301!
+/course171          https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model    301!
+/171                https://end-to-end-machine-learning.teachable.com/p/building-blocks-choosing-a-model    301!
 
-/course-133         https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186
-/course133          https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186
-/133                https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186
+/course-133         https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186    301!
+/course133          https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186    301!
+/133                https://end-to-end-machine-learning.teachable.com/courses/advanced-neural-network-methods/lectures/11902186    301!
 
-/course-131         https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks
-/course131          https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks
-/131                https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks
+/course-131         https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks    301!
+/course131          https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks    301!
+/131                https://end-to-end-machine-learning.teachable.com/p/data-munging-tips-and-tricks    301!
 
-/course-121         https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career
-/course121          https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career
-/121                https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career
+/course-121         https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career    301!
+/course121          https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career    301!
+/121                https://end-to-end-machine-learning.teachable.com/p/navigating-a-data-science-career    301!
 
-/course-101         https://end-to-end-machine-learning.teachable.com/p/data-science-concepts
-/course101          https://end-to-end-machine-learning.teachable.com/p/data-science-concepts
-/101 i              https://end-to-end-machine-learning.teachable.com/p/data-science-concepts
+/course-101         https://end-to-end-machine-learning.teachable.com/p/data-science-concepts    301!
+/course101          https://end-to-end-machine-learning.teachable.com/p/data-science-concepts    301!
+/101 i              https://end-to-end-machine-learning.teachable.com/p/data-science-concepts    301!
 
-/course-000         https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills
-/course000          https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills
-/000                https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills
+/course-000         https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills    301!
+/course000          https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills    301!
+/000                https://end-to-end-machine-learning.teachable.com/p/000-foundational-skills    301!
 
-/blog-notifications https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications
-/post-notifications https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications
-/notifications      https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications
+/blog-notifications https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications    301!
+/post-notifications https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications    301!
+/notifications      https://end-to-end-machine-learning.teachable.com/p/blog-post-notifications    301!
 
-/stickers           https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/buy                https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/purchase           https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/merch              https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/merchandise        https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/swag               https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
-/stuff              https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers
+/stickers           https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/buy                https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/purchase           https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/merch              https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/merchandise        https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/swag               https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
+/stuff              https://end-to-end-machine-learning.teachable.com/p/e2eml-stickers    301!
