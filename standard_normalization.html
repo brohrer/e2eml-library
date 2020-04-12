@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <script type="text/javascript">var blog_title = "How to Normalize a Signal by mean and variance";</script>
+  <script type="text/javascript">var blog_title = "How to Normalize a Signal by Mean and Variance";</script>
   <script type="text/javascript">var publication_date = "April 13, 2020";</script>
   <head>
     <link rel="icon" href="images/ml_logo.png">
@@ -36,10 +36,10 @@
           you can transform it to a
           signal <em>z</em> having
           a mean of 0 and a standard deviation of 1 with <br>
-          <code>z = (s - &mu;_s) / (&sigma; + &epsilon;)</code><br>,
+          <code>z = (s - &mu;_s) / (&sigma;_s + &epsilon;)</code>,<br>
           where &epsilon; is a small number, say 10^-6 or 10^-10, that
           prevents divide-by-zero errors in the rare cases where
-          &sigma; is zero.
+          &sigma_s; is zero.
         </p>
         <p>
           That in turn can be transformed to a signal <em>t</em>
