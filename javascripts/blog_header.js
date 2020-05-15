@@ -4,8 +4,8 @@ document.write('\
         <header class="inner">\
           <h1 id="project_title">' + blog_title + '</h1>\
             <h4>\
-              <a id="project_tagline" href="blog.html">\
-                Part of the e2eML library\
+              <a id="project_tagline" href="https://e2eml.school/catalog">\
+                End to End Machine Learning\
               </a>\
             </h4>\
         </header>\
