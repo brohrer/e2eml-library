@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <script type="text/javascript">var blog_title = "Rate of Change";</script>
+  <script type="text/javascript">var publication_date = "May 22, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          Sometimes we're not so interested in the thing our data measures,
+          as we are in how it changes over time. Sea level is interesting
+          how fast it is changing over hours and years is even more so.
+          Population of a town is important, but how fast it is going
+          up or down is a critical economic indicator. Customer purchases
+          are informative in their own right, but whether customers are
+          making those purchases less often is a strong signal for
+          predicting whether they'll leave you.
+        </p>        
+        <p>
+          You can also do this with data measured across different positions.
+          Elevation data is useful, but how elevation changes as you walk
+          tells you how steep the terrain is and is a very important
+          factor to keep in mind as you plan your hike.
+        </p>
+        <p>
+          To calculate rate of change, you'll need a series of measurements
+          made at regularly spaced intervals of time or distance.
+          (There are methods for dealing with irregular intervals, but
+          that will be the topic of another post.) For our example,
+          we'll measure the temperature, <em>x</em>, at different
+          times, <em>t</em>. We'll make those measurements at intervals
+          of 1 hour.
+        </p>
+        <p>
+          Temperature data has lots of uses, but we are trying to choose
+          what to wear outside today, so we're interested
+          in answering the question of whether it's getting warmer or
+          cooler right now. What's the rate of change of temperature
+          at this moment?
+        </p>
+        <p style="text-align:center;">
+        <img title="Temperature measurements over 5 hours"
+          src="images/rate_of_change/measurements.png"
+          alt="Temperature measurements over 5 hours"
+          style="width: 400px;">
+        </p>
+        <p>
+          There are a few different ways to get at this. We can't measure
+          it directly. The notion of rate of change comes from calculus,
+          and the only way you calculate it directly is to have measurements
+          infinitessimally close together. Our measurements are an hour apart,
+          so we're just going to have to do the best we can with that.
+          We'll look at three methods: forward difference, backward difference,
+          and center difference.
+        </p>
+
+        <h3>Forward difference</h3>
+        <p>
+
+
+        <p style="text-align:center;">
+        <img title="Forward difference method illustrated"
+          src="images/rate_of_change/forward_difference.png"
+          alt="Forward difference method illustrated"
+          style="width: 400px;">
+        </p>
+
+        <h3>Backward difference</h3>
+        <p style="text-align:center;">
+        <img title="Backward difference method illustrated"
+          src="images/rate_of_change/backward_difference.png"
+          alt="Backward difference method illustrated"
+          style="width: 400px;">
+        </p>
+
+        <h3>Center difference</h3>
+        <p style="text-align:center;">
+        <img title="Center difference method illustrated"
+          src="images/rate_of_change/center_difference.png"
+          alt="Center difference method illustrated"
+          style="width: 400px;">
+        </p>
+
+        <h3>When to use which</h3>
+        <p style="text-align:center;">
+        <img title="Difference method comparison"
+          src="images/rate_of_change/difference_comparison.png"
+          alt="Difference method_comparison"
+          style="width: 400px;">
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-10180621-3");
+      pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>
