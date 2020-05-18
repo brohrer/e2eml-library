@@ -43,7 +43,8 @@
           (There are methods for dealing with irregular intervals, but
           that will be the topic of another post.) For our example,
           we'll measure the temperature, <em>x</em>, at different
-          times, <em>t</em>. We'll make those measurements at intervals
+          times, <em>t</em>, to find the temperature change per hour,
+          <em>v</em>. We'll make those measurements at intervals
           of 1 hour.
         </p>
         <p>
@@ -149,9 +150,9 @@
           of interest. To get the slope, we take the difference between
           these two values and we double the time step to account for
           the fact that we skipped a measurement. It is a quirk of the
-          cetner difference that the current measurement isn’t part of
-          the rate of change calculation at all. Also, but because
-          the center difference looks both forward and back By one time step,
+          center difference that the current measurement isn’t part of
+          the rate of change calculation at all. Also, note that because
+          the center difference looks both forward and back by one time step,
           it will not be able to create an estimate for either the first or
           last elements of a series.
         </p>
@@ -168,7 +169,7 @@
           by two times the time interval <code>dt</code>:
         </p>
         <p>
-          <code(measurements[2:] - measurements[:-2]) / (2 * dt)</code>
+          <code>(measurements[2:] - measurements[:-2]) / (2 * dt)</code>
         </p>
 
         <h3>When to use which</h3>
