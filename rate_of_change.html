@@ -57,11 +57,16 @@
         <img title="Temperature measurements over 5 hours"
           src="images/rate_of_change/measurements.png"
           alt="Temperature measurements over 5 hours"
-          style="width: 400px;">
+          style="width: 600px;">
+        </p>
+        <p>
+          The current time is <em>t_0</em>. We would like to know
+          if the temperature is going up or down and how fast.
         </p>
         <p>
           There are a few different ways to get at this. We can't measure
-          it directly. The notion of rate of change comes from calculus,
+          it directly. The notion of rate of change comes from calculus
+          and derivatives,
           and the only way you calculate it directly is to have measurements
           infinitessimally close together. Our measurements are an hour apart,
           so we're just going to have to do the best we can with that.
@@ -70,14 +75,38 @@
         </p>
 
         <h3>Forward difference</h3>
-        <p>
-
 
         <p style="text-align:center;">
         <img title="Forward difference method illustrated"
           src="images/rate_of_change/forward_difference.png"
           alt="Forward difference method illustrated"
-          style="width: 400px;">
+          style="width: 600px;">
+        </p>
+        <p>
+          All three of these methods can be understood as drawing a line
+          through two points and finding the slope of that line. How they
+          differ is in which two points they use. Forward difference uses
+          the current point, at <em>t_0</em>, and the next, at <em>t_1</em>.
+        </p>
+        <p>
+          The slope of our line is the change in <em>x</em>
+          over the change in <em>t</em> for
+          any pair of points. For the two points we've chosen, this gives
+          us the equation for <em>v(t_0)</em> in the figure above. 
+        </p>
+        <p>
+          Note that for the very last temperature measurement we make, we
+          won't be able to estimate a rate of change with the forward
+          difference. There is no next point to use. The number of rate of
+          change estimates we get will be one less than the number of
+          measurements we have.
+        </p>
+        <p>
+          The Python implementation of this takes advantage of Numpy's
+          <code>diff()</code>. It subtracts every element in an array from
+          the one that follows. For a sampling period <code>dt</code>,
+          the forward difference of the array <code>measurements</code> is
+          <code>np.diff(measurements) / dt</code>.
         </p>
 
         <h3>Backward difference</h3>
@@ -85,7 +114,7 @@
         <img title="Backward difference method illustrated"
           src="images/rate_of_change/backward_difference.png"
           alt="Backward difference method illustrated"
-          style="width: 400px;">
+          style="width: 600px;">
         </p>
 
         <h3>Center difference</h3>
@@ -93,7 +122,7 @@
         <img title="Center difference method illustrated"
           src="images/rate_of_change/center_difference.png"
           alt="Center difference method illustrated"
-          style="width: 400px;">
+          style="width: 600px;">
         </p>
 
         <h3>When to use which</h3>
@@ -101,7 +130,7 @@
         <img title="Difference method comparison"
           src="images/rate_of_change/difference_comparison.png"
           alt="Difference method_comparison"
-          style="width: 400px;">
+          style="width: 600px;">
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
