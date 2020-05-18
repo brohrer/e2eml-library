@@ -116,6 +116,24 @@
           alt="Backward difference method illustrated"
           style="width: 600px;">
         </p>
+        <p>
+          In backward difference, the line that we are finding the slope of
+          is between the current measurement and the previous measurement.
+          It estimates rate of change by looking back.
+          The change in value and the change in time between the current
+          and the previous measurement give the slope of the line
+          that connects them as shown in the figure.
+        </p>
+        <p>
+          If you look carefully, you'll notice that the backward difference
+          is calculated the same way as the forward difference,
+          but the interpretation is different. The resulting time series
+          in both cases is the same, but shifted by one time step.
+          Where the forward difference can’t calculate a rate
+          for the last element In the sequence, the backward difference
+          can’t calculate a rate for the first element. There is nothing
+          to look back to.
+        </p>
 
         <h3>Center difference</h3>
         <p style="text-align:center;">
@@ -125,12 +143,56 @@
           style="width: 600px;">
         </p>
 
+        <p>
+          In the center difference, the two points that are connected
+          are the point preceding and the point following the time point
+          of interest. To get the slope, we take the difference between
+          these two values and we double the time step to account for
+          the fact that we skipped a measurement. It is a quirk of the
+          cetner difference that the current measurement isn’t part of
+          the rate of change calculation at all. Also, but because
+          the center difference looks both forward and back By one time step,
+          it will not be able to create an estimate for either the first or
+          last elements of a series.
+        </p>
+        <p>
+          To calculate the center difference in Python on an array of values,
+          we will have to do some slicing to pull out an array of
+          the pre-measurements and post-measurements for each point
+          of interest.
+          <code>measurements[: -2]</code> gathers all but the last
+          two elements measurements, and
+          <code>measurements[2:]</code> gathers all but the first two elements.
+          Now we can subtract one from the other to find the pairwise
+          difference between each before and after point, and divide
+          by two times the time interval <code>dt</code>:
+        </p>
+        <p>
+          <code(measurements[2:] - measurements[:-2]) / (2 * dt)</code>
+        </p>
+
         <h3>When to use which</h3>
         <p style="text-align:center;">
         <img title="Difference method comparison"
           src="images/rate_of_change/difference_comparison.png"
           alt="Difference method_comparison"
           style="width: 600px;">
+        </p>
+        <p>
+          The center difference has a lot to recommend it. It's my
+          first choice whenever I can use it. Because it is centered around
+          the time of interest, it’s not biased in the direction of future
+          or past events. And because it incorporates measurements over
+          a longer time period, it’s more accurate.
+        </p>
+        <p>
+          Sometimes, center difference isn’t an option. If you are at
+          the beginning or the end of your time series, then you will be
+          stuck With forward or backward difference. A common situation is
+          when you want to estimate the rate of chang of something
+          going on right now. In that case, we don’t have any future
+          measurements because they haven’t happened yet. When you’re in
+          that situation, backward difference is a fine way to go.
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
