@@ -42,6 +42,46 @@
           <code>softmax = exp(x) / sum(exp(x))</code>
         </p>
 
+        <h4>Probability mass function (PMF)</h4>
+
+        <h4>PMF normalization</h4>
+
+        <h4>Softmax as a PMF normalization of exponentials</h4>
+
+        <h4>Derivative of a PMF normalization</h4>
+
+        <h4>Derivative of softmax</h4>
+
+        <h4>Python implementation</h4>
+
+        <h4>Backpropagation</h4>
+
+        <h4>Gotchas</h4>
+        <p>
+          Softmax is an activation function in its own right.
+          If you use it together with another activation function that
+          limits the range, like logistic or hyperbolic tangent, then
+          its effectiveness will be greatly diminshed. Softmax is sensitive
+          to the differences between values, so you don't want to compress
+          them into a small range before applying it. 
+        </p>
+        <p>
+          Because it's a PMF, softmax is appropriate for categorization
+          tasks where each example only belongs to one category. The
+          whole premise behind the softmax is that it emphasizes the value
+          with the highest value, the category with the greatest affinity,
+          at the expense of all others. Multi-label classification
+          problems (say, where a photo could be tagged as both "person" and
+          "dog" if it has both a persona and a dog in it) break this
+          assumption. For multilabel problems the logisitic activation
+          function is your best bet. It represents the affinity of every
+          label separately on a zero to one scale. For some medical
+          examples, check out this
+          <a href="https://glassboxmedicine.com/2019/05/26/classification-sigmoid-vs-softmax/">
+            article by Rachel Draelos</a>.
+        </p>
+
+        <h4></h4>
 
         <h4>References and resources</h4>
         <p>
@@ -52,7 +92,24 @@
               <a href="https://en.wikipedia.org/wiki/Softmax_function">
                 The Wikipedia article</a>
             </li>
+            <li>
+              <a href="https://victorzhou.com/blog/softmax/">
+                Victor Zhou's post</a>
+            </li>
+            <li>
+              <a href="https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/"</a>
+                Eli Bendersky's post</a>
+            </li>
+            <li>
+              <a href="https://medium.com/@aerinykim/how-to-implement-the-softmax-derivative-independently-from-any-loss-function-ae6d44363a9d"</a>
+                Aerin Kim's post</a>
+            </li>
+            <li>
+              <a href="https://stats.stackexchange.com/questions/265905/derivative-of-softmax-with-respect-to-weights"</a>
+                Antoni Parellada's Cross Validated post</a>
+            </li>
           </ul>
+
         </p>
 
 
