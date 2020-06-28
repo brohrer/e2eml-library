@@ -126,9 +126,9 @@
           PMF normalization.
         </p>
         <p style="text-align:center;">
-          <img title="softmax definition"
+          <img title="pmf normalization"
             src="images/softmax/def_02_eq.png"
-            alt="softmax definition"
+            alt="pmf normalization"
             style="width: 600px;">
         </p>
 
@@ -137,8 +137,41 @@
           Softmax is very like a PMF normalization, with the exception
           that all of the elements of 
           <em><strong>x</strong></em>
-          are first passed through an exponential function
+          are first passed through an
+          <a href="https://en.wikipedia.org/wiki/Exponential_function">
+            exponential function</a>
           (<em>e</em> is raised to power of each <em>x<sub>i</sub></em>). 
+        </p>
+        <p>
+          This does two good things. First, it makes sure that all the
+          elements of 
+          <em><strong>x</strong></em>
+          are positive. <em>e</em> raised to any power is a positive
+          number. This lets us apply a PMF normalization to any
+          array of numbers without worrying about whether they are
+          positive or negative.
+        </p>
+        <p>
+          Second, it stretches out the difference between the largest
+          value and the second largest value, compared to the differences
+          between the smaller values. This elongation of the upper part
+          of the value range is what makes the function maximum-like.
+          It takes the largest value and further isolates it from the rest
+          of its cohort. It extends the lead of the front-runner over
+          the rest of the pack. Because it leaves the other elements
+          with some non-zero value, it earns the name "soft" max, 
+        </p>
+        <p>
+          After taking the exponential function of 
+          <em><strong>x</strong></em>, the PMF normalization can proceed
+          normally.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax full definition"
+            src="images/softmax/def_03_eq.png"
+            alt="softmax full definition"
+            style="width: 600px;">
+        </p>
 
         <h4>Derivative of a PMF normalization</h4>
 
