@@ -37,27 +37,27 @@
         </p>
         <p>
           Softmax is an activation function that turns an array of values
-          into probability mass function where the weight of maximum value
+          into probability mass function where the weight of the maximum value
           is exaggerated.
         </p>
 
 
         <h4>Why softmax?</h4>
         <p>
-          Softmax is tailor made for multi-class categorization problems,
+          Softmax is tailor made for multi-class categorization problems
           like the
           <a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST</a> or
           <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR</a>
           datasets.
-          It's is ideal for converting the result of a linear layer
+          It's ideal for converting the result of a linear layer
           into vote for a category.
           It works best across a wide range
           of input values, so
           it takes the place of other activation
           functions, like sigmoid (logistic) or rectified linear units (ReLU).
-          The softmax emphasizes the strongest vote and so it focuses
+          The softmax emphasizes the strongest vote and so focuses
           the learning on the parameters that will strengthen that vote.
-          It's also relativel cheap to compute.
+          It's also relatively cheap to compute.
         </p>
 
         <h4>Probability mass function (PMF)</h4>
@@ -65,15 +65,17 @@
           One reason softmax is so appealing is that it fits in well
           with statistics and information theory. It is a probability
           mass function, a collection of values, each associated with
-          one outcome, that are all between zero and one and add up to one.
-          This lets us interpret the as degrees of belief. If a softmax
-          layer gives us the values .1, .7, and .2 for the categories
+          a separate and exclusive outcome, that are all between
+          zero and one and add up to one.
+          This lets us interpret the output of the softmax
+          as degrees of belief. If a softmax
+          layer gives us the values .2, .7, and .1 for the categories
           "cat", "dog", and "elephant", we can explain that as the
-          model believing with 10% strength that the image contains a
-          cat, 70% that it contains a dog, and 20% that it contains
+          model believing with 20% strength that the image contains a
+          cat, 70% that it contains a dog, and 10% that it contains
           an elephant. Alternatively, if we were using the model to
-          place bets, we would estimate the odds of there being a cat
-          at 1:9, an elephant at 1:4 and a dog at 7:3. All the tricks
+          place bets, we would estimate the odds of there being an elephant
+          at 1:9, a cat at 1:4 and a dog at 7:3. All the tricks
           we can do with probabilities, we can now apply to the
           result of the softmax, a PMF of our expectations about
           the category membership of the example.
