@@ -180,14 +180,26 @@
           parameters that need adjusting during training, it is responsible
           for properly backpropagating the loss gradient so that upstream
           layers can learn from it. We'll start by working through
-          ther derivative of PMF normalization before extending it to
+          the derivative of PMF normalization before extending it to
           the full softmax function.
+        </p>
+        <p>
+          Because <em><strong>x</strong></em> is an array, the partial
+          derivative of the <em>p(<strong>x</strong>)</em>) with respect to
+          <em><strong>x</strong></em> is a collection of derivatives
+          with respect to each element.
         </p>
         <p style="text-align:center;">
           <img title="pmf derivative, step 1"
             src="images/softmax/d_pmf_01_eq.png"
             alt="pmf derivative, part 1"
             style="width: 600px;">
+        </p>
+        <p>
+          Because <em><strong>x</strong></em> is an array, the partial
+          derivative of the <em>p(<strong>x</strong>)</em>) with respect to
+          <em><strong>x</strong></em> is a collection of derivatives
+          with respect to each element.
         </p>
 
         <p style="text-align:center;">
@@ -196,6 +208,8 @@
             alt="pmf derivative, part 2"
             style="width: 600px;">
         </p>
+
+
         <h4>Derivative of softmax</h4>
 
         <h4>Python implementation</h4>
