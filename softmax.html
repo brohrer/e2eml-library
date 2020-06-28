@@ -122,7 +122,7 @@
           ... x<sub>N-1</sub>, x<sub>N</sub></em>], which we can call
           <em><strong>x</strong></em> for short. To convert
           <em><strong>x</strong></em>
-          into the PMF <em>p(<strong>x</strong></em> we can perform
+          into the PMF <em>p(<strong>x</strong></em>) we can perform
           PMF normalization.
         </p>
         <p style="text-align:center;">
@@ -174,6 +174,15 @@
         </p>
 
         <h4>Derivative of a PMF normalization</h4>
+        <p>
+          To use softmax in a neural network we need to be able to
+          differentiate it. Even though it doesn't have any internal
+          parameters that need adjusting during training, it is responsible
+          for properly backpropagating the loss gradient so that upstream
+          layers can learn from it. We'll start by working through
+          ther derivative of PMF normalization before extending it to
+          the full softmax function.
+        </p>
 
         <h4>Derivative of softmax</h4>
 
