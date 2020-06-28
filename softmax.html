@@ -93,7 +93,8 @@
           You can make a PMF out of any set of values, provided they
           aren't negative. Counted values are a classic case.
           Imagine I was sitting on the street corner watching people drive by.
-          I could count vehicles by type: car, truck, bicycle. After an hour
+          I could count vehicles by type: car, truck, bicycle. Suppose that
+          after an hour
           I had counted 100 bicycles, 300 trucks, and 600 cars. Now
           I want to figure out how likely it is that the next vehicle
           will be a bicycle. I can turn my histogram of counts into
@@ -115,9 +116,29 @@
           as opposed to a <em>Bayesian</em> approach.
         </p>
 
-
+        <p>
+          Expressed in equations, we start with an array of values
+          [<em>x<sub>1</sub>, x<sub>2</sub>,
+          ... x<sub>N-1</sub>, x<sub>N</sub></em>], which we can call
+          <em><strong>x</strong></em> for short. To convert
+          <em><strong>x</strong></em>
+          into the PMF <em>p(<strong>x</strong></em> we can perform
+          PMF normalization.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax definition"
+            src="images/softmax/def_02_eq.png"
+            alt="softmax definition"
+            style="width: 600px;">
+        </p>
 
         <h4>Softmax as a PMF normalization of exponentials</h4>
+        <p>
+          Softmax is very like a PMF normalization, with the exception
+          that all of the elements of 
+          <em><strong>x</strong></em>
+          are first passed through an exponential function
+          (<em>e</em> is raised to power of each <em>x<sub>i</sub></em>). 
 
         <h4>Derivative of a PMF normalization</h4>
 
