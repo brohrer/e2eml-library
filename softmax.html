@@ -78,12 +78,42 @@
           result of the softmax, a PMF of our expectations about
           the category membership of the example.
         </p>
+        <p style="text-align:center;">
+          <img title="pmf example"
+            src="images/softmax/ex_pmf_00.png"
+            alt="pmf example"
+            style="width: 600px;">
+        </p>
+
 
         <h4>PMF normalization</h4>
-        <a>
+        <p>
           You can make a PMF out of any set of values, provided they
-          are not negative.
-        </a>
+          aren't negative. Counted values are a classic case.
+          Imagine I was sitting on the street corner watching people drive by.
+          I could count vehicles by type: car, truck, bicycle. After an hour
+          I had counted 100 bicycles, 300 trucks, and 600 cars. Now
+          I want to figure out how likely it is that the next vehicle
+          will be a bicycle. I can turn my histogram of counts into
+          a probability mass function by dividing each count by the
+          sum of all the observations I've made (100 + 300 + 600 = 1000).
+          This gives a PMF of bicycles = .1, trucks = .3 and cars = .6.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="pmf from counts illustration"
+            src="images/softmax/ex_pmf_01.png"
+            alt="pmf from counts illustration"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          This method of converting counts (frequencies) to probabilities
+          is a hallmark of a <em>frequentist</em> approach to statistics,
+          as opposed to a <em>Bayesian</em> approach.
+        </p>
+
+
 
         <h4>Softmax as a PMF normalization of exponentials</h4>
 
