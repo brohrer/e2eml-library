@@ -159,7 +159,7 @@
           It takes the largest value and further isolates it from the rest
           of its cohort. It extends the lead of the front-runner over
           the rest of the pack. Because it leaves the other elements
-          with some non-zero value, it earns the name "soft" max, 
+          with some non-zero value, it earns the name "soft" max.
         </p>
         <p>
           After taking the exponential function of 
@@ -171,6 +171,31 @@
             src="images/softmax/def_03_eq.png"
             alt="softmax full definition"
             style="width: 600px;">
+        </p>
+
+        <h4>Gotchas</h4>
+        <p>
+          Softmax is an activation function in its own right.
+          If you use it together with another activation function that
+          limits the range, like logistic or hyperbolic tangent, then
+          its effectiveness will be greatly diminshed. Softmax is sensitive
+          to the differences between values, so you don't want to compress
+          them into a small range before applying it. 
+        </p>
+        <p>
+          Because it's a PMF, softmax is appropriate for categorization
+          tasks where each example only belongs to one category. The
+          whole premise behind the softmax is that it emphasizes the value
+          with the highest value, the category with the greatest affinity,
+          at the expense of all others. Multi-label classification
+          problems (say, where a photo could be tagged as both "person" and
+          "dog" if it has both a persona and a dog in it) break this
+          assumption. For multilabel problems the logisitic activation
+          function is your best bet. It represents the affinity of every
+          label separately on a zero to one scale. For some medical
+          examples, check out this
+          <a href="https://glassboxmedicine.com/2019/05/26/classification-sigmoid-vs-softmax/">
+            article by Rachel Draelos</a>.
         </p>
 
         <h4>Derivative of a PMF normalization</h4>
@@ -187,7 +212,8 @@
           Because <em><strong>x</strong></em> is an array, the partial
           derivative of the <em>p(<strong>x</strong>)</em> with respect to
           <em><strong>x</strong></em> is a collection of derivatives
-          with respect to each element.
+          with respect to each element of
+          <em><strong>x</strong></em>.
         </p>
         <p style="text-align:center;">
           <img title="pmf derivative, step 1"
@@ -196,10 +222,13 @@
             style="width: 600px;">
         </p>
         <p>
-          Because <em><strong>x</strong></em> is an array, the partial
+          Because <em>p(<strong>x</strong>)</em> is also an array, the partial
           derivative of the <em>p(<strong>x</strong>)</em> with respect to
-          <em><strong>x</strong></em> is a collection of derivatives
-          with respect to each element.
+          <em><strong>x</strong></em> is a two dimensional array
+          of derivatives of each element of 
+          <em>p(<strong>x</strong>)</em>
+          with respect to each element of
+          <em><strong>x</strong></em>.
         </p>
 
         <p style="text-align:center;">
@@ -209,7 +238,8 @@
             style="width: 600px;">
         </p>
         <p>
-          We can express this with some indexing shorthand.
+          We can express this collection of partial derivatives
+          with some indexing shorthand.
         </p>
 
         <p style="text-align:center;">
@@ -302,36 +332,38 @@
             Jacobean</a>) gives us a strong start for calculating the
           Jacobean of the softmax. We'll retrace our steps, making the
           modifications we need to for softmax's exponential functions.
+          Starting from the expression for the Jacobean of the
+          softmax
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 1"
+            src="images/softmax/d_softmax_01.png"
+            alt="softmax derivative, part 1"
+            style="width: 600px;">
+        </p>
+        <p>
+          we can again break the numerator and denominator of the softmax
+          out for differentiation using the Quotient Rule.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 2"
+            src="images/softmax/d_softmax_02.png"
+            alt="softmax derivative, part 2"
+            style="width: 600px;">
+        </p>
+        <p>
+          This expression can be simplified further.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 3"
+            src="images/softmax/d_softmax_03.png"
+            alt="softmax derivative, part 3"
+            style="width: 600px;">
         </p>
 
         <h4>Python implementation</h4>
 
         <h4>Backpropagation</h4>
-
-        <h4>Gotchas</h4>
-        <p>
-          Softmax is an activation function in its own right.
-          If you use it together with another activation function that
-          limits the range, like logistic or hyperbolic tangent, then
-          its effectiveness will be greatly diminshed. Softmax is sensitive
-          to the differences between values, so you don't want to compress
-          them into a small range before applying it. 
-        </p>
-        <p>
-          Because it's a PMF, softmax is appropriate for categorization
-          tasks where each example only belongs to one category. The
-          whole premise behind the softmax is that it emphasizes the value
-          with the highest value, the category with the greatest affinity,
-          at the expense of all others. Multi-label classification
-          problems (say, where a photo could be tagged as both "person" and
-          "dog" if it has both a persona and a dog in it) break this
-          assumption. For multilabel problems the logisitic activation
-          function is your best bet. It represents the affinity of every
-          label separately on a zero to one scale. For some medical
-          examples, check out this
-          <a href="https://glassboxmedicine.com/2019/05/26/classification-sigmoid-vs-softmax/">
-            article by Rachel Draelos</a>.
-        </p>
 
         <h4></h4>
 
