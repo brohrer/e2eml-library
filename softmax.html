@@ -394,11 +394,11 @@
         <h4>Python implementation</h4>
         <p>
           The Python code for softmax, given a one dimensional array
-          of input values <code>x</code> is short.<br>
+          of input values <code>x</code> is short.
+          <br>
 <pre><code>import numpy as np
 softmax = np.exp(x) / np.sum(np.exp(x))</code></pre>
-        </p>
-        <p>
+          <br>
           The backward pass takes a bit more doing. The derivative of the
           softmax is natural to express in a two dimensional array. This
           will really help in calculating it too. We can make use of
@@ -408,8 +408,10 @@ softmax = np.exp(x) / np.sum(np.exp(x))</code></pre>
           of the softmax, <code>softmax</code>, and the loss gradient,
           <code>grad</code>, are both two dimensional arrays with one row
           and many columns.
+          <br>
 <pre><code>softmax = np.reshape(softmax, (1, -1))
 grad = np.reshape(grad, (1, -1))</code></pre>
+          <br>
           Then we can create the Jacobean matrix, <code>d_softmax</code>.
         </p>
         <p style="text-align:center;">
@@ -424,9 +426,11 @@ grad = np.reshape(grad, (1, -1))</code></pre>
           equation), and the second part of this expression creates
           the other term (the product of softmax values associated with
           each row and column index).
+          <br>
 <pre><code>d_softmax = (                                                           
     softmax * np.identity(softmax.size)                                 
     - softmax.transpose() @ softmax)</code></pre>
+          <br>
           The @ symbol calls NumPy's matrix multiplication function.
           The matrix product of the N x 1 softmax transpose and the 1 x N
           softmax is an N x N two dimensional array.
@@ -434,7 +438,17 @@ grad = np.reshape(grad, (1, -1))</code></pre>
         <p>
           Thanks to all this careful setup, we can now calcuate the
           input gradient with just one more matrix multiplication.
+          <br>
 <pre><code>input_grad = grad @ d_softmax</code></pre>
+        </p>
+        <p>
+          This implementation was lifted from the collection
+          of activation functions in the
+          <a href="https://e2eml.school/cottonwood">
+          Cottonwood machine learning framework</a>. You can see the
+          full implementation in the SoftMax class
+          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/core/blocks/activation.py">
+            here</a>.
         </p>
 
         <h4>References and resources</h4>
