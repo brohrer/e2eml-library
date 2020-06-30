@@ -471,7 +471,15 @@ grad = np.reshape(grad, (1, -1))</code></pre>
             Paul Panzer</a> on StackOverflow.
           Because <em>softmax(x) = softmax(x - c)</em>
           for any constant <em>c</em>, we can calculate
-          <em>softmax(x - max(x))</em> instead. This ensures that the
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax Jacobian, expanded"
+            src="images/softmax/def_04_eq:!.png"
+            alt="softmax Jacobian, expanded"
+            style="width: 600px;">
+        </p>
+        <p>
+          instead. This ensures that the
           largest input element is 0, keeping us safe from overflows.
           Even better, it doesn't affect the gradient calculation at all.
           (Thanks to <a href="https://twitter.com/araffin2">Antonin Raffin</a>
