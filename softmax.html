@@ -396,7 +396,7 @@
           The Python code for softmax, given a one dimensional array
           of input values <code>x</code> is short.<br>
 <pre><code>import numpy as np
-softmax = exp(x) / sum(exp(x))</code></pre>
+softmax = np.exp(x) / np.sum(np.exp(x))</code></pre>
         </p>
         <p>
           The backward pass takes a bit more doing. The derivative of the
@@ -413,9 +413,9 @@ grad = np.reshape(grad, (1, -1))</code></pre>
           Then we can create the Jacobean matrix, <code>d_softmax</code>.
         </p>
         <p style="text-align:center;">
-          <img title="softmax backprop"
-            src="images/softmax/softmax_backprop.png"
-            alt="softmax backprop"
+          <img title="softmax Jacobean, expanded"
+            src="images/softmax/softmax_jacobean_expanded.png"
+            alt="softmax Jacobean, expanded"
             style="width: 600px;">
         </p>
         <p>
