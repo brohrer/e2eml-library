@@ -452,15 +452,6 @@ grad = np.reshape(grad, (1, -1))</code></pre>
 <pre><code>input_grad = grad @ d_softmax</code></pre>
         </p>
         <p>
-          This implementation was lifted from the collection
-          of activation functions in the
-          <a href="https://e2eml.school/cottonwood">
-          Cottonwood machine learning framework</a>. You can see the
-          full implementation in the SoftMax class
-          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/core/blocks/activation.py">
-            here</a>.
-        </p>
-        <p>
           When working with exponents, there's a danger of overflow errors
           if the base gets too large. This can easily happen when working
           with the output of a linear layer. To protect ourselves from
@@ -485,6 +476,15 @@ grad = np.reshape(grad, (1, -1))</code></pre>
           (Thanks to <a href="https://twitter.com/araffin2">Antonin Raffin</a>
           for <a href="https://twitter.com/araffin2/status/1277940752056643584?s=20">
             pointing this out</a>.)
+        </p>
+        <p>
+          This implementation was lifted from the collection
+          of activation functions in the
+          <a href="https://e2eml.school/cottonwood">
+          Cottonwood machine learning framework</a>. You can see the
+          full implementation in the SoftMax class
+          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/core/blocks/activation.py">
+            here</a>.
         </p>
 
 
