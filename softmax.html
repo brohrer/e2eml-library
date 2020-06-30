@@ -190,12 +190,22 @@
           at the expense of all others. Multi-label classification
           problems (say, where a photo could be tagged as both "person" and
           "dog" if it has both a person and a dog in it) break this
-          assumption. For multilabel problems the logisitic activation
-          function is your best bet. It represents the affinity of every
+          assumption.
+        </p>
+        <p>
+          For multilabel problems the logisitic activation
+          function is your best bet in theory. It represents the affinity of every
           label separately on a zero to one scale. For some medical
           examples, check out this
           <a href="https://glassboxmedicine.com/2019/05/26/classification-sigmoid-vs-softmax/">
             article by Rachel Draelos</a>.
+          However, <a href="https://arxiv.org/abs/1805.00932">
+            some recent work</a> suggests that softmax works well
+          in this situation too. It may be worth trying both and
+          comparing the results. (Thanks to
+          <a href="https://twitter.com/ducha_aiki">Dmytro Mishkin</a> for
+          <a href="https://twitter.com/ducha_aiki/status/1277936866944221184?s=20">
+            pointing this out</a>.)
         </p>
 
         <h4>Derivative of a PMF normalization</h4>
@@ -329,10 +339,10 @@
           Having the partial derivative of the PMF with respect to
           all of its input elements (also called the
           <a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">
-            Jacobean</a>) gives us a strong start for calculating the
-          Jacobean of the softmax. We'll retrace our steps, making the
+            Jacobian</a>) gives us a strong start for calculating the
+          Jacobian of the softmax. We'll retrace our steps, making the
           modifications we need to for softmax's exponential functions.
-          Starting from the expression for the Jacobean of the
+          Starting from the expression for the Jacobian of the
           softmax
         </p>
         <p style="text-align:center;">
@@ -412,12 +422,12 @@ softmax = np.exp(x) / np.sum(np.exp(x))</code></pre>
 <pre><code>softmax = np.reshape(softmax, (1, -1))
 grad = np.reshape(grad, (1, -1))</code></pre>
           <br>
-          Then we can create the Jacobean matrix, <code>d_softmax</code>.
+          Then we can create the Jacobian matrix, <code>d_softmax</code>.
         </p>
         <p style="text-align:center;">
-          <img title="softmax Jacobean, expanded"
-            src="images/softmax/softmax_jacobean_expanded.png"
-            alt="softmax Jacobean, expanded"
+          <img title="softmax Jacobian, expanded"
+            src="images/softmax/softmax_jacobian_expanded.png"
+            alt="softmax Jacobian, expanded"
             style="width: 600px;">
         </p>
         <p>
@@ -450,6 +460,25 @@ grad = np.reshape(grad, (1, -1))</code></pre>
           <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/core/blocks/activation.py">
             here</a>.
         </p>
+        <p>
+          When working with exponents, there's a danger of overflow errors
+          if the base gets too large. This can easily happen when working
+          with the output of a linear layer. To protect ourselves from
+          this, we can use
+          <a href="https://stackoverflow.com/a/42606665/5830204">
+            a trick</a> described by
+          <a href="https://stackoverflow.com/users/7207392/paul-panzer">
+            Paul Panzer</a> on StackOverflow.
+          Because <em>softmax(x) = softmax(x - c)</em>
+          for any constant <em>c</em>, we can calculate
+          <em>softmax(x - max(x))</em> instead. This ensures that the
+          largest input element is 0, keeping us safe from overflows.
+          Even better, it doesn't affect the gradient calculation at all.
+          (Thanks to <a href="https://twitter.com/araffin2">Antonin Raffin</a>
+          for <a href="https://twitter.com/araffin2/status/1277940752056643584?s=20">
+            pointing this out</a>.)
+        </p>
+
 
         <h4>References and resources</h4>
         <p>
