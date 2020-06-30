@@ -185,11 +185,11 @@
         <p>
           Because it's a PMF, softmax is appropriate for categorization
           tasks where each example only belongs to one category. The
-          whole premise behind the softmax is that it emphasizes the value
+          whole premise behind the softmax is that it emphasizes the element
           with the highest value, the category with the greatest affinity,
           at the expense of all others. Multi-label classification
           problems (say, where a photo could be tagged as both "person" and
-          "dog" if it has both a persona and a dog in it) break this
+          "dog" if it has both a person and a dog in it) break this
           assumption. For multilabel problems the logisitic activation
           function is your best bet. It represents the affinity of every
           label separately on a zero to one scale. For some medical
@@ -373,8 +373,69 @@
         </p>
 
         <h4>Backpropagation</h4>
+        <p>
+          Having the derivative of the softmax means that we can use it
+          in a model that learns its parameter values by means of
+          backpropagation. During the backward pass, a softmax layer
+          receives a gradient, the partial derivative of the loss
+          with respect to its output values. It is expected to provide
+          to upstream layers a partial derivative with respect to
+          its input values. These are related through the softmax
+          derivative by the product rule: the input gradient is the
+          output gradient multiplied by the softmax derivative.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax backprop"
+            src="images/softmax/softmax_backprop.png"
+            alt="softmax backprop"
+            style="width: 600px;">
+        </p>
 
         <h4>Python implementation</h4>
+        <p>
+          The Python code for softmax, given a one dimensional array
+          of input values <code>x</code> is short.<br>
+<pre><code>import numpy as np
+softmax = exp(x) / sum(exp(x))</code></pre>
+        </p>
+        <p>
+          The backward pass takes a bit more doing. The derivative of the
+          softmax is natural to express in a two dimensional array. This
+          will really help in calculating it too. We can make use of
+          NumPy's matrix multiplication to make our code concise, but
+          this will require us to keep careful track of the shapes of
+          our arrays. The first step is to make sure that both the output
+          of the softmax, <code>softmax</code>, and the loss gradient,
+          <code>grad</code>, are both two dimensional arrays with one row
+          and many columns.
+<pre><code>softmax = np.reshape(softmax, (1, -1))
+grad = np.reshape(grad, (1, -1))</code></pre>
+          Then we can create the Jacobean matrix, <code>d_softmax</code>.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax backprop"
+            src="images/softmax/softmax_backprop.png"
+            alt="softmax backprop"
+            style="width: 600px;">
+        </p>
+        <p>
+          The first part of this expression propagates the
+          softmax values down the diagonal (the Kronecker term of the
+          equation), and the second part of this expression creates
+          the other term (the product of softmax values associated with
+          each row and column index).
+<pre><code>d_softmax = (                                                           
+    softmax * np.identity(softmax.size)                                 
+    - softmax.transpose() @ softmax)</code></pre>
+          The @ symbol calls NumPy's matrix multiplication function.
+          The matrix product of the N x 1 softmax transpose and the 1 x N
+          softmax is an N x N two dimensional array.
+        </p>
+        <p>
+          Thanks to all this careful setup, we can now calcuate the
+          input gradient with just one more matrix multiplication.
+<pre><code>input_grad = grad @ d_softmax</code></pre>
+        </p>
 
         <h4>References and resources</h4>
         <p>
