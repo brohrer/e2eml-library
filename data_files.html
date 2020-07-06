@@ -63,6 +63,13 @@ img = np.asarray(Image.open("image_filename.jpg"))</code></pre>
 fig.savefig("filename.png", dpi=300)</code></pre>
         </p>
 
+        <h3>Load a csv as a Python list of dictionaries</h3>
+        <p>
+<pre><code>import csv
+with open('data.csv') as csv_file:
+    list_of_dicts = list(csv.DictReader(csv_file))</code></pre>
+        </p>
+
         <h3>Load a csv as a Pandas DataFrame</h3>
         <p>
 <pre><code>import pandas as pd
