@@ -1,7 +1,7 @@
 document.write('\
         <!-- SIGNATURE -->\
         <p>\
-          <a href="http://brohrer.github.io/index.html">Brandon</a>\
+          <a href="https://e2eml.school">Brandon</a>\
           <br>\
           ' + publication_date + '\
         <\p>\
