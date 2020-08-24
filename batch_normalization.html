@@ -65,26 +65,49 @@
         Normalization can mean different things, but in this case it means making it as close as possible to a Normal distribution: giving it a mean of zero and a variance of one. Step one is to subtract the mean to shift the distribution.
       </p>
 
-      [mean_removal.png]
+
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/mean_removal.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         Step two is to divide all the shifted values by their standard deviation (the square root of the variance).
       </p>
 
-      [unit_var.png]
+
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/unit_var.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         The end result may not have a nice Normal bell shape, but at least it will have a zero mean and unit variance.
       </p>
 
-      [irregular_normalized.png]
+
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/irregular_normalized.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <h3>Batch</h3>
       <p>
         How many observations of a node's activity should be included when normalizing? There is a trade-off. Including too few observations will result in noisy estimates for mean and variance, making the normalization step a source of erratic changes, rather than a source of stability.
       </p>
 
-      [dist_variability.png]
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/dist_variability.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         On the other hand, all the parameters in the model are being updated at every timestep, so if we wait too long, we will in effect be straddling different models and the node's meaning may have changed entirely.
@@ -98,13 +121,23 @@
         This batch-wise normalization of each node's activities ensures that it will appear to produce a set of zero-mean, unit-variance outputs to everything upstream of it in the network. A concise description of this is given by <a href="https://arxiv.org/abs/1502.03167">Ioffe and Szegedy in their 2015 paper</a>
       </p>
 
-      [eq_batch_norm_no_affine.png]
-
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/eq_batch_norm_no_affine.png"
+          alt=""
+          style="height: 300px;">
+      </p>
+      
       <p>
         This occurs element-by-element. Within each batch, the activities of each element are separately shifted and scaled so that they have a zero mean and unit variance within the batch.
       </p>
 
-      [element_wise_normalization.png]
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/element_wise_normalization.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         The mean and variance of one node's activities will be independent from that of another.  
@@ -116,7 +149,12 @@
         There is also an optional scale-and-shift that can be learned to further improve performance, also known as an affine transformation. The shift parameter is represented by beta and the scale parameter by gamma in the full definition of batch normalization.
       </p>
 
-      [eq_batch_norm.png]
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/eq_batch_norm.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         The affine transformation is a popular option. It's the default in Tensorflow and PyTorch. An informal survey of practitioners on
@@ -153,7 +191,12 @@
       <a href="https://twitter.com/dcpage3/status/1171867587417952260?s=20">An accompanying Twitter thread </a> gives additional context.
       </p>
 
-      [david_c_page_before_after.png]
+      <p style="text-align:center;">
+        <img title=""
+          src="images/batch_norm/david_c_page_before_after.png"
+          alt=""
+          style="height: 300px;">
+      </p>
 
       <p>
         He also investigates the curvature (sometimes called "smoothness") of the loss function and finds that the very directions in which the loss function is least smooth are the directions that get adjusted by batch normalization. In other words, batch normalization tends to smooth out the loss function. This allows for more aggressive training rates, and shorter training runs.  
