@@ -2,7 +2,7 @@
 <html>
 
   <script type="text/javascript">var blog_title = "Batch normalization";</script>
-  <script type="text/javascript">var publication_date = "August 28, 2020";</script>
+  <script type="text/javascript">var publication_date = "August 25, 2020";</script>
   <head>
     <link rel="icon" href="images/ml_logo.png">
     <meta charset='utf-8'>
@@ -19,7 +19,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <p>
-          When I first looked into batch normalization, I hated it. It looked like an arbitrary hack. Worse, I had a tough time finding everything I needed to know to see how it worked. Since then I’ve come to see that it's a wildly effective method and that it drops tantalizing hints at deeper machine learning concepts. Here’s the tutorial I wish I had found at the outset.
+          When I first came across batch normalization, I hated it. It looked like an arbitrary hack. Worse, I had a tough time finding everything I needed to know to see how it worked. Since then I’ve come to see that it's a wildly effective method and that it drops tantalizing hints at deeper machine learning concepts. Here’s the tutorial I wish I had found at the outset.
         </p>
 
         <h3>The punchline</h3>
@@ -179,7 +179,7 @@
           Realistically, the first question to ask here is Does it matter? Why should you care about how it works, as long as it brings the loss down? If your focus is on climbing a leaderboard, then it probably doesn't and you can skip this section. But if you'd like to build a deeper intuition for what's going on, and possibly introduce some new customizations to your toolbox, then understanding why batch normalization is so effective can help you out.
         </p>
 
-        <h3>Internal covariate shift</h3>
+        <h4>Internal covariate shift</h4>
         <p>
           This phrase, taken from the title of Ioffe and Szegedy's original batch normalization paper, is described in that paper as the change in nodes' activation distributions due to changes in network weights. The authors give several examples of mechanisms that can cause those distributions to wander far from normal, and postulate ways in which that may hurt its performance or make it difficult to train.
         </p>
@@ -202,12 +202,12 @@
           He also investigates the curvature (sometimes called "smoothness") of the loss function and finds that the very directions in which the loss function is least smooth are the directions that get adjusted by batch normalization. In other words, batch normalization tends to smooth out the loss function. This allows for more aggressive training rates, and shorter training runs.  
         </p>
 
-        <h3>Smoothing of the gradient</h3>
+        <h4>Smoothing of the gradient</h4>
         <p>
           <a href="https://arxiv.org/pdf/1805.11604.pdf">A subsequent paper</a> demonstrates that if you carefully construct your example you can in fact get all the benefits of batch normalization while intentionally inducing distributional shift in nodes' activities. This suggests that stabilizing nodes' activity distributions is a side effect of whatever good thing batch normalization does, rather than the root cause.
         </p>
 
-        <h3>"Internal covariate shift" causes some confusion</h3>
+        <h4>"Internal covariate shift" causes some confusion</h4>
         <p>
           If you care to descend down this rabbit hole,
           <a href="https://twitter.com/aleks_madry/status/1171935705121136641?s=20">
