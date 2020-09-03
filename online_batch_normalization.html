@@ -18,6 +18,24 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+        <h1>DEPRECATED</h1>
+        <p>
+          Since writing this, I learned about
+          <a href="http://papers.nips.cc/paper/9051-online-normalization-for-training-neural-networks.pdf">
+            a paper describing Online Normalization</a>, solving the
+          problem I was trying to solve here, but doing a much better job.
+          If you use the method I describe below, it probably won't
+          work well. Luckily now I have a simplified version of this
+          implemented in Cottonwood. As of version 28, a line like
+<pre><code>import cottonwood.experimental.online_normalization.OnlineNormalization</code></pre>
+          will get it into your code. To get a deeper sense of what batch
+          normalization is doing and how,
+          <a href="https://e2eml.school/batch_normalization.html">
+            check out this post</a> on the topic.
+        </p>
+        <hr>
+        <hr>
+
         <p>
         Batch Normalization (BN) is a learned element-wise shift
         and scale transformation used in deep neural networks.
