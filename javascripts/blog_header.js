@@ -5,7 +5,7 @@ document.write('\
           <h1 id="project_title">' + blog_title + '</h1>\
             <h4>\
               <a id="project_tagline" href="https://e2eml.school/catalog">\
-                Go deeper. Get the End to End Machine Learning course you need.\
+                Find your course. e2eML.school\
               </a>\
             </h4>\
         </header>\
