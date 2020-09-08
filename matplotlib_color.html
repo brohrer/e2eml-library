@@ -80,7 +80,7 @@
 
         <h3>Colormaps</h3>
         <p>
-          When creating an image from a single channel (one two-dimensional
+          When creating an image from a single channel (a two-dimensional
           array),
           <a href="https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html">
           Matplotlib gives you lots of different
@@ -92,9 +92,15 @@
             alt="matplotlib colormaps" style="width: 440px;">
         </a>
 
+        <p>
+          To choose your color scheme, pass the colormap by name to
+          <tt>imshow()</tt>, like this:
+        </p>
+<pre><code>ax.imshow(image, cmap="inferno")</code></pre>
+
         <h3>Create a custom colormap</h3>
         <p>
-          Matplotlib gives you complete control in
+          Matplotlib also gives you complete control in
         <a href="https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html">
           creating your own colormaps</a>. There are several ways to go
           about it, but my favorite is this: make a list of colors you'd
@@ -115,14 +121,11 @@ custom_cmap = LinearSegmentedColormap("my_cmap", ["red", "black", "white"])</cod
           currently exist in the Matplotlib library.
         </p>
         <p>
-          Whatever you do, please colormap responsibly.
+          Whatever you do, please colormap responsibly. If you do this
+          the Internet will get angry:
         </p>
         <img src="https://github.com/brohrer/taming_matplotlib/raw/master/images/atrocious_colormap.png"
             alt="a horrible colormap" style="width: 440px;">
-
-          
-
-
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
