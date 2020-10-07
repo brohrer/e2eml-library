@@ -38,6 +38,10 @@
 /lodgepole          https://gitlab.com/brohrer/lodgepole/    301!
 /lp                 https://gitlab.com/brohrer/lodgepole/    301!
 
+/cifar              https://gitlab.com/brohrer/study-cifar-10   301!
+/cifar-10           https://gitlab.com/brohrer/study-cifar-10   301!
+/cifar10            https://gitlab.com/brohrer/study-cifar-10   301!
+
 # Office Hours blog aliases
 /blog               https://end-to-end-machine-learning.teachable.com/blog    301!
 /office-hours-blog  https://end-to-end-machine-learning.teachable.com/blog    301!
