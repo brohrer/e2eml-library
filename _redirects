@@ -38,6 +38,14 @@
 /lodgepole          https://gitlab.com/brohrer/lodgepole/    301!
 /lp                 https://gitlab.com/brohrer/lodgepole/    301!
 
+/ecg                https://gitlab.com/brohrer/study-ecg-rhythms   301!
+/ecg-rhythms        https://gitlab.com/brohrer/study-ecg-rhythms   301!
+/ecgrhythms         https://gitlab.com/brohrer/study-ecg-rhythms   301!
+
+/mnist              https://gitlab.com/brohrer/study-mnist-digits   301!
+/mnist-digits       https://gitlab.com/brohrer/study-mnist_digits   301!
+/mnistdigits        https://gitlab.com/brohrer/study-mnist_digits   301!
+
 /cifar              https://gitlab.com/brohrer/study-cifar-10   301!
 /cifar-10           https://gitlab.com/brohrer/study-cifar-10   301!
 /cifar10            https://gitlab.com/brohrer/study-cifar-10   301!
