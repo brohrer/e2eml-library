@@ -168,6 +168,18 @@
           and varied in spatial frequency, complexity, and orientation.
         </p>
 
+        <h3>With convolutional layers</h3>
+        <p>
+          When you're working with a convolutional neural network, there's
+          an alternative way to apply sparsity. Instead of choosing just
+          <em>N</em> non-zero values from the entire layer's output,
+          you can choose the output of <em>N</em> channels at each position
+          in the image or signal. This method is implemented in
+          Cottonwood's
+          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/experimental/sparsify.py">
+            SparsifyByChannel2D block</a>.
+        </p>
+
         <h3>Motivation</h3>
         <p>
           Neural networks are very flexible, because they have so many
