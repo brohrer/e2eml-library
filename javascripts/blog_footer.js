@@ -3,8 +3,16 @@ document.write('\
     <div id="footer_wrap" class="outer">\
       <footer class="inner">\
         <section class="clearfix">\
-          <h4><a id="project_tagline" href="http://e2eml.school/courses">\
-            Visit the e2eML course catalog</a></h4>\
+          <a id="project_tagline" href="http://e2eml.school/courses">\
+          <h4>Visit the e2eML course catalog</h4>\
+          <p>\
+            Wherever you are in your machine learning journey\
+            The End to End Machine Learning School has video and\
+            project tutorials to take you to the next level.\
+          </p>\
+          <p>\
+            Come on over for a visit.\
+          </p>\
           <p>\
             <br>\
             <a href="https://creativecommons.org/publicdomain/zero/1.0/">\
