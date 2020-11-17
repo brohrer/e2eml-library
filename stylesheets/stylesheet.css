@@ -110,8 +110,8 @@ footer p {
 }
 
 a {
-  /*text-decoration: none;*/
-  text-decoration: underline;
+  text-decoration: none;
+  /*text-decoration: underline;*/
   text-shadow: none;
   /*font-weight: 700;
   color: #000000; */
@@ -130,7 +130,8 @@ a {
 }
 
 a:visited {
-  color: #04253a;
+  /*color: #04253a;*/
+  color: #487d77;
 }
 
 a:hover, a:focus {
