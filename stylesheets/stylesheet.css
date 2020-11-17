@@ -115,7 +115,8 @@ a {
   text-shadow: none;
   /*font-weight: 700;
   color: #000000; */
-  color: #4c837a;
+  /* color: #4c837a; */
+  color: #3a736a;
   
   transition: color 0.5s ease;
   transition: text-shadow 0.5s ease;
@@ -131,7 +132,7 @@ a {
 
 a:visited {
   /*color: #04253a;*/
-  color: #487d77;
+  color: #22695d;
 }
 
 a:hover, a:focus {
