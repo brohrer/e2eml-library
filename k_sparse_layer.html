@@ -46,7 +46,7 @@
         </p>
         <p>
           The <em>k</em>sparse layer is initialized with a set number
-          of active notes, <em>k</em>. On each forward pass, the <em>k</em>
+          of active nodes, <em>k</em>. On each forward pass, the <em>k</em>
           nodes with
           the highest activity are left unchanged, and all other node
           activities are set to zero. Then forward propagation
@@ -206,7 +206,7 @@
           little bit — to reduce the number of knobs you have to adjust.
         </p>
         <p>
-          In neural networks this is achieved through regular position.
+          In neural networks this is achieved through regularization.
           Regularization is the mathy way of nudging the solution in
           a particular direction, in this case in the direction of having
           fewer knobs to adjust. If we can take a fraction of those
