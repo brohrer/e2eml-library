@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Play and Record Sound";</script>
+  <script type="text/javascript">var publication_date = "November 30, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          Working with sound is cool because it's one of very few ways
+          that the outside world can touch the inside of a computer.
+          When I talk, I shake atoms back and forth, which push and pull
+          on a microphone, which pushes and pulls on electrons in a wire,
+          which gets converted to a voltage, which gets represented as
+          a floating point number for my program to work with. And as
+          a bonus it can turn around and do the reverse. It's all the
+          hardware connections we need to re-create the Star Trek computer
+          voice interface. (The algorithms still need some work.)
+        </p>
+        <h3>Installations</h3>
+        <p>
+          To get set up for sound in Python, you'll need the
+          <tt>sounddevice</tt> and <tt>soundfile</tt> packages.
+          These are cross platform tools
+          (they work on Mac, Windows, and Linux).  <tt>Sounddevice</tt>
+          talks to your machine's speakers and microphone and
+          <tt>soundfile</tt> is good for reading and writing lots of
+          different types of audio files. Both convert sound into
+          NumPy arrays, which is perfect if you want to use it for
+          signal processing and machine learning applications, which we do.
+        </p>
+        <p>
+          At the command line run
+        </p>
+<pre><code>python3 -m pip install sounddevice
+python3 -m pip install soundfile</pre></code>
+        <p>
+          Heads up: if you're working on Linux, you may get
+          <a href="https://techoverflow.net/2019/08/05/how-to-fix-pyaudio-fatal-error-portaudio-h-no-such-file-or-directory/">
+            this "missing portaudio.h" error</a> during the pip installs.
+          If that happens, you'll have to manually install PortAudio,
+          another library that sounddevice relies on. On my Ubuntu machine
+          that is done with
+<pre><code>sudo apt install portaudio19-dev</code></pre>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-10180621-3");
+      pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>
