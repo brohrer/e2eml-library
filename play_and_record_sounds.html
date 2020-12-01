@@ -32,21 +32,21 @@
         <h3>Installations</h3>
         <p>
           To get set up for sound in Python, you'll need the
-          <a href="https://pypi.org/project/sounddevice/">sounddevice</a> and
-          <a href="https://pypi.org/project/SoundFile/">soundfile</a> packages.
+          <a href="https://pypi.org/project/sounddevice/">sounddevice</a>
+          package.
           These are cross platform tools
           (they work on Mac, Windows, and Linux).  Sounddevice
           talks to your machine's speakers and microphone and
           soundfile is good for reading and writing lots of
-          different types of audio files. Both convert sound into
+          different types of audio files.
+          It converts sound to and from
           NumPy arrays, which is perfect if you want to use it for
           signal processing and machine learning applications, which we do.
         </p>
         <p>
           At the command line run
         </p>
-<pre><code>python3 -m pip install sounddevice
-python3 -m pip install soundfile</pre></code>
+<pre><code>python3 -m pip install sounddevice</pre></code>
         <p>
           Heads up: if you're working on Linux, you may get
           <a href="https://techoverflow.net/2019/08/05/how-to-fix-pyaudio-fatal-error-portaudio-h-no-such-file-or-directory/">
@@ -95,6 +95,8 @@ python3 -m pip install soundfile</pre></code>
           This level of convenience for turning arrays into sound opens
           up a lot of possibilities for turning data into
           "auralizations" &mdash; audio representations of data.
+          (<a href="https://python-sounddevice.readthedocs.io/en/0.4.1/api/convenience-functions.html">
+            Here are the docs for <em>play</em> and <em>rec</em>.</a>)
         </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
