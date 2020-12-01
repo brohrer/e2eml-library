@@ -32,11 +32,12 @@
         <h3>Installations</h3>
         <p>
           To get set up for sound in Python, you'll need the
-          <tt>sounddevice</tt> and <tt>soundfile</tt> packages.
+          <a href="https://pypi.org/project/sounddevice/">sounddevice</a> and
+          <a href="https://pypi.org/project/SoundFile/">soundfile</a> packages.
           These are cross platform tools
-          (they work on Mac, Windows, and Linux).  <tt>Sounddevice</tt>
+          (they work on Mac, Windows, and Linux).  Sounddevice
           talks to your machine's speakers and microphone and
-          <tt>soundfile</tt> is good for reading and writing lots of
+          soundfile is good for reading and writing lots of
           different types of audio files. Both convert sound into
           NumPy arrays, which is perfect if you want to use it for
           signal processing and machine learning applications, which we do.
@@ -53,8 +54,48 @@ python3 -m pip install soundfile</pre></code>
           If that happens, you'll have to manually install PortAudio,
           another library that sounddevice relies on. On my Ubuntu machine
           that is done with
+        </p>
 <pre><code>sudo apt install portaudio19-dev</code></pre>
 
+        <p>
+          Python's built in
+          <a href="https://docs.python.org/3/library/wave.html">
+            wave package</a> may also come in handy. It's useful for
+          reading and writing one specific audio format: .wav files.
+          These are nice and generic, so if you had to pick just
+          one audio format to work with it would be a good one.
+        </p>
+
+        <h3>Recording sound</h3>
+        <p>
+          To start recording, we have to specify the number of channels
+          (1 for mono, 2 for stereo) and the number of samples.
+          If our device has a sampling rate of 44,100 samples per
+          second and we want to record for 2 seconds, that would
+          give total of n_samples = 44,100 x 2 = 88,200. (44,100
+          or 48,000 samples per second are what you're most likely
+          to see on your computer.)
+        </p>
+<pre><code>recorded_array = sd.rec(n_samples, channels=2, blocking=True)</code></pre>
+        <p>
+          The <code>blocking=True</code> option forces the rest of your code to
+          wait until the recording is complete before it carries on.
+          This records the audio as a NumPy array, which sets it up for
+          whatever signal processing or machine learning shenanigans
+          you can dream up.
+        </p>
+
+        <h3>Playing sound</h3>
+        <p>
+          There's a complementary one liner to
+          play back a NumPy array as sound.
+        </p>
+<pre><code>sd.play(recorded_array, blocking=True)</code></pre>
+        <p>
+          This level of convenience for turning arrays into sound opens
+          up a lot of possibilities for turning data into
+          "auralizations" &mdash; audio representations of data.
+        </p>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
