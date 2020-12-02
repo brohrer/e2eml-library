@@ -66,7 +66,7 @@
           to see on your computer.)
         </p>
 <pre><code>import sounddevice as sd  
-recorded_array = sd.rec(88200, channels=2, blocking=True)</code></pre>
+recorded_array = sd.rec(n_samples, channels=2, blocking=True)</code></pre>
         <p>
           The <code>blocking=True</code> option forces the rest of your code to
           wait until the recording is complete before it carries on.
