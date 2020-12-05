@@ -1,4 +1,8 @@
 # Redirects for inbound queries
+/home               https://end-to-end-machine-learning.teachable.com/    301!
+/news               https://end-to-end-machine-learning.teachable.com/    301!
+/newsletter         https://end-to-end-machine-learning.teachable.com/    301!
+
 # Course catalog aliases
 /courses            https://end-to-end-machine-learning.teachable.com/courses    301!
 /course             https://end-to-end-machine-learning.teachable.com/courses    301!
