@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Threading in Python";</script>
+  <script type="text/javascript">var publication_date = "December 30, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+        Growing up my family had a Christmas Eve tradition of making
+        <a href="https://en.wikipedia.org/wiki/Wonton">wontons</a>. It took about 10,000 of them to feed our household of eight, and each one had to be folded by hand. My mom calculated that this would have taken her three days to do by herself, so she invented threading.
+        </p>
+
+        <pre><code>import threading</code></pre> 
+
+        <p>
+        She recruited six workers (children) and gave us a stack of wrappers and a big bowl of filling and told us to get to work.  She also set up a pan where we could put our freshly wrapped wontons.
+        </p>
+
+        <pre><code>worker_1 = threading.Thread(target=fold_wontons, args=(pan, wrappers, filling))
+        worker_2 = threading.Thread(target=fold_wontons, args=(pan, wrappers, filling))
+        …
+        worker_1.start()
+        worker_2.start()
+        …</code></pre>
+
+        <p>
+        Using this arrangement, she was able to put us all to work and focus on the task of deep frying. 
+        </p>
+        <p>
+        As each of us finished wrapping a wonton we added it to the pan, putting it at the end of the row. Because we were at different stages of fine motor skill development, our folding rates varied dramatically, but that was OK. We each just added our freshly folded wonton to the end of the row as we finished them.
+        </p>
+
+        <pre><code>def fold_wontons(pan, wrappers, filling):
+            while wrappers > 0 and filling > 0:
+                # It takes about 10 seconds for a 12 year old to fold a wonton. 
+                time.sleep(10)
+                pan.put("wonton")</pre></code>
+
+        <p>
+        Then, as my mom cooked the wontons she would pull from the beginning of the row, the ones that had been on the pan the longest, and throw them in the oil.
+        </p>
+
+        <pre><code>wonton = pan.get()
+        fry(wonton)</pre></code>
+
+        <p>
+        In this way, my mom also invented the first in, first out (FIFO) queue.
+        <p>
+
+        <pre><code>import queue
+        pan = queue.Queue()</code></pre>
+
+        <p>
+        To reach even greater levels of efficiency, my mom moved to a batch processing approach. The wok she used was large and could cook many wontons at once, so she emptied the pan
+        for each batch.
+        </p>
+
+        <pre><code>batch = []
+        try:
+            next_wonton = pan.get_nowait() 
+            batch.append(next_wonton)
+        except queue.Empty:
+            break
+        fry(batch)</code></pre>
+
+        <p>
+        The snippets above aren't entirely complete. Here's a self-contained minimal example.
+        </p>
+
+        <pre><code>import queue                                                                    
+        import threading                                                                
+        import time                                                                     
+                                                                                        
+                                                                                        
+        def fold_wontons(pan):                                                          
+            counter = 0                                                                 
+            while True:                                                                    
+                time.sleep(.1)                                                             
+                pan.put(f"wonton_{counter}")                                               
+                counter += 1
+                                                                                       
+        pan = queue.Queue()                                                                
+        worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)           
+        worker.start()                                                                     
+                                                                                           
+        for i in range(10):                                                                
+            time.sleep(.4)                                                                 
+            print(f"cooking batch {i}")                                                    
+            while True:                                                                    
+                try:                                                                       
+                    next_wonton = pan.get_nowait()                                         
+                    print(next_wonton)                                                     
+                except queue.Empty:                                                        
+                    break</code></pre>
+
+
+        <h3><code>get_nowait()</code></h3>
+        <p>
+        The <code>get_nowait()</code>
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-10180621-3");
+      pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>
