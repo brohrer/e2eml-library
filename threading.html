@@ -19,8 +19,8 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <p>
-        Growing up my family had a Christmas Eve tradition of making
-        <a href="https://en.wikipedia.org/wiki/Wonton">wontons</a>. It took about 10,000 of them to feed our household of eight, and each one had to be folded by hand. My mom calculated that this would have taken her three days to do by herself, so she invented threading.
+        Growing up, my family had a Christmas Eve tradition of making
+        <a href="https://en.wikipedia.org/wiki/Wonton">wontons</a>. It took about 10,000 of them to feed our household of eight, and each one had to be folded by hand. My mom calculated that this would have taken her three days to do alone, so she invented threading.
         </p>
 
         <pre><code>import threading</code></pre> 
@@ -29,12 +29,14 @@
         She recruited six workers (children) and gave us a stack of wrappers and a big bowl of filling and told us to get to work.  She also set up a pan where we could put our freshly wrapped wontons.
         </p>
 
-        <pre><code>worker_1 = threading.Thread(target=fold_wontons, args=(pan, wrappers, filling))
-        worker_2 = threading.Thread(target=fold_wontons, args=(pan, wrappers, filling))
-        …
-        worker_1.start()
-        worker_2.start()
-        …</code></pre>
+<pre><code>worker_1 = threading.Thread(
+    target=fold_wontons, args=(pan, wrappers, filling))
+worker_2 = threading.Thread(
+    target=fold_wontons, args=(pan, wrappers, filling))
+…
+worker_1.start()
+worker_2.start()
+…</code></pre>
 
         <p>
         Using this arrangement, she was able to put us all to work and focus on the task of deep frying. 
