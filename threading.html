@@ -39,74 +39,81 @@ worker_2.start()
 …</code></pre>
 
         <p>
-        Using this arrangement, she was able to put us all to work and focus on the task of deep frying. 
+        Using this arrangement, she was able to put us all to work and focus on the deep frying. 
         </p>
         <p>
-        As each of us finished wrapping a wonton we added it to the pan, putting it at the end of the row. Because we were at different stages of fine motor skill development, our folding rates varied dramatically, but that was OK. We each just added our freshly folded wonton to the end of the row as we finished them.
+        As each of us finished wrapping a wonton, we added it to the pan, putting it at the end of the row. Because we were at different stages of fine motor skill development, our folding rates varied dramatically, but that was OK. We each just added our freshly folded wonton to the end of the row as we finished them.
         </p>
 
-        <pre><code>def fold_wontons(pan, wrappers, filling):
-            while wrappers > 0 and filling > 0:
-                # It takes about 10 seconds for a 12 year old to fold a wonton. 
-                time.sleep(10)
-                pan.put("wonton")</pre></code>
+<pre><code>def fold_wontons(pan, wrappers, filling):
+    while wrappers > 0 and filling > 0:
+        # It takes about 10 seconds for a 13 year old to fold a wonton. 
+        time.sleep(10)
+        pan.put("wonton")</pre></code>
 
-        <p>
+<p>
         Then, as my mom cooked the wontons she would pull from the beginning of the row, the ones that had been on the pan the longest, and throw them in the oil.
         </p>
 
-        <pre><code>wonton = pan.get()
-        fry(wonton)</pre></code>
+<pre><code>wonton = pan.get()
+fry(wonton)</pre></code>
 
         <p>
         In this way, my mom also invented the first in, first out (FIFO) queue.
         <p>
 
-        <pre><code>import queue
-        pan = queue.Queue()</code></pre>
+<pre><code>import queue
+pan = queue.Queue()</code></pre>
 
         <p>
-        To reach even greater levels of efficiency, my mom moved to a batch processing approach. The wok she used was large and could cook many wontons at once, so she emptied the pan
+        To reach even greater levels of efficiency, she moved to a batch processing approach. The wok she used was large and could cook many wontons at once, so she emptied the pan
         for each batch.
         </p>
 
-        <pre><code>batch = []
-        try:
-            next_wonton = pan.get_nowait() 
-            batch.append(next_wonton)
-        except queue.Empty:
-            break
-        fry(batch)</code></pre>
+<pre><code>batch = []
+while True:
+    try:
+        next_wonton = pan.get_nowait() 
+        batch.append(next_wonton)
+    except queue.Empty:
+        break
+fry(batch)</code></pre>
 
+        <p>
+        The <code>try-except</code> block in the <code>while True</code>
+        loop let her repeatedly pull wontons from the pan until there
+        weren't any left to take. Then she fried the whole batch together.
+        </p>
         <p>
         The snippets above aren't entirely complete. Here's a self-contained minimal example.
         </p>
 
-        <pre><code>import queue                                                                    
-        import threading                                                                
-        import time                                                                     
-                                                                                        
-                                                                                        
-        def fold_wontons(pan):                                                          
-            counter = 0                                                                 
-            while True:                                                                    
-                time.sleep(.1)                                                             
-                pan.put(f"wonton_{counter}")                                               
-                counter += 1
-                                                                                       
-        pan = queue.Queue()                                                                
-        worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)           
-        worker.start()                                                                     
-                                                                                           
-        for i in range(10):                                                                
-            time.sleep(.4)                                                                 
-            print(f"cooking batch {i}")                                                    
-            while True:                                                                    
-                try:                                                                       
-                    next_wonton = pan.get_nowait()                                         
-                    print(next_wonton)                                                     
-                except queue.Empty:                                                        
-                    break</code></pre>
+<pre><code>import queue
+import threading                                                                
+import time                                                                     
+                                                                                
+                                                                                
+def fold_wontons(pan):                                                          
+    counter = 0                                                                 
+    while True:                                                                    
+        time.sleep(.1)                                                             
+        pan.put(f"wonton_{counter}")                                               
+        counter += 1
+                                                                               
+
+pan = queue.Queue()                                                                
+worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)           
+worker.start()                                                                     
+                                                                                   
+for i in range(10):                                                                
+    time.sleep(.4)                                                                 
+    print(f"cooking batch {i}")                                                    
+    while True:                                                                    
+        try:                                                                       
+            next_wonton = pan.get_nowait()                                         
+            print(next_wonton)                                                     
+        except queue.Empty:                                                        
+            break</code></pre>
 
 
         <h3><code>get_nowait()</code></h3>
