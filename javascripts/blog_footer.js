@@ -3,7 +3,7 @@ document.write('\
     <div id="footer_wrap" class="outer">\
       <footer class="inner">\
         <section class="clearfix">\
-          <a id="project_tagline" href="http://e2eml.school/courses">\
+          <a id="footer_message" href="http://e2eml.school/courses">\
           <p>\
             The End to End Machine Learning School is\
             a collection of project-centered tutorials designed to\

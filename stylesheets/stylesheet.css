@@ -110,8 +110,8 @@ footer p {
 }
 
 a {
-  text-decoration: none;
-  /*text-decoration: underline;*/
+  /*text-decoration: none;*/
+  text-decoration: underline;
   text-shadow: none;
   /*font-weight: 700;
   color: #000000; */
@@ -387,6 +387,16 @@ Full-Width Styles
   color: #e1ddbf;
   font-size: 24px;
   font-weight: 700;
+  background: none;
+  text-shadow: #111 0px 0px 10px;
+  text-decoration: none;
+}
+
+#footer_message {
+  /* color: #fff; */
+  color: #e1ddbf;
+  font-size: 18px;
+  /*font-weight: 700;*/
   background: none;
   text-shadow: #111 0px 0px 10px;
   text-decoration: none;
