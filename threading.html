@@ -89,30 +89,30 @@ fry(batch)</code></pre>
         </p>
 
 <pre><code>import queue
-import threading                                                                
-import time                                                                     
-                                                                                
-                                                                                
-def fold_wontons(pan):                                                          
-    counter = 0                                                                 
-    while True:                                                                    
-        time.sleep(.1)                                                             
-        pan.put(f"wonton_{counter}")                                               
-        counter += 1
-                                                                               
+import threading
+import time
 
-pan = queue.Queue()                                                                
-worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)           
-worker.start()                                                                     
-                                                                                   
-for i in range(10):                                                                
-    time.sleep(.4)                                                                 
-    print(f"cooking batch {i}")                                                    
-    while True:                                                                    
-        try:                                                                       
-            next_wonton = pan.get_nowait()                                         
-            print(next_wonton)                                                     
-        except queue.Empty:                                                        
+
+def fold_wontons(pan):
+    counter = 0
+    while True:
+        time.sleep(.1)
+        pan.put(f"wonton_{counter}")
+        counter += 1
+
+
+pan = queue.Queue()
+worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)
+worker.start()
+
+for i in range(10):
+    time.sleep(.4)
+    print(f"cooking batch {i}")
+    while True:
+        try:
+            next_wonton = pan.get_nowait()
+            print(next_wonton)
+        except queue.Empty:
             break</code></pre>
 
         <p>
@@ -147,26 +147,27 @@ for i in range(10):
         </p>
         <p>
         A third way of doing this is to declare the thread to be a daemon. That means it’ll go off and keep doing its thing, but as soon as the program that created it stops running it will automatically die. This is helpful for setting up a thread that continually grabs the latest packet or video frame and places it on a queue where it waits to be used by the main program. The convenience of a daemon is that you don't have to worry about closing it down.
-        You can declare a threat to be a daemon when you create it with a <code>daemon=True</code> argument.
+        You can declare a threat to be a daemon when you create it with a <code>daemon=True</code> argument, as in the example above.
         </p>
 
         <h4>Thread safety</h4>
         <p>
-        One gotcha with threads is that there can be confusion if two of them are both trying to change the same variable at the same time. This would be like two children placing their freshly rolled wontons into the same location on the pan at the same time. Making Christmas Eve dinner, physics is on our side and prevents this from happening. But in multithreaded programs this can happen easily if you’re not careful. In that case, whoever placed their wonton last would overwrite any previous wontons in that location. This is obviously not OK, and we would like to prevent it.
+        One gotcha with threads is that there can be confusion if two of them are both trying to change the same variable at the same time. This would be like two children placing their freshly rolled wontons into the same location on the pan at the same time. Making Christmas Eve dinner, physics helps out and makes this impossible. But in multithreaded programs this can happen easily if you’re not careful. In that case, whoever placed their wonton last would overwrite any previous wontons in that location. This is obviously not OK, and we would like to prevent it.
         </p>
         <p>
         The way competing threads ensure that they don’t overwrite each other’s hard work is by using locks. I’ll save the details of these for another post, but if you picture one thread warning all the others not to put a wonton on the pan until they’re done placing theirs, that's a reasonable mental model. In the code above we didn’t have to worry about that because
         <a href="https://docs.python.org/3/library/queue.html#module-queue">the Queue class</a> has all of that built-in. It is a thread safe data type. That makes it especially useful for communication between threads.
         </p>
+        <h4>Threads are most useful for code that waits</h4>
         <p>
-        Threads are particularly useful when your code spends a lot of its time waiting on something else. It may have to wait to get some network packets, video frames, audio snippets, or it may have to coordinate with her other processes like expensive calculations or rendering routines. Whatever the cause, if your code spends a significant portion of his time waiting on external events, then it might be a good candidate for threading. With multiple threads, one part of your code can be waiting for that next video frame while the other part can be busy doing something else useful.
+        Threads are particularly useful when your code spends a lot of its time waiting on something else. It may have to wait to get some network packets, video frames, audio snippets, or it may have to coordinate with other processes like expensive calculations or rendering routines. Whatever the cause, if your code spends a significant portion of its time waiting on external events, then it might be a good candidate for threading. With multiple threads, one part of your code can be waiting for that next video frame while the other part can be busy doing something else useful.
         </p>
         <p>
-        Threading will only speed up your code if spends a lot time waiting around. Even after breaking your program up into several threads, they still are part of one process, that is, they take the form of a single set of instructions that run on a single processor in your computer. If your code is already using all the cycles on one processor, then breaking it up into threads won’t change that. (For that you want Python's
+        Threading will only speed up your run times if your code is spending a lot time waiting around. Even after breaking your program up into several threads, they still are part of one process, that is, they take the form of a single set of instructions that run on a single processor in your computer. If your code is already using all the cycles on one processor, then breaking it up into threads won’t change that. (For that you want Python's
         <a href="https://docs.python.org/3/library/multiprocessing.html">multiprocessing package</a>. Here’s <a href="https://e2eml.school/multiprocessing.html">a streamlined introduction</a> to it.)
         </p>
         <p>
-        Another good reason to use threading is that it can streamline your code. You can accomplish almost everything that threading does with some clever flow control, but it will make your code a whole lot less readable. Setting up multiple threads can make it a lot easier to explain and to figure out what the hell you were thinking when you come back to your code a month from now.
+        Another good reason to use threading is that it can simplify your code. You can accomplish almost everything that threading does with some clever flow control, but it will make your code a whole lot less readable. Setting up multiple threads can make it easier to explain to a colleague or a rubber duck. You'll be grateful when you come back to it a month from now and try to figure out what the hell you were thinking when you wrote it.
         </p>
 
 
