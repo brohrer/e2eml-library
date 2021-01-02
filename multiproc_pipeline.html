@@ -107,7 +107,7 @@ for i in range(1000):
           Create <a href="https://docs.python.org/3/library/multiprocessing.html#shared-ctypes-objects">
           a special object</a> for sharing values between
           the two processes. This is the dead drop where one process
-          can write a set of value and the other can read from it.
+          can write a set of values and the other can read from it.
           All of the trickiness of making sure both processes know where
           in memory to find this object and preventing them both from
           changing it at the same time is taken care of for you. This
@@ -115,7 +115,8 @@ for i in range(1000):
           This particular object is a two-element array of doubles ('d').
           There are also objects available for single values and
           <a href="https://docs.python.org/3/library/multiprocessing.html#exchanging-objects-between-processes">queues</a>,
-          and if those aren't enough for you, you can use a Manager to
+          and if those aren't enough for you, you can use a
+          <a href="https://docs.python.org/3/library/multiprocessing.html#managers">Manager</a> to
           share any other object type you want.
         </p>
       
@@ -145,8 +146,9 @@ for i in range(1000):
           Declare the new child process to be a daemon. This means that
           when the parent process dies for any reason, the child process
           will be killed too. This saves you from having to explicitly
-          track and clean up after each process separately. If you
-          need to do this, for instance, to gracefully shut down a
+          track and clean up after each process separately. However, if you
+          need to close your child process explicitly,
+          for instance, to gracefully shut down a
           connection or close a file, you can skip the daemon argument
           and use an
           <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event"</a>Event</a>
@@ -172,11 +174,11 @@ for i in range(1000):
         <h2>What about threading?</h2>
         <p>
           In situations where you're not running low on CPU cycles,
-          <a href"https://docs.python.org/3/library/threading.html">
+          <a href="https://docs.python.org/3/library/threading.html">
             Python's threading library</a> is a fine alternative for
           decoupling your code.
-          <a href="https://e2eml.school/threading.html">
-            Here's an example of how</a>.
+          (<a href="https://e2eml.school/threading.html">
+            Here's an example of how</a>.)
           There's about 90% similarity between the two libraries,
           so you can almost copy and paste multiprocessing code to
           get multi-threaded code.
