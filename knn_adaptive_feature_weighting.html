@@ -95,7 +95,7 @@
           This method introduces two new parameters. The first is a waiting period of how many data points to collect before first trying to adjust feature weights,
           <code>loocv_delay</code>. Starting with too few data points could lead to some degenerate optimization runs and poor feature weights. The other parameter is how often to try a new set of feature weights,
           <code>loocv_interval</code>. In practice, on a data set with over 40,000 points, I have found that a
-          <code>loocv_delay = 1000</code and a
+          <code>loocv_delay = 1000</code> and a
           <code>loocv_interval = 10</code> works well, but my experimentation suggests that performance is not very sensitive to either of those numbers.
         </p>
         <h3>Prior work?</h3>
