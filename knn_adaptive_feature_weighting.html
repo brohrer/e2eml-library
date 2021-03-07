@@ -93,10 +93,10 @@
         </p>
         <p>
           This method introduces two new parameters. The first is a waiting period of how many data points to collect before first trying to adjust feature weights,
-          <code>loocv_delay</code>. Starting with too few data points could lead to some degenerate optimization runs and poor feature weights. The other parameter is how often to try a new set of feature weights,
-          <code>loocv_interval</code>. In practice, on a data set with over 40,000 points, I have found that a
-          <code>loocv_delay = 1000</code> and a
-          <code>loocv_interval = 10</code> works well, but my experimentation suggests that performance is not very sensitive to either of those numbers.
+          <code>weight_adjustment_delay</code>. Starting with too few data points could lead to some degenerate optimization runs and poor feature weights. The other parameter is how often to try a new set of feature weights,
+          <code>weight_adjustment_interval</code>. In practice, on a data set with over 40,000 points, I have found that a
+          <code>weight_adjustment_delay = 1000</code> and a
+          <code>weight_adjustment_interval = 10</code> works well, but my experimentation suggests that performance is not very sensitive to either of those numbers.
         </p>
         <h3>Prior work?</h3>
         <p>
@@ -117,8 +117,8 @@
         <p>
           The strength of this method is that it requires very little twiddling . While there are hyperparameters to choose, the
           <code>weight_scale_step</code>, the termination criterion, and for the online implementation,
-          the <code>loocv_delay</code> and
-          <code>loocv_interval</code>, experience suggests that the results are insensitive to the exact values of these and that reasonable defaults provide results every bit as good as carefully chosen values. The ability to get high-quality answers without extensive fiddling makes this method a rarity.
+          the <code>weight_adjustment_delay</code> and
+          <code>weight_adjustment_interval</code>, experience suggests that the results are insensitive to the exact values of these and that reasonable defaults provide results every bit as good as carefully chosen values. The ability to get high-quality answers without extensive fiddling makes this method a rarity.
         </p>
 
 
