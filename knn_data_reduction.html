@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <script type="text/javascript">var blog_title = "Data reduction for efficient k-nearest neighbors";</script>
+  <script type="text/javascript">var blog_title = "Data reduction for efficient <em>k-</em>nearest neighbors";</script>
   <script type="text/javascript">var publication_date = "March 23, 2021";</script>
   <head>
     <link rel="icon" href="images/ml_logo.png">
@@ -19,7 +19,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <p>
-          The thing that makes k-nearest neighbors is challenging to use
+          The thing that makes <em>k-</em>nearest neighbors is challenging to use
           with large data sets is the time it takes to calculate the distance
           between each new data point and all the previously observed
           data points. One strategy for dealing with this is to be selective
@@ -47,7 +47,7 @@
         <h2>Early stopping with replacement</h2>
         <p>
           Early stopping is a surprisingly effective way to get
-          an efficient k-nearest neighbors model, as long as the first
+          an efficient <em>k-</em>nearest neighbors model, as long as the first
           <code>n_examples</code> are representative of the entire data set.
           This is likely to happen when the data set has been shuffled
           beforehand, but otherwise it’s not at all guaranteed.
@@ -68,8 +68,7 @@
           random subsampling.
         </p>
 
-        <h2>Active replacement: Keep misclassified or wrongly
-        predicted points</h2>
+        <h2>Keep misclassified or wrongly predicted points</h2>
         <p>
           Random subsampling performs surprisingly well, but it’s tempting
           to try to improve on it. How to best do this is still an open
@@ -95,14 +94,14 @@
           examples in a data set. It overrepresents outliers and anomalies.
           The flipside of this is that it underrepresents easy to predict
           examples. This is exactly what we want. It focuses the resources
-          of our k-nearest neighbors model in the trickiest regions of
+          of our <em>k-</em>nearest neighbors model in the trickiest regions of
           the feature space.
         </p>
         <p>
           The parts of the feature space with many similar examples get
           thinned out a little bit. Having a large cluster of points with
           similar labels adds a computational burden to the model
-          without adding much information. Because k-nearest neighbors
+          without adding much information. Because <em>k-</em>nearest neighbors
           is local, including anomalies doesn’t hurt its performance,
           even if they are errors.
         </p>
