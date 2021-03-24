@@ -19,6 +19,47 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <p>
+          The thing that makes k-nearest neighbors is challenging to use
+          with large data sets is the time it takes to calculate the distance
+          between each new data point and all the previously observed
+          data points. One strategy for dealing with this is to be selective
+          about which previously seen data points to keep.
+          A straightforward approach is to select a random subset.
+        </p>
+        <p>
+          This performs surprisingly well, but it’s tempting to try and
+          improve upon it. Efficient data reduction for KNN is
+          an open research problem. Here’s one method that performs better
+          than random subsetting. It's shown implemented in an online
+          fashion, where each data point is processed at one at a time.
+        </p>
+
+        <h2>Early stopping</h2> 
+        <p>
+          The simplest approach is to simply stop collecting points after
+          a certain point, <kbd>n_examples</kbd>. For all points
+          with index <var>i_example < n_examples</var>, add it to the
+          collection or retained points, <samp>keepers</samp>. After that,
+          for <code>i_example >= n_examples</code>, discard all new data
+          points.
+
+        </p>
+
+        <h2>Early stopping with replacement</h2>
+        <p>
+          Open till the desired number of points, and examples, keep all of them. After that for each eighth point, replace a randomly selected. Point with each ice point with probability,.
+        </p>
+
+
+        <h2>Active replacement</h2>
+        <p>
+        </p>
+
+
+        <h2>Keep misclassified or wrongly predicted points</h2>
+        <p>
+        </p>
+
 
         </p>
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
