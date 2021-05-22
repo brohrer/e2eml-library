@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <script type="text/javascript">var blog_title = "";</script>
+  <script type="text/javascript">var blog_title = "Data types in Python";</script>
   <script type="text/javascript">var publication_date = "May 23, 2021";</script>
   <head>
     <link rel="icon" href="images/ml_logo.png">
@@ -43,7 +43,7 @@
           <li>
             a Boolean (<code>bool</code>)
           </li>
-          </ul>>
+          </ul>
           or some amalgam of these.
         </p>
         <p>
@@ -61,8 +61,8 @@
           Booleans are either True or False.
         </p>
 
-        <h2>Why types are confusing
-          <br>Part I: They mean the same thing</h2>
+        <h2>Why types are confusingg</h2>
+        <h3>Part I: They mean the same thing</h3>
         <p>
           Mathematically, we know that the integer 1
           and the floating point number 1.0 mean the same thing.
@@ -76,8 +76,7 @@
           A bit by bit comparison would show they are not even close.
         </p>
 
-        <h2>Why types are confusing<br>
-          Part II: They look the same</h2>
+        <h3>Part II: They look the same</h3>
         <p>
           Sometimes different types can look identical when you put them
           in a print statement. The number three is an abstract thing,
@@ -94,12 +93,13 @@
           types and might mean something different.
         </p>
 
-        <h2>Why types are confusing<br>
-          Part III: Python doesn't check them</h2>
+        <h3>Part III: Python doesn't check them</h3>
         <p>
           Consider this <code>add()</code> function.
+
 <pre><code>def add(a, b):
     return a + b</code></pre>
+
           Nowhere does it specify whether <code>a</code> and <code>b</code> 
           should be integers, floats, or strings. A lot of other languages
           require this, but Python doesn't. All it cares is that whatever
@@ -123,8 +123,7 @@
         </p>
 
 
-        <h2>Why types are confusing<br>
-          Part IV: Python automatically changes them</h2>
+        <h3>Part IV: Python automatically changes them</h3>
         <p>
           In an effort to be helpful, Python also does some automatic type
           conversion without you even asking, called <em>implicit casting</em>.
