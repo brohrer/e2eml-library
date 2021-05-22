@@ -20,7 +20,7 @@
       <section id="main_content" class="inner">
         <p>
           Data types are the broccoli of Python, not the most exciting thing
-          on the plate but sooo good for you.
+          on the plate but soooo good for you.
         </p>
         <p>
           If you are relatively new to Python, this will give you
@@ -32,36 +32,28 @@
           Most of what we work with in Python is either
           <ul>
           <li>
-            an integer (<code>int</code>)
+            an integer (<code>int</code>)<br>
+            Integers are whole numbers like 1, 2, 300, 10 million, 0, or -7.
           </li>
           <li>
-            a floating point number (<code>float</code>)
+            a floating point number (<code>float</code>)<br>
+            Floating point numbers are numbers with a decimal place, like
+            6.4, -.9, .0001, or 500.005.
           </li>
           <li>
-            a string of characters (<code>str</code>)
+            a string of characters (<code>str</code>)<br>
+            Strings are sequences of characters, like "Bob", "abracadabra",
+            "xvCd5Kp6q", "%#*$", "z", and can even include emojis.
           </li>
           <li>
-            a Boolean (<code>bool</code>)
+            a Boolean (<code>bool</code>)<br>
+            Booleans are either True or False.
           </li>
           </ul>
           or some amalgam of these.
         </p>
-        <p>
-          Integers are whole numbers like 1, 2, 300, 10 million, 0, or -7.
-        </p>
-        <p>
-          Floating point numbers are numbers with a decimal place, like
-          6.4, -.9, .0001, or 500.005.
-        </p>
-        <p>
-          Strings are sequences of characters, like "Bob", "abracadabra",
-          "xvCd5Kp6q", "%#*$", "z", and can even include emojis.
-        </p>
-        <p>
-          Booleans are either True or False.
-        </p>
 
-        <h2>Why types are confusingg</h2>
+        <h2>Why types are confusing</h2>
         <h3>Part I: They mean the same thing</h3>
         <p>
           Mathematically, we know that the integer 1
@@ -96,10 +88,10 @@
         <h3>Part III: Python doesn't check them</h3>
         <p>
           Consider this <code>add()</code> function.
-
+        </p>
 <pre><code>def add(a, b):
     return a + b</code></pre>
-
+        <p>
           Nowhere does it specify whether <code>a</code> and <code>b</code> 
           should be integers, floats, or strings. A lot of other languages
           require this, but Python doesn't. All it cares is that whatever
