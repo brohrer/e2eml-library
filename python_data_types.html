@@ -53,6 +53,56 @@
           or some amalgam of these.
         </p>
 
+        <p>
+          There's a convenient built-in function <code>type()</code>
+          that can tell you the type of a variable.
+        </p>
+
+<pre><code>>>> a = 8
+>>> print(type(a))
+<class 'int'></code></pre>
+
+        <p>
+          This is also great for checking whether a variable is of a
+          particular type.
+        </p>
+
+<pre><code>>>> print(type(a) == int)
+True</code></pre>
+
+        <p>
+          Python also has the power to transform variables from one type
+          to another. Whenever there's a reasonble way to do it. The
+          casting functions are named after the types:
+          <code>int()</code>,
+          <code>float()</code>,
+          <code>str()</code>, and
+          <code>bool()</code>.
+        </p>
+
+<pre><code># Start with a str
+>>> b = "5.0"
+>>> print(b)
+5.0
+>>> print(type(b))
+<class 'str'>
+
+# Cast a str to a float
+>>> c = float(b)
+>>> print(c)
+5.0
+>>> print(type(c))
+<class 'float'>
+
+# Cast a float to an int
+>>> d = int(c)
+>>> print(d)
+5
+>>> print(type(d))
+<class 'int'></code></pre>
+
+
+
         <h2>Why types are confusing</h2>
         <h3>Part I: They mean the same thing</h3>
         <p>
