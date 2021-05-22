@@ -105,7 +105,7 @@ True</code></pre>
 
 
         <h2>Why types are confusing</h2>
-        <h3>Part I: They mean the same thing</h3>
+        <h3>Part I: Different types can mean the same thing</h3>
         <p>
           Mathematically, we know that the integer 1
           and the floating point number 1.0 mean the same thing.
@@ -119,24 +119,24 @@ True</code></pre>
           A bit by bit comparison would show they are not even close.
         </p>
 
-        <h3>Part II: They look the same</h3>
+        <h3>Part II: Different types can look the same</h3>
         <p>
           Sometimes different types can look identical when you put them
           in a print statement. The number three is an abstract thing,
           but it can be represented by a character, the numeral "3".
-          To show a numbers, a
+          To show a number, a
           computer first has to translate it into a sequence of
           characters. Minus seventeen becomes "-17".
           One and a half becomes "1.5". After this translation happens,
           you can't tell whether the "1.5" you see on the screen was
           originally the floating point representation of one
-          and a half or the character string "1", ".". "5". They
+          and a half or the character string "1", ".", and "5". They
           end up looking identical on the screen. This makes it
-          easy to forget that might actually have originated as different
+          easy to forget that they might actually have originated as different
           types and might mean something different.
         </p>
 
-        <h3>Part III: Python doesn't check them</h3>
+        <h3>Part III: Python doesn't check types</h3>
         <p>
           Consider this <code>add()</code> function.
         </p>
@@ -150,7 +150,7 @@ True</code></pre>
           for this is <em>duck typing</em>, as in "if it walks like a
           duck and talks lke a duck (and in our case, adds like a duck),
           then we'll call it a duck". As long as the variables can do whatever
-          is asked of them, Python doesn't care what they are. Nevermind
+          is asked of them, Python doesn't care what they are. Never mind
           that the plus operator adds integers and concatenates strings.
           As long is the code can be carried out on the arguments, then
           that's good enough for Python.
@@ -158,7 +158,7 @@ True</code></pre>
         <p>
           This flexibility can take some of the pressure off to have
           your functions know exactly what types they need to handle, and
-          it give allow your functions to handle several types seamlessly,
+          it can allow your functions to handle several types seamlessly,
           but it can also cause trouble. If you are thinking that
           <code>a</code> and <code>b</code> are integers when they are actually
           strings, the <code>add()</code> function will be happy to let you
@@ -166,14 +166,14 @@ True</code></pre>
         </p>
 
 
-        <h3>Part IV: Python automatically changes them</h3>
+        <h3>Part IV: Python automatically changes variables' types</h3>
         <p>
           In an effort to be helpful, Python also does some automatic type
           conversion without you even asking, called <em>implicit casting</em>.
           It's really helpful if you're trying to add 7, an integer, to 3.3,
           a float. Integers and floating point numbers are apples and oranges.
           They can't be meaningfully added. Fortunately, Python has some
-          built in logic that interprets this as a request to add the
+          built-in logic that interprets this as a request to add the
           floating point number 7 to 3.3, and gives that intuitive result 10.3.
         </p>
         <p>
