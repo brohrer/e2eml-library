@@ -29,6 +29,8 @@
           It won’t be exhaustive, but it will keep you from shooting
           yourself in the foot.
         </p>
+
+        <h2>The big four</h2>
         <p>
           Most of our variables in Python are either
           <ul>
@@ -54,6 +56,7 @@
           or some amalgam of these.
         </p>
 
+        <h2>Find out a variable's type</h2>
         <p>
           There's a convenient built-in function <code>type()</code>
           that can tell you the type of a variable.
@@ -71,6 +74,7 @@
 <pre><code>>>> print(type(a) == int)
 True</code></pre>
 
+        <h2>Cast a variable from one type to another</h2>
         <p>
           Python also has the power to transform variables from one type
           to another, whenever there's a reasonble way to do it. The
@@ -136,6 +140,17 @@ True</code></pre>
           types and might mean something different.
         </p>
 
+<pre><code>>>> a = "1.5"
+>>> print(type(a))
+<class 'str'>
+
+>>> b = 1.5
+>>> print(type(b))
+<class 'float'>
+
+>>> print(a, b)
+1.5 1.5</code></pre>
+
         <h3>Part III: Python doesn't check types</h3>
         <p>
           Consider this <code>add()</code> function.
@@ -155,6 +170,12 @@ True</code></pre>
           As long is the code can be carried out on the arguments, then
           that's good enough for Python.
         </p>
+<pre><code>>>> add(4, 7)
+11
+
+>>> add ("some", "strings")
+'somestrings'</code></pre>
+
         <p>
           This flexibility can take some of the pressure off to have
           your functions know exactly what types they need to handle, and
@@ -176,6 +197,21 @@ True</code></pre>
           built-in logic that interprets this as a request to add the
           floating point number 7 to 3.3, and gives that intuitive result 10.3.
         </p>
+
+<pre><code>>>> m = 7
+>>> print(type(m))
+<class 'int'>
+
+>>> n = 3.3
+>>> print(type(n))
+<class 'float'>
+
+>>> p = m + n
+>>> print(p)
+10.3
+>>> print(type(p))
+<class 'float'></code></pre>
+
         <p>
           This all happens without any pedantic error messages and is
           part of Python's appeal as a first programming language.
@@ -190,7 +226,11 @@ True</code></pre>
         <p>
           Python does everything in its power to let you ignore types.
           But like religion, kids, and how to hang the toilet paper, it's
-          a conversation you can only put off for so long.
+          a conversation you can only put off for so long. Once you have
+          a clear mental picture of your variables types and how
+          Python is interpreting them, you'll be able to avoid some
+          extremely painful debugging and walk more confidently through your
+          coding projects.
         </p>
 
 
