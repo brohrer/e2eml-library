@@ -19,11 +19,8 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <p>
-          Data types are the broccoli of Python. They're
-          not the most exciting thing
-          on the plate, but they're soooo good for you.
-        </p>
-        <p>
+          Like religion, kids, and how to hang the toilet paper, data types
+          are a conversation you can only put off for so long.
           If you are relatively new to Python, this will give you
           a good enough understanding to get started with.
           It won’t be exhaustive, but it will keep you from shooting
@@ -106,10 +103,8 @@ True</code></pre>
 >>> print(type(d))
 &lt;class 'int'&gt;</code></pre>
 
-
-
-        <h2>Why types are confusing</h2>
-        <h3>Part I: Different types can mean the same thing</h3>
+        <h2>Four secrets to keeping track of your variables' types</h2>
+        <h3>1. Different types can mean the same thing</h3>
         <p>
           Mathematically, we know that the integer 1
           and the floating point number 1.0 mean the same thing.
@@ -123,7 +118,7 @@ True</code></pre>
           A bit by bit comparison would show they are not even close.
         </p>
 
-        <h3>Part II: Different types can look the same</h3>
+        <h3>2. Different types can look the same</h3>
         <p>
           Sometimes different types can look identical when you put them
           in a print statement. The number three is an abstract thing,
@@ -151,7 +146,7 @@ True</code></pre>
 >>> print(a, b)
 1.5 1.5</code></pre>
 
-        <h3>Part III: Python doesn't check types</h3>
+        <h3>3. Python doesn't check types</h3>
         <p>
           Consider this <code>add()</code> function.
         </p>
@@ -187,7 +182,7 @@ True</code></pre>
         </p>
 
 
-        <h3>Part IV: Python automatically changes variables' types</h3>
+        <h3>4. Python can automatically change variables' types</h3>
         <p>
           In an effort to be helpful, Python also does some automatic type
           conversion without you even asking, called <em>implicit casting</em>.
@@ -222,11 +217,11 @@ True</code></pre>
           up-cast from integer to float. It's not a fatal flaw, but it
           can bite you in the butt occassionally.
         </p>
-
+        <hr>
+        <br>
         <p>
           Python does everything in its power to let you ignore types.
-          But like religion, kids, and how to hang the toilet paper, it's
-          a conversation you can only put off for so long. Once you have
+          But once you have
           a clear mental picture of your variables types and how
           Python is interpreting them, you'll be able to avoid some
           extremely painful debugging and walk more confidently through your
