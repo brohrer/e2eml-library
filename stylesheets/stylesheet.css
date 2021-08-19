@@ -56,6 +56,7 @@ https://www.slideteam.net/blog/9-beautiful-color-palettes-for-designing-powerful
 #4c837a : green
 
 https://visme.co/blog/website-color-schemes/
+#182628 turquoise black
 #687864 green gray
 #31708E deep sea
 #5085A5 dawn blue
@@ -65,8 +66,8 @@ https://visme.co/blog/website-color-schemes/
 
 body {
   box-sizing: border-box;
-  color: #5085a5;
-  background: #5085a5;
+  color: #182628;
+  background: #182628;
   font-size: 16px;
   font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -76,7 +77,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
   font-weight: 700;
-  color: #5085a5;
+  color: #182628;
   font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
   letter-spacing: -1px;
 }
@@ -122,7 +123,7 @@ a {
   text-shadow: none;
   /*font-weight: 700;
   color: #000000; */
-  color: #5085a5;
+  color: #182628;
   /* color: #3a736a; */
   
   transition: color 0.5s ease;
@@ -138,8 +139,8 @@ a {
 }
 
 a:visited {
-  /*color: #5085a5;*/
-  color: #22695d;
+  color: #182628;
+  /*color: #22695d;*/
 }
 
 a:hover, a:focus {
@@ -192,14 +193,14 @@ pre, code, var {
 }
 
 var {
-  color: #5085a5;
+  color: #182628;
 }
 
 pre, code {
   font-size: 14px;
   width: 100%;
   color: #f7f9fb; 
-  background: #5085a5;
+  background: #182628;
   border-radius: 2px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
   -moz-border-radius: 2px;
@@ -366,12 +367,12 @@ Full-Width Styles
   background: -o-linear-gradient(top, #373737, #212121);
   background: linear-gradient(top, #373737, #212121);
   */
-  background: #5085a5;
-  /* background: -moz-linear-gradient(top, #08293f, #5085a5);
-  background: -webkit-linear-gradient(top, #08293f, #5085a5);
-  background: -ms-linear-gradient(top, #08293f, #5085a5);
-  background: -o-linear-gradient(top, #08293f, #5085a5);
-  background: linear-gradient(top, #08293f, #5085a5); */
+  background: #182628;
+  /* background: -moz-linear-gradient(top, #08293f, #182628);
+  background: -webkit-linear-gradient(top, #08293f, #182628);
+  background: -ms-linear-gradient(top, #08293f, #182628);
+  background: -o-linear-gradient(top, #08293f, #182628);
+  background: linear-gradient(top, #08293f, #182628); */
 }
 
 #header_wrap .inner {
@@ -449,7 +450,7 @@ Full-Width Styles
 }
 
 #footer_wrap {
-  background: #5085a5;
+  background: #182628;
   text-decoration: none;
 }
 
