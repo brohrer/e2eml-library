@@ -202,6 +202,7 @@ p img {
   margin: 15px;
   /*padding: 10px;*/
   padding: 0px;
+  border: 1px solid #212e53;
   vertical-align: middle;
   text-align: center;
   border: none;
