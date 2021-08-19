@@ -4,8 +4,13 @@ by Jason Costello, @jsncostello
 modified slightly by Brandon Rohrer
 *******************************************************************************/
 
-@import url(github-light.css);
-@import url('fonts/Lato-Regular.tff');
+/*@import url(github-light.css);*/
+
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Regular.ttf')
+    format('truetype')
+}
 
 /*******************************************************************************
 MeyerWeb Reset
