@@ -4,12 +4,11 @@ document.write('\
       <footer class="inner">\
         <section class="clearfix">\
           <p>\
-            All text and images CC0 except where noted.\
+            <a href="https://creativecommons.org/publicdomain/zero/1.0/">\
+            All text and images CC0 except where noted.</a>\
           </p>\
           <p>\
-            The postings on this site are my own and don\'t necessarily\
-            represent iRobot\'s\
-            positions, strategies or opinions.\
+            The opinions here are wholly my own.\
           </p>\
         </section>\
       </footer>\
