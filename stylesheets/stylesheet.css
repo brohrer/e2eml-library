@@ -78,7 +78,7 @@ body {
   color: #212e53;
   background: #212e53;
   font-size: 16px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lato;/*', sans-serif;*/
   /*font-family: 'Lato', 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;*/
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
