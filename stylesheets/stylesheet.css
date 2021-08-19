@@ -382,54 +382,6 @@ Full-Width Styles
   text-decoration: none;
 }
 
-#project_tagline {
-  /* color: #fff; */
-  color: #fbe7d2;
-  font-size: 24px;
-  font-weight: 700;
-  background: none;
-  text-shadow: #111 0px 0px 10px;
-  text-decoration: none;
-}
-
-#footer_message {
-  /* color: #fff; */
-  color: #fbe7d2;
-  font-size: 18px;
-  font-weight: 100;
-  background: none;
-  text-shadow: #111 0px 0px 10px;
-  text-decoration: none;
-}
-
-.zip_download_link {
-  display: block;
-  float: right;
-  width: 90px;
-  height:70px;
-  text-indent: -5000px;
-  overflow: hidden;
-  background: url(../images/sprite_download.png) no-repeat bottom left;
-}
-
-.tar_download_link {
-  display: block;
-  float: right;
-  width: 90px;
-  height:70px;
-  text-indent: -5000px;
-  overflow: hidden;
-  background: url(../images/sprite_download.png) no-repeat bottom right;
-  margin-left: 10px;
-}
-
-.zip_download_link:hover {
-  background: url(../images/sprite_download.png) no-repeat top left;
-}
-
-.tar_download_link:hover {
-  background: url(../images/sprite_download.png) no-repeat top right;
-}
 <!--
 #main_content_wrap {
   background: #fbe7d2;
