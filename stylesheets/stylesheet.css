@@ -6,11 +6,13 @@ modified slightly by Brandon Rohrer
 
 /*@import url(github-light.css);*/
 
-@font-face {
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+/*@font-face {
     font-family: 'Lato';
     src: local('fonts/Lato-Regular.ttf')
     format('truetype')
-}
+}*/
 
 /*******************************************************************************
 MeyerWeb Reset
