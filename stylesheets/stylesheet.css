@@ -102,27 +102,33 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   font-size: 36px;
   font-weight: 700;
+  letter-spacing: 1px;
 }
 
 h2 {
   padding-bottom: 10px;
   font-size: 32px;
+  letter-spacing: 1px;
 }
 
 h3 {
   font-size: 24px;
+  letter-spacing: 1px;
 }
 
 h4 {
   font-size: 21px;
+  letter-spacing: 1px;
 }
 
 h5 {
   font-size: 18px;
+  letter-spacing: 1px;
 }
 
 h6 {
   font-size: 16px;
+  letter-spacing: 1px;
 }
 
 
