@@ -105,8 +105,8 @@
           index to an array. Continuing with our example above, in one-hot
           notation <br>
           <em>files</em> = [1, 0, 0], <br>
-          <em>find</em> = [0, 1, 0], <br>
-          and <em>my</em> = [0, 0, 1]. <br>
+          <em>find</em> = [0, 1, 0], and<br>
+          <em>my</em> = [0, 0, 1]. <br>
           So the sentence "Find my files" becomes a sequence of one-dimensional
           arrays <br>
           [0, 1, 0], <br>
@@ -122,6 +122,15 @@
 
 
         <h3>Dot product</h3>
+        <p>
+          One really useful thing about the one-hot representation is that
+          it lets us compute
+          <a href="https://en.wikipedia.org/wiki/Dot_product">dot products</a>.
+          These are also known by other
+          intimidating names like inner product and scalar product.
+          To get the dot product of two vectors, multiply their
+          corresponding elements one by one, then add the results.
+        </p>
 
         <h3>Matrix multiplication</h3>
 
