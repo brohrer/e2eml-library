@@ -90,6 +90,36 @@
           ]
           could be represented instead as the sequence of numbers [2, 3, 1].
         </p>
+        <p>
+          This is a perfectly valid way to convert symbols to numbers,
+          but it turns out that there's another format that's even
+          easier for computers to work with, <strong>one-hot encoding</strong>.
+          In one-hot encoding a symbol is represented by an array of
+          mostly zeros, the same length of the vocabulary, with only a single
+          element having a value of one. Each element in the array corresponds
+          to a separate symbol. 
+        </p>
+        <p>
+          Another way to think about one-hot encoding is that
+          each word still gets assigned its own number, but now it is an
+          index to an array. Continuing with our example above, in one-hot
+          notation <br>
+          <em>files</em> = [1, 0, 0], <br>
+          <em>find</em> = [0, 1, 0], <br>
+          and <em>my</em> = [0, 0, 1]. <br>
+          So the sentence "Find my files" becomes a sequence of one-dimensional
+          arrays <br>
+          [0, 1, 0], <br>
+          [0, 0, 1], <br>
+          [1, 0, 0] <br>
+          which quickly starts to look like a two-dimensional array.
+        </p>
+        <p>
+          Heads-up, I'll be using the terms "one-dimensional array" and
+          "<strong>vector</strong>" interchangeably. Likewise with
+          "two-dimensional array" and "<strong>matrix</strong>".
+        </p>
+
 
         <h3>Dot product</h3>
 
