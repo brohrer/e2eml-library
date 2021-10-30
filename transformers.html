@@ -51,7 +51,36 @@
 
         <h3>One-hot encoding</h3>
         <p>
-          
+          Imagine that our goal is to create the computer that responds
+          to our voice commands. It’s our job to build the
+          transformer that converts (or <strong>transduces</strong>)
+          a sequence of sounds to a sequence of words.
+        </p>
+        <p>
+          The first step in working with sequences is to convert
+          them to numbers so we can do math on them.
+          We start by choosing our <strong>vocabulary</strong>,
+          the collection symbols
+          that we are going to be working with in each sequence.
+          In our case, there will be two different sets of symbols,
+          one for the input sequence to represent vocal sounds
+          and one for the output sequence to represent words.
+        </p>
+        <p>
+          For now, let's assume we're working with English.
+          There are tens of thousands of words in the English language,
+          and perhaps another few thousand to cover computer-specific
+          terminology. That would give us a vocabulary size that is
+          the better part of a hundred thousand. One way to convert
+          a words to numbers is to assign each word its
+          own number. Then a sequence of words can be represented as a
+          list of numbers.
+        </p>
+        <p>
+          For example, consider a tiny language with a vocabulary size
+          of three: <tt>files</tt>, <tt>find</tt>, and <tt>my</tt>.
+          Each word could be swapped
+          out for a number
         </p>
 
         <h3>Dot product</h3>
