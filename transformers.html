@@ -103,17 +103,25 @@
         <p>
           Another way to think about one-hot encoding is that
           each word still gets assigned its own number, but now it is an
-          index to an array. Continuing with our example above, in one-hot
-          notation <br>
-          <em>files</em> = [1, 0, 0], <br>
-          <em>find</em> = [0, 1, 0], and<br>
-          <em>my</em> = [0, 0, 1]. <br>
+          index to an array. Here is our example above, in one-hot
+          notation.
+        </p>
+        <p style="text-align:center;">
+          <img title="A one-hot encoded vocabulary"
+            src="images/transformers/one_hot_vocabulary.png"
+            alt="A one-hot encoded vocabulary"
+            style="height: 300px;">
+        </p>
+        <p>
           So the sentence "Find my files" becomes a sequence of one-dimensional
-          arrays <br>
-          [0, 1, 0], <br>
-          [0, 0, 1], <br>
-          [1, 0, 0] <br>
+          arrays,
           which quickly starts to look like a two-dimensional array.
+        </p>
+        <p style="text-align:center;">
+          <img title="A one-hot encoded vocabulary"
+            src="images/transformers/one_hot_vocabulary.png"
+            alt="A one-hot encoded vocabulary"
+            style="height: 300px;">
         </p>
         <p>
           Heads-up, I'll be using the terms "one-dimensional array" and
