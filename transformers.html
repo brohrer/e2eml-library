@@ -275,7 +275,7 @@
             </li>
           </ul>
           Our vocabulary size is now seven:<br>
-          {<em>directories, me, files, my, photos, please, show</em>}.
+          {<em>directories, files, me, my, photos, please, show</em>}.
         </p>
         <p>
           One useful way to represent sequences is with a transition model.
@@ -285,6 +285,12 @@
           of the time, the transition model will look like this.
           The sum of the transitions away from any word will always add up
           to one.
+        </p>
+        <p style="text-align:center;">
+          <img title="Markov chain transition model"
+            src="images/transformers/markov_chain.png"
+            alt="Markov chain transition model"
+            style="height: 250px;">
         </p>
         <p>
           This particular transition model is called a
@@ -311,6 +317,12 @@
           a probability, they will all fall between zero and one.
           Because probabilities always some to one, the values in each
           row will always add up to one.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transition matrix"
+            src="images/transformers/transition_matrix.png"
+            alt="Transition matrix"
+            style="height: 300px;">
         </p>
         <p>
           In the transition matrix here we can see the structure
