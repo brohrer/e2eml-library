@@ -50,7 +50,7 @@
           This isn't a short journey, but I hope you'll be glad you came.
         </p>
 
-        <h3>One-hot encoding</h3>
+        <h3 id="one_hot">One-hot encoding</h3>
         <p>
           Imagine that our goal is to create the computer that responds
           to our voice commands. It’s our job to build the
@@ -129,7 +129,7 @@
           "two-dimensional array" and "<strong>matrix</strong>".
         </p>
 
-        <h3>Dot product</h3>
+        <h3 id="dot_product">Dot product</h3>
         <p>
           One really useful thing about the one-hot representation is that
           it lets us compute
@@ -182,7 +182,7 @@
             style="height: 300px;">
         </p>
 
-        <h3>Matrix multiplication</h3>
+        <h3 id="matrix_multiplication">Matrix multiplication</h3>
         <p>
           The dot product is the building block of matrix multiplication,
           a very particular way to combine a pair of two-dimensional arrays.
@@ -239,8 +239,100 @@
             alt="multiplication of a one three matrix and a two column matrix"
             style="height: 450px;">
         </p>
+        <p>
+          If this is the first time you're seeing this, it might
+          feel needlessly complex, but I promise it pays off later.
+        </p>
 
-        <h3>First order sequence model</h3>
+        <h4>Matrix multiplication as a table lookup</h4>
+        <p>
+          Notice how matrix multiplication acts as a lookup table here.
+          Our <em>A</em> matrix is made up of a stack of one-hot vectors.
+          They have ones in the first column, the fourth column,
+          and the third column, respectively. When we work through the
+          matrix multiplication, this serves to pull out the first row,
+          the fourth row, and the third row of the <em>B</em> matrix,
+          in that order. This trick of using a one-hot vector to pull
+          out a particular row of a matrix is at the core of how
+          transformers work.
+        </p>
+
+        <h3 id="markov_chain">First order sequence model</h3>
+        <p>
+          We can set aside matrices for a minute and get back to what
+          we really care about, sequences of words. Imagine that as we
+          start to develop our natural language computer interface
+          we want to handle just three possible commands:
+          <ul>
+            <li>
+              Show me my directories please.
+            </li>
+            <li>
+              Show me my files please.
+            </li>
+            <li>
+              Show me my photos please.
+            </li>
+          </ul>
+          Our vocabulary size is now seven:<br>
+          {<em>directories, me, files, my, photos, please, show</em>}.
+        </p>
+        <p>
+          One useful way to represent sequences is with a transition model.
+          For every word in the vocabulary, it shows what the next word
+          is likely to be. If users ask about photos half
+          the time, files 30% of the time, and directories the rest
+          of the time, the transition model will look like this.
+          The sum of the transitions away from any word will always add up
+          to one.
+        </p>
+        <p>
+          This particular transition model is called a
+          <strong>Markov chain</strong>,
+          because it satisfies the
+          <a href="https://en.wikipedia.org/wiki/Markov_property">
+            Markov property</a>
+          that the probabilities for the next word depend only on
+          recent word. More specifically, it is a first order
+          Markov model because it only looks at the single most recent word.
+          If it considered the two most recent words it would be
+          a second order Markov model.
+        </p>
+        <p>
+          Our break from matrices is over. It turns out that
+          Markov chains can be expressed conveniently in matrix form.
+          Using the same indexing scheme that we used when creating one-hot
+          vectors, each row represents one of the words in our vocabulary.
+          So does each column. The matrix transition model
+          treats a matrix as a lookup table. Find the row
+          that corresponds to the word you’re interested in. The value in
+          each column shows the probability of that word coming next.
+          Because the value of each element in the matrix represents
+          a probability, they will all fall between zero and one.
+          Because probabilities always some to one, the values in each
+          row will always add up to one.
+        </p>
+        <p>
+          In the transition matrix here we can see the structure
+          of our three sentences clearly. Almost all of the transition
+          probabilities are zero or one. There is only one place in
+          the Markov chain where branching happens. After <em>my</em>,
+          the words <em>directories</em>, <em>files</em>, or <em>photos</em>
+          might appear, each with a different probability. Other than that,
+          there’s no uncertainty about which word will come next.
+          That certainty is reflected by having mostly ones and zeros in the
+          transition matrix.
+        </p>
+        <p>
+          We can revisit our trick of using matrix matrix multiplication
+          with a one-hot vector to pull out the transition probabilities
+          associated with any given word. For instance, if we just wanted
+          to isolate the probabilities of which word comes after <em>my</em>,
+          we can create a one-hot vector representing the word <em>my</em>
+          and multiply it by our transition matrix. This pulls out the row
+          the relevant row and shows us the probability distribution
+          of what the next word will be.
+        </p>
 
         <h3>Second order sequence model</h3>
 
@@ -283,6 +375,7 @@
 
         <h3>Audio speech</h3>
 
+        <h3>Resources and credits</h3>
 
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
