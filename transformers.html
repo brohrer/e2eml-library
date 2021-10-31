@@ -183,6 +183,40 @@
         </p>
 
         <h3>Matrix multiplication</h3>
+        <p>
+          The dot product is the building block of matrix multiplication,
+          a very particular way to combine a pair of two-dimensional arrays.
+          We'll call the first of these matrices <em>A</em> and the second
+          one <em>B</em>.
+          In the simplest case, when <em>A</em> has only one row and
+          <em>B</em> has only one column, the result of matrix multiplication
+          is the dot product of the two.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a single row matrix and a single column matrix"
+            src="images/transformers/matrix_mult_one_row_one_col.png"
+            alt="multiplication of a single row matrix and a single column matrix"
+            alt="Dot product gives the similarity between two vectors"
+            style="height: 300px;">
+        </p>
+        <p>
+          Notice how the number of columns in <em>A</em> and the number of
+          rows in <em>B</em> needs to be the same for the two arrays
+          to match up and for the dot product to work out.
+        </p>
+        <p>
+          When <em>A</em> and <em>B</em> start to grow, matrix multiplication
+          starts to get trippy. To handle more than one row in <em>A</em>,
+          take the dot product of <em>B</em> with each row separately.
+          The answer will have as many rows as <em>A</em> does.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a single row matrix and a single column matrix"
+            src="images/transformers/matrix_mult_one_row_one_col.png"
+            alt="multiplication of a single row matrix and a single column matrix"
+            alt="Dot product gives the similarity between two vectors"
+            style="height: 300px;">
+        </p>
 
         <h3>First order sequence model</h3>
 
