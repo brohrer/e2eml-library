@@ -265,13 +265,13 @@
           we want to handle just three possible commands:
           <ul>
             <li>
-              Show me my directories please.
+              <em>Show me my directories please</em>.
             </li>
             <li>
-              Show me my files please.
+              <em>Show me my files please</em>.
             </li>
             <li>
-              Show me my photos please.
+              <em>Show me my photos please</em>.
             </li>
           </ul>
           Our vocabulary size is now seven:<br>
@@ -353,8 +353,96 @@
         </p>
 
         <h3>Second order sequence model</h3>
+        <p>
+          Predicting the next word based on only the current word is
+          hard. That's like predicting the rest of a tune after being
+          given just the first note. Our chances are a lot better if
+          we can at least get two notes to go on.
+        </p>
+        <p>
+          We can see how this works in another toy language model
+          for our computer commands. We expect that this one
+          will only ever see two sentences, in a 40/60 proportion.
+          <ul>
+            <li>
+              <em>Check whether the battery ran down please.</em>
+            </li>
+            <li>
+              <em>Check whether the program ran please.</em>
+            </li>
+          </ul>
+          A Markov chain illustrates a first order model for this.
+        </p>
+        <p style="text-align:center;">
+          <img title="Another first order Markov chain transition model"
+            src="images/transformers/markov_chain_2.png"
+            alt="Another first order Markov chain transition model"
+            style="height: 250px;">
+        </p>
+        <p>
+          Here we can see that if our model looked at the two most recent
+          words, instead of just one, that it could do a better job. When it
+          encounters <em>battery ran</em>, it knows that the next word
+          will be <em>down</em>, and when it sees <em>program ran</em>
+          the next word will be <em>please</em>. This eliminates one of
+          the branches in the model, reducing uncertainty and increasing
+          confidence.
+        </p>
+        <p>
+          Looking back two words turns this into a second order Markov model.
+          It gives more context on which to base next word predictions.
+          It's tougher to draw a second-order Markov chain, but we can see
+          it in a transition matrix. To illustrate the difference,
+          here is the first order transition matrix.
+        </p>
+        <p style="text-align:center;">
+          <img title="Another first order transition matrix"
+            src="images/transformers/transition_matrix_first_order_2.png"
+            alt="Another first order transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          And here the second order transition matrix.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order transition matrix"
+            src="images/transformers/transition_matrix_second_order.png"
+            alt="Second order transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          Notice how the second order matrix has a separate row for every
+          combination of words (most of which are not shown here). That
+          means that if we start with a vocabulary size of <em>N</em>
+          then the transition matrix has <em>N</em>^2 rows.
+        </p>
+        <p>
+          What this
+          buys us is more confidence. There are more ones and fewer
+          fractions in the second order model. There's only one row
+          with fractions in it, one branch in our model. Intuitively,
+          looking at two words instead of just one gives more context,
+          more information on which to base a next word guess.
+        </p>
 
         <h3>Second order sequence model with skips</h3>
+        <p>
+          New example, needing skips
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order transition matrix"
+            src="images/transformers/transition_matrix_second_order.png"
+            alt="Second order transition matrix"
+            style="height: 350px;">
+        </p>
+
+        <p>
+          If we want to improve on our second order language model,
+          we can of course consider third- and higher order models.
+          However, with a significant vocabulary size this takes
+          a combination of creativity, simplification, and brute force
+          to execute.
+        </p>
 
         <h3>Masking</h3>
         <p>
@@ -418,6 +506,8 @@
             explaining how transformers work.
           </li>
           <li>
+            The <a href="https://docs.google.com/presentation/d/1Po-GY7X-mXmPKHr8Vh29S4tFPv23TjeY-jq-yShlivM/edit?usp=sharing">
+              illustrations</a> in Google Slides.
           </li>
           <li>
           </li>
