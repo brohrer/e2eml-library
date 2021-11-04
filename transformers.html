@@ -387,19 +387,20 @@
           the next word will be <em>please</em>. This eliminates one of
           the branches in the model, reducing uncertainty and increasing
           confidence.
+          Looking back two words turns this into a second order Markov model.
+          It gives more context on which to base next word predictions.
+          Second order Markov chains are more challenging to
+          draw, but here are the connections that demonstrate their value.
         </p>
         <p style="text-align:center;">
           <img title="Second order Markov chain"
             src="images/transformers/markov_chain_second_order.png"
             alt="Second order Markov chain"
-            style="height: 350px;">
+            style="height:250px;">
         </p>
         <p>
-          Looking back two words turns this into a second order Markov model.
-          It gives more context on which to base next word predictions.
-          It's tougher to draw a second-order Markov chain, but we can see
-          it in a transition matrix. To illustrate the difference,
-          here is the first order transition matrix.
+          To highlight the difference between the two,
+          here is the first order transition matrix,
         </p>
         <p style="text-align:center;">
           <img title="Another first order transition matrix"
@@ -408,7 +409,7 @@
             style="height: 350px;">
         </p>
         <p>
-          And here the second order transition matrix.
+          and here is the second order transition matrix.
         </p>
         <p style="text-align:center;">
           <img title="Second order transition matrix"
@@ -455,16 +456,10 @@
           If we want to improve on our second order language model,
           we can of course consider third- and higher order models.
           However, with a significant vocabulary size this takes
-          a combination of creativity, simplification, and brute force
+          a combination of creativity and brute force
           to execute. A naive implementation of an eighth order model
           would have <em>N</em>^8 rows, a ridiculous number for any
           reasonable vocubulary.
-        </p>
-        <p style="text-align:center;">
-          <img title="Second order with skips feature voting"
-            src="images/transformers/feature_voting.png"
-            alt="Second order with skips feature voting"
-            style="height: 350px;">
         </p>
         <p>
           Instead, we can do something sly and make a second order model,
@@ -476,7 +471,23 @@
           second-order-with-skips and a full umpteenth-order model is that
           we discard most of the word order information and
           combinations of preceeeding words. What remains is still pretty
-          powerful. Here's what it might look like in a transition matrix.
+          powerful.
+        </p>
+        <p>
+          Markov chains fail us entirely now, but we can still represent
+          the link between each pair of preceding words and the words
+          that follow. Here we've dispensed with numerical weights, and
+          instead are showing only the arrows associated with non-zero weights.
+          Larger weights are shown with heavier lines.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order with skips feature voting"
+            src="images/transformers/feature_voting.png"
+            alt="Second order with skips feature voting"
+            style="height: 350px;">
+        </p>
+        <p>
+          Here's what it might look like in a transition matrix.
         </p>
         <p style="text-align:center;">
           <img title="Second order with skips transition matrix"
