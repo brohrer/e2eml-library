@@ -244,7 +244,7 @@
           feel needlessly complex, but I promise it pays off later.
         </p>
 
-        <h4>Matrix multiplication as a table lookup</h4>
+        <h4 id="table_lookup">Matrix multiplication as a table lookup</h4>
         <p>
           Notice how matrix multiplication acts as a lookup table here.
           Our <em>A</em> matrix is made up of a stack of one-hot vectors.
@@ -551,11 +551,37 @@
         <h3>Masking</h3>
         <p>
           On more careful consideration, this is unsatisfying. The difference
-          between a vote total of 4 and 5 is relatively small. In suggests
+          between a vote total of 4 and 5 is relatively small. It suggests
           that the model isn't as confident as it could be. And in
           a larger, more organic language model it's easy to imagine that
           such a slight difference could be lost in the statistical noise.
         </p>
+        <p>
+          We can sharpen the prediction by weeding out all the uninformative
+          feature votes. With the exception of <em>battery, ran</em>
+          and <em>program, ran</em>. It's helpful to remember at this point
+          that we pull the <a href="#table_lookup">relevant rows</a>
+          out of the transition matrix by
+          multiplying it with a vector showing which features are currently
+          active. For this example so far, we've been using the implied
+          feature vector shown here.
+        </p>
+        <p style="text-align:center;">
+          <img title="Feature selection vector"
+            src="images/transformers/feature_selection.png"
+            alt="Feature selection vector"
+            style="height: 250px;">
+        </p>
+        <p>
+          It includes a one for each feature that is a combination of
+          <em>ran</em> with each of the words that come before it. Any words
+          that come after it don't get included in the feature set.
+          (In the next word prediction problem these haven't been seen yet,
+          and so it's not fair to use them predict what comes next.)
+          And this doesn't include all the other possible word
+          combinations.
+          We can safely ignore these for this example because they will
+          all be zero.
         <p>
           Forward masking
         </p>
