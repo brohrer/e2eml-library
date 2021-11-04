@@ -582,6 +582,30 @@
           combinations.
           We can safely ignore these for this example because they will
           all be zero.
+        </p>
+        <p>
+          To improve our results, we can additionally force the unhelpful
+          features to zero by creating a <strong>mask</strong>. It's
+          a vector full of ones except for the positions you'd like to
+          hide or mask, and those are set to zero. In our case we'd like
+          to mask everything except for 
+          <em>battery, ran</em>
+          and <em>program, ran</em>, the only two features that have
+          been of any help. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Masked feature activities"
+            src="images/transformers/masked_feature_activities.png"
+            alt="Masked feature activities"
+            style="height:300px;">
+        </p>
+        <p>
+          To apply the mask, we multiply the two vectors element by element.
+          Any feature activity value in an unmasked position will be
+          multiplied by one and left unchanged. Any feature activity value
+          in a masked position will be multiplied by zero, and thus forced
+          to zero.
+        </p>
         <p>
           Forward masking
         </p>
