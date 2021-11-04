@@ -352,7 +352,7 @@
             style="height: 300px;">
         </p>
 
-        <h3>Second order sequence model</h3>
+        <h3 id="second_order">Second order sequence model</h3>
         <p>
           Predicting the next word based on only the current word is
           hard. That's like predicting the rest of a tune after being
@@ -387,6 +387,12 @@
           the next word will be <em>please</em>. This eliminates one of
           the branches in the model, reducing uncertainty and increasing
           confidence.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order Markov chain"
+            src="images/transformers/markov_chain_second_order.png"
+            alt="Second order Markov chain"
+            style="height: 350px;">
         </p>
         <p>
           Looking back two words turns this into a second order Markov model.
@@ -425,7 +431,7 @@
           more information on which to base a next word guess.
         </p>
 
-        <h3>Second order sequence model with skips</h3>
+        <h3 id="second_order_skips">Second order sequence model with skips</h3>
         <p>
           A second order model works well when we only have to look back
           two words to decide what word comes next. What about when we
@@ -453,6 +459,12 @@
           to execute. A naive implementation of an eighth order model
           would have <em>N</em>^8 rows, a ridiculous number for any
           reasonable vocubulary.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order with skips feature voting"
+            src="images/transformers/feature_voting.png"
+            alt="Second order with skips feature voting"
+            style="height: 350px;">
         </p>
         <p>
           Instead, we can do something sly and make a second order model,
@@ -524,11 +536,15 @@
           this model gets us the right answer, despite having an
           eight word deep dependency.
         </p>
-        <p>
-          On 
-        </p>
 
         <h3>Masking</h3>
+        <p>
+          On more careful consideration, this is unsatisfying. The difference
+          between a vote total of 4 and 5 is relatively small. In suggests
+          that the model isn't as confident as it could be. And in
+          a larger, more organic language model it's easy to imagine that
+          such a slight difference could be lost in the statistical noise.
+        </p>
         <p>
           Forward masking
         </p>
