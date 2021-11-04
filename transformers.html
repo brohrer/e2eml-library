@@ -427,21 +427,105 @@
 
         <h3>Second order sequence model with skips</h3>
         <p>
-          New example, needing skips
+          A second order model works well when we only have to look back
+          two words to decide what word comes next. What about when we
+          have to look back further? Imagine we are building yet another
+          language model. This one only has to represent two sentences,
+          each equally likely to occur.
+          <ul>
+            <li>
+              <em>Check the program log and find out whether it ran please.
+              </em>
+            </li>
+            <li>
+              <em>Check the battery log and find out whether it ran down
+              please.</em>
+            </li>
+          </ul>
         </p>
-        <p style="text-align:center;">
-          <img title="Second order transition matrix"
-            src="images/transformers/transition_matrix_second_order.png"
-            alt="Second order transition matrix"
-            style="height: 350px;">
-        </p>
-
         <p>
+          In this example, in order to determine which word should come after
+          <em>ran</em>, we would have to look back 8 words into the past.
           If we want to improve on our second order language model,
           we can of course consider third- and higher order models.
           However, with a significant vocabulary size this takes
           a combination of creativity, simplification, and brute force
-          to execute.
+          to execute. A naive implementation of an eighth order model
+          would have <em>N</em>^8 rows, a ridiculous number for any
+          reasonable vocubulary.
+        </p>
+        <p>
+          Instead, we can do something sly and make a second order model,
+          but consider the combinations of the most recent word with
+          each of the words that came before. It's still second order,
+          because we're only considering two words at a time, but it allows
+          us to reach back further and capture <strong>long range
+          dependencies</strong>. The difference between this
+          second-order-with-skips and a full umpteenth-order model is that
+          we discard most of the word order information and
+          combinations of preceeeding words. What remains is still pretty
+          powerful. Here's what it might look like in a transition matrix.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order with skips transition matrix"
+            src="images/transformers/transition_matrix_second_order_skips.png"
+            alt="Second order with skips transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          This view only shows the rows relevant to predicting the word
+          that comes after <em>ran</em>. It shows instances where the most
+          recent word (<em>ran</em>) is preceded by each of the other
+          words in the vocabulary. Only the relevant values are shown.
+          All the empty cells are zeros. 
+        </p>
+        <p>
+          The first thing that becomes apparent is that, when trying to
+          predict the word that comes after <em>ran</em>, we no longer
+          look at just one line, but rather a whole set of them.
+          We've moved out of the Markov realm now. Each row no longer
+          represents the state of the sequence at a particular point.
+          Instead, each row represents one of many <strong>features</strong>
+          that may describe the sequence at a particular point. The
+          combination of the most recent word with each of the words
+          that came before makes for a collection of applicable rows,
+          maybe a large collection. Because of this change in meaning,
+          each value in the matrix no longer represents a probability,
+          but rather a vote. Votes will be summed and compared to determine
+          next word predictions.
+        </p>
+        <p>
+          The next thing that becomes apparent is that most of the features
+          don't matter. Most of the words appear in both sentences, and
+          so the fact that they have been seen is of no help in predicting
+          what comes next. They all have a value of .5. 
+          The only two exceptions are <em>battery</em> and <em>program</em>.
+          They have some 1 and 0 weights associated with the.
+          The feature <em>battery, ran</em> indicates that <em>ran</em> was
+          the most recent word and that <em>battery</em> occurred somewhere
+          earlier in the sentence. This feature has a weight of 1 associated
+          with <em>down</em> and a weight of 0 associated with <em>please</em>.
+          Similarly, the feature <em>program, ran</em> has the opposite set
+          of weights. This structure shows that it is the presence of these
+          two words earlier in the sentence that is decisive in predicting
+          which word comes next.
+        </p>
+        <p>
+          To convert this set of word-pair features into a next word estimate,
+          the values of all the relevant rows need to be summed.
+          Adding down, the column, the sequence
+          <em>Check the program log and find out whether it ran</em>
+          generates sums of 0 for all the words, except a 4 for
+          <em>down</em> and a 5 for <em>please</em>. The sequence
+          <em>Check the battery log and find out whether it ran</em>
+          does the same, except with a 5 for
+          <em>down</em> and a 4 for <em>please</em>. By choosing the word
+          with the highest vote total as the next word prediction,
+          this model gets us the right answer, despite having an
+          eight word deep dependency.
+        </p>
+        <p>
+          On 
         </p>
 
         <h3>Masking</h3>
@@ -484,29 +568,29 @@
         <h3>Resources and credits</h3>
         <ul>
           <li>
-            The O.G.
+            &#9658; The O.G.
             <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
             paper</a>, Attention is All You Need.
           </li>
           <li>
-            A wildly helpful Python
+            &#9658; A wildly helpful Python
             <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
               implementation</a>
             of the transformer.
           </li>
           <li>
-            Jay Alammar's insightful transformer
+            &#9658; Jay Alammar's insightful transformer
             <a href="https://jalammar.github.io/illustrated-transformer/">
               walkthough</a>.
           </li>
           <li>
-            Lukasz Kaiser's (one of the authors)
+            &#9658; Lukasz Kaiser's (one of the authors)
             <a href="https://www.youtube.com/watch?v=rBCqOTEfxvg">
               talk</a>
             explaining how transformers work.
           </li>
           <li>
-            The <a href="https://docs.google.com/presentation/d/1Po-GY7X-mXmPKHr8Vh29S4tFPv23TjeY-jq-yShlivM/edit?usp=sharing">
+            &#9658; The <a href="https://docs.google.com/presentation/d/1Po-GY7X-mXmPKHr8Vh29S4tFPv23TjeY-jq-yShlivM/edit?usp=sharing">
               illustrations</a> in Google Slides.
           </li>
           <li>
