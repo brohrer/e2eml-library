@@ -549,7 +549,7 @@
           eight word deep dependency.
         </p>
 
-        <h3>Masking</h3>
+        <h3 id="masking">Masking</h3>
         <p>
           On more careful consideration, this is unsatisfying. The difference
           between a vote total of 4 and 5 is relatively small. It suggests
@@ -704,7 +704,20 @@
 
         <h3 id="attention">Attention as matrix multiplication</a>
         <p>
-          
+          Up to this point, we've pulled the mask vector out of thin air.
+          How transformers find the relevant mask matters. It would be
+          natural to use some sort of lookup table, but now we are focusing
+          hard on expressing everything as matrix multiplications. We can
+          use the same <a href="table_lookup">lookup</a> method we
+          introduced above by stacking the mask vectors for every word
+          into a matrix and using the one-hot representation of the
+          most recent word to pull out the relevant mask.
+        </p>
+        <p style="text-align:center;">
+          <img title="Mask lookup by matrix multiplication"
+            src="images/transformers/mask_lookup.png"
+            alt="Mask lookup by matrix multiplication"
+            style="height:350px;">
         </p>
         <p>
         </p>
