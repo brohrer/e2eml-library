@@ -630,12 +630,18 @@
           prediction occurs for <em>please</em> when
           <em>program</em> occurs early on.
         </p>
+        <p>
+          This process of selective masking is the <strong>attention</strong>
+          called out in the title of the original
+          <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
+            paper</a> on transformers.
+        </p>
 
         <h3 id="rest_stop">Rest Stop and an Off Ramp</h3>
         <p>
           Congratulations on making it this far. You can stop if you want.
-          A second-order-with-skips-and-masking is useful mental model
-          for what transformers do, at least in the decoder side.
+          The selective-second-order-with-skips model is useful way to think
+          about what transformers do, at least in the decoder side.
           It captures, to a first approximation, what generative
           language models like
           OpenAI's <a href="https://en.wikipedia.org/wiki/GPT-3">GPT-3</a> and
@@ -675,11 +681,32 @@
               conditioned.</strong>
               The combination of all the
               derivatives for all the parameters is the loss
-              <strong>gradient</strong>. The success of backpropagation
-              is highly sensitive to the smoothness of the gradient
-              
+              <strong>gradient</strong>.
+              In practice, getting backpropagation to behave well requires
+              gradients that are smooth, that is, the slope doesn’t change
+              very quickly as you make small steps in any direction.
+              They also behave much better when the gradient is well conditioned,
+              that is, it’s not radically larger in one direction than another.
+              If you picture a loss function as a landscape, The Grand Canyon
+              would be a poorly conditioned one. Depending on whether you are
+              traveling along the bottom, or up the side, you will have very
+              different slopes to travel. By contrast, the rolling hills of
+              the classic Windows screensaver would have a well conditioned
+              gradient.
+              <br>
+              If the science of architecting neural networks is creating
+              differentiable building blocks, the art of it is stacking
+              them in such a way that the gradient doesn’t change too quickly
+              and is roughly of the same magnitude in every direction.
             </li>
           </ol>
+        </p>
+
+        <h3 id="attention">Attention as matrix multiplication</a>
+        <p>
+          
+        </p>
+        <p>
         </p>
 
         <h3>Skip connection</h3>
