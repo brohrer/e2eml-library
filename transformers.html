@@ -42,7 +42,8 @@
         <p>
           Before we start, just a heads-up.
           We're going to be talking a lot about matrix
-          multiplications and touching on backpropagation, but you don't
+          multiplications and touching on <strong>backpropagation</strong>
+          (the algorithm for training the model), but you don't
           need to know any of it beforehand. We'll add the concepts we need
           one at a time, with explanation.
         </p>
@@ -536,7 +537,7 @@
         <p>
           To convert this set of word-pair features into a next word estimate,
           the values of all the relevant rows need to be summed.
-          Adding down, the column, the sequence
+          Adding down the column, the sequence
           <em>Check the program log and find out whether it ran</em>
           generates sums of 0 for all the words, except a 4 for
           <em>down</em> and a 5 for <em>please</em>. The sequence
@@ -607,7 +608,78 @@
           to zero.
         </p>
         <p>
-          Forward masking
+          The mask has the effect of hiding a lot of the transition matrix.
+          It hides the combination of <em>ran</em> with everything except
+          <em>battery</em> and <em>program</em>, leaving just the features
+          that matter. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Masked transition matrix"
+            src="images/transformers/masked_transition_matrix.png"
+            alt="Masked transition matrix"
+            style="height:350px;">
+        </p>
+        <p>
+          After masking the unhelpful features, the next word predictions
+          become much stronger. When the word <em>battery</em> occurs
+          earlier in the sentence, the word after <em>ran</em> is
+          predicted to be <em>down</em> with a weight of 1 and
+          <em>please</em> with a weight of 0. What was a weight difference
+          of 25 percent has become a difference of infinity percent.
+          There is no doubt what word comes next. The same strong
+          prediction occurs for <em>please</em> when
+          <em>program</em> occurs early on.
+        </p>
+
+        <h3 id="rest_stop">Rest Stop and an Off Ramp</h3>
+        <p>
+          Congratulations on making it this far. You can stop if you want.
+          A second-order-with-skips-and-masking is useful mental model
+          for what transformers do, at least in the decoder side.
+          It captures, to a first approximation, what generative
+          language models like
+          OpenAI's <a href="https://en.wikipedia.org/wiki/GPT-3">GPT-3</a> and
+          GitHub's <a href="https://copilot.github.com/">Copilot</a>
+          are doing. It doesn't tell the complete story, but it represents
+          the central thrust of it.
+        </p>
+        <p>
+          The next sections cover more of the gap between this
+          intuitive explanation and how transformers are implemented.
+          These are largely driven by three practical considerations.
+          <ol>
+            <li>
+              <strong>Computers are especially good at matrix
+              multiplications.</strong>
+              There is an entire industry around
+              building computer hardware specifically for fast
+              matrix multiplications. Any computation that can
+              be expressed as a matrix multiplication can be made
+              shockingly efficient. It's a bullet train. If you can get
+              your baggage into it, it will get you where you want to go
+              real fast.
+            </li>
+            <li>
+              <strong>Each step needs to be differentiable.</strong>
+              So far we've just been working with toy examples, and have
+              had the luxury of hand-picking all the transition probabilities
+              and mask values&mdash;the model <strong>parameters</strong>.
+              In practice, these have to be learned via
+              backpropagation, which depends on each computation step
+              being differentiable. This means that for any small change
+              in a parameter, we can calculate the change in the model error
+              or <strong>loss</strong>.
+            </li>
+            <li>
+              <strong>The gradient needs to be smooth and well
+              conditioned.</strong>
+              The combination of all the
+              derivatives for all the parameters is the loss
+              <strong>gradient</strong>. The success of backpropagation
+              is highly sensitive to the smoothness of the gradient
+              
+            </li>
+          </ol>
         </p>
 
         <h3>Skip connection</h3>
