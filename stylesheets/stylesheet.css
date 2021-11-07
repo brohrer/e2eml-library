@@ -142,9 +142,10 @@ footer p {
 
 a {
   text-decoration: none;
-  /*text-decoration: underline;*/
+  text-decoration: underline;
   text-shadow: none;
   color: #212e53;
+  border-bottom: 2px;
   
   /*
   transition: color 0.5s ease;
