@@ -704,6 +704,8 @@
 
         <h3 id="attention">Attention as matrix multiplication</h3>
         <p>
+          Feature weights could be straightforward to build, by counting
+          occurrences in training, but attention masks are not.
           Up to this point, we've pulled the mask vector out of thin air.
           How transformers find the relevant mask matters. It would be
           natural to use some sort of lookup table, but now we are focusing
@@ -718,6 +720,10 @@
             src="images/transformers/mask_matrix_lookup.png"
             alt="Mask lookup by matrix multiplication"
             style="height:450px;">
+        </p>
+        <p>
+          In the matrix showing the collection of mask vectors, we've only
+          shown the one we're trying to pull out, for clarity.
         </p>
         <p>
           We're finally getting to the point where we can start tying into
@@ -735,6 +741,9 @@
           matrix <em>K</em> represents the collection of masks. Because
           it's stored with masks in columns, rather than rows, it needs to
           be transposed (with the <em>T</em> operator) before multiplying.
+          By the time we're all done, we'll make some important modifications
+          to this, but at this level it captures the concept of a
+          differentiable lookup table that transformers make use of.
         </p>
 
         <h3>Skip connection</h3>
