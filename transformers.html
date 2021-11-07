@@ -719,7 +719,11 @@
             alt="Mask lookup by matrix multiplication"
             style="height:350px;">
         </p>
-
+        <p>
+          We're finally getting to the point where we can start tying into
+          the paper. This mask lookup is represented by the
+          <em>QK<sup>T</sup></em> term in the attention equation.
+        </p>
         <p style="text-align:center;">
           <img title="Attention equation highlighting QKT"
             src="images/transformers/attention_equation_QKT.png"
@@ -727,6 +731,10 @@
             style="height:150px;">
         </p>
         <p>
+          The query <em>Q</em> represents the feature of interest and the
+          matrix <em>K</em> represents the collection of masks. Because
+          it's stored with masks in columns, rather than rows, it needs to
+          be transposed (with the <em>T</em> operator) before multiplying.
         </p>
 
         <h3>Skip connection</h3>
