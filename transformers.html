@@ -746,11 +746,62 @@
           differentiable lookup table that transformers make use of.
         </p>
 
-        <h3>Skip connection</h3>
-
-        <h3>Second order sequence model as matrix multiplications</h3>
+        <h3 id="second_order_matrix_mult">Second order sequence model as matrix multiplications</h3>
+        <p>
+          Another step that we have been hand wavy about so far is the
+          construction of transition matrices. We have been clear about
+          the logic, but not about how to do it with matrix multiplications.
+        </p>
+        <p>
+          Once we have the result of our attention step, a vector
+          that includes the most recent word and a small
+          collection of the words that have preceded it, we need to
+          translate that into features, each of which is a word pair.
+          Attention masking gets us the raw material that we need,
+          but it doesn’t build those word pair features. To do that,
+          we can use a single layer fully connected neural network.
+        </p>
+        <p>
+          To see how a neural network layer can create these pairs,
+          we'll hand craft one. It will be artificially clean and stylized,
+          and its weights will bear no resemblance to the weights in practice,
+          but it will demonstrate how the neural network has the
+          expressivity necessary to build these two word pair features.
+          To keep it small and clean, will focus on just the three
+          attended words from this example,
+          <em>battery</em>, <em>program</em>, <em>ran</em>.
+        </p>
+        <p style="text-align:center;">
+          <img title="Neural network layer for creating multi word features"
+            src="images/transformers/feature_creation_layer.png"
+            alt="Neural network layer for creating multi word features"
+            style="height:250px;">
+        </p>
+        <p>
+          In the layer diagram above, we can see how the weights act to combine
+          the presence and absence of each word into a collection of features.
+          This can also be expressed in matrix form.
+        </p>
+        <p style="text-align:center;">
+          <img title="Weight matrix for creating multi word features"
+            src="images/transformers/feature_creation_matrix.png"
+            alt="Weight matrix for creating multi word features"
+            style="height:200px;">
+        </p>
+        <p>
+          And it can be calculated
 
         <h3>Sequence completion</h3>
+
+
+        <h3>Skip connection</h3>
+        <p>
+        https://theaisummer.com/skip-connections/
+
+https://arxiv.org/abs/1712.09913#
+
+  
+        </p>
 
         <h3>Embeddings</h3>
 
