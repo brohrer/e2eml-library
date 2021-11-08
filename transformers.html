@@ -746,7 +746,8 @@
           differentiable lookup table that transformers make use of.
         </p>
 
-        <h3 id="second_order_matrix_mult">Second order sequence model as matrix multiplications</h3>
+        <h3 id="second_order_matrix_mult">
+          Second order sequence model as matrix multiplications</h3>
         <p>
           Another step that we have been hand wavy about so far is the
           construction of transition matrices. We have been clear about
@@ -775,7 +776,7 @@
           <img title="Neural network layer for creating multi word features"
             src="images/transformers/feature_creation_layer.png"
             alt="Neural network layer for creating multi word features"
-            style="height:250px;">
+            style="height:350px;">
         </p>
         <p>
           In the layer diagram above, we can see how the weights act to combine
@@ -786,11 +787,41 @@
           <img title="Weight matrix for creating multi word features"
             src="images/transformers/feature_creation_matrix.png"
             alt="Weight matrix for creating multi word features"
-            style="height:200px;">
+            style="height:300px;">
         </p>
         <p>
-          And it can be calculated by a 
+          And it can be calculated by a matrix multiplication with a
+          vector representing the collection of words seen so far.
         </p>
+        <p style="text-align:center;">
+          <img title="Calculation of the 'battery, ran' feature"
+            src="images/transformers/second_order_feature_battery.png"
+            alt="Calculation of the 'battery, ran' feature"
+            style="height:300px;">
+        </p>
+        <p>
+          The <em>battery</em> and <em>ran</em> elements are 1 and the
+          <em>program</em> element is 0. The <em>bias</em> element is
+          always 1, a feature of neural networks. Working through the
+          matrix multiplication gives a 1 for the element
+          representing <em>battery, ran</em> and a -1 for the element
+          representing <em>program, ran</em>. The results for the
+          other case are similar.
+        </p>
+        <p style="text-align:center;">
+          <img title="Calculation of the 'program, ran' feature"
+            src="images/transformers/second_order_feature_program.png"
+            alt="Calculation of the 'program, ran' feature"
+            style="height:300px;">
+        </p>
+        <p>
+          The final step in calculating these word combo features is
+          to apply a rectified linear unit (ReLU) nonlinearity. The effect
+          of this is to substitute any negative value with a zero. This
+          cleans up both of these results so they represent the presence
+          (with a 1) or absence (with a 0) of each word combination feature.
+        </p>
+
 
         <h3>Sequence completion</h3>
 
