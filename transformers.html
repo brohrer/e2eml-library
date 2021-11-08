@@ -635,6 +635,10 @@
           called out in the title of the original
           <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
             paper</a> on transformers.
+          So far, what we've descibed is a just an approximation of
+          how attention is implemented in the paper. It captures
+          the important concepts, but the details are different. We'll
+          close that gap later.
         </p>
 
         <h3 id="rest_stop">Rest Stop and an Off Ramp</h3>
@@ -870,7 +874,7 @@
           <img title="Equations behind the Feed Forward block"
             src="images/transformers/feedforward_equations.png"
             alt="Equations behind the Feed Forward block"
-            style="height:250px;">
+            style="height:300px;">
         </p>
         <p>
           The Figure 1 architecture diagram of the of the paper
@@ -883,7 +887,46 @@
             style="height:450px;">
         </p>
 
-        <h3>Sequence completion</h3>
+        <h3 id="sequence_completion">Sequence completion</h3>
+        <p>
+          So far we've only talked about next word prediction. There are
+          a couple of pieces we need to add to get our decoder to generate
+          a long sequence. The first is a <strong>prompt</strong>,
+          some example text to give the transformer running start and
+          context on which to build the rest of the sequence.
+          It gets fed in to decoder, the column on the right in
+          the image above, where it's labeled "Outputs (shifted right)".
+          Choosing
+          a prompt that gives interesting sequences is an art in itself,
+          called prompt engineering. It's also a great example of humans
+          modifying their behavior to support algorithms, rather than
+          the other way around.
+        </p>
+        <p>
+          Once the decoder has a partial sequence to get started with,
+          it takes a forward pass. The end result is a set of
+          predicted probability distributions of words,
+          one probability distribution for each position in the sequence.
+          At each position, the distribution shows the predicted
+          probabilities for each next word in the vocabulary. We don't
+          care about predicted probabilities for each established word
+          in the sequence. They're already established. What we really care
+          about are the predicted probabilities for the next word after the
+          end of the prompt. There are several ways to go about choosing
+          what that word should be, but the most straightforward is
+          called "greedy", picking the word with the highest probability.
+        </p>
+        <p>
+          The new next word then gets added to the sequence, substituted
+          in at the with the "Outputs" at the bottom of the decoder, and
+          the process is repeated until you get tired of it.
+        </p>
+        <p>
+          The one piece we're not quite ready to describe in detail is
+          yet another form of masking, ensuring that when the transformer
+          makes predictions it only looks behind, not ahead. We'll
+          revisit this later when we can be clearer about how it's done.
+        </p>
 
 
         <h3>Skip connection</h3>
