@@ -787,7 +787,7 @@
           <img title="Weight matrix for creating multi word features"
             src="images/transformers/feature_creation_matrix.png"
             alt="Weight matrix for creating multi word features"
-            style="height:300px;">
+            style="height:250px;">
         </p>
         <p>
           And it can be calculated by a matrix multiplication with a
@@ -797,7 +797,7 @@
           <img title="Calculation of the 'battery, ran' feature"
             src="images/transformers/second_order_feature_battery.png"
             alt="Calculation of the 'battery, ran' feature"
-            style="height:300px;">
+            style="height:200px;">
         </p>
         <p>
           The <em>battery</em> and <em>ran</em> elements are 1 and the
@@ -812,7 +812,7 @@
           <img title="Calculation of the 'program, ran' feature"
             src="images/transformers/second_order_feature_program.png"
             alt="Calculation of the 'program, ran' feature"
-            style="height:300px;">
+            style="height:200px;">
         </p>
         <p>
           The final step in calculating these word combo features is
@@ -821,7 +821,54 @@
           cleans up both of these results so they represent the presence
           (with a 1) or absence (with a 0) of each word combination feature.
         </p>
-
+        <p>
+          With those gymnastics behind us, we finally have a matrix
+          multiplication based method for creating multiword features.
+          Although I originally claimed that these consist of the
+          most recent word and one earlier word, a closer look at this
+          method shows that it can build other features too. 
+          When the feature creation matrix is learned, rather than hard
+          coded, other structures can be learned. Even in this toy example,
+          there's nothing to stop the creation of a three-word combination
+          like <em>battery, program, ran</em>. If this combination occurred
+          commonly enough it would probably end up being represented.
+          There wouldn't be any way to indicated what order the words
+          occurred in (at least not <a href="#positioned_embedding">yet</a>),
+          but we could absolutely use their co-occurrence to make predictions.
+          It would even be possible to make use of word combos that ignored
+          the most recent word, like <em>battery, program</em>. These and
+          other types of features are probably created in practice,
+          exposing the oversimiplification I made when I claimed that
+          transformers are a selective-second-order-with-skips sequence model.
+          There's more nuance to it than that, and now you can see exactly
+          what that nuance is. This won't be the last time we'll change
+          the story to incorporate more subtlety.
+        </p>
+        <p>
+          In this form, the multiword feature matrix is ready for
+          one more matrix multiplication, the 
+          second order sequence model with skips we developed
+          <a href="second_order_skips">above</a>. All together the
+          sequence of feature creation, ReLU, transition matrix is represented
+          in the Figure 1 architecture diagram of the of the paper as the
+          Feed Forward block.
+        </p>  
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing the Feed Forward block"
+            src="images/transformers/architecture_feedforward.png"
+            alt="Transformer architecture showing the Feed Forward block"
+            style="height:450px;">
+        </p>
+        <p>
+          Equation 2 from the paper shows a concise mathematical representation
+          of the diagrams we've been constructing.
+        </p>
+        <p style="text-align:center;">
+          <img title="Equations behind the Feed Forward block"
+            src="images/transformers/feedforward_equations.png"
+            alt="Equations behind the Feed Forward block"
+            style="height:250px;">
+        </p>
 
         <h3>Sequence completion</h3>
 
@@ -837,7 +884,7 @@ https://arxiv.org/abs/1712.09913#
 
         <h3>Embeddings</h3>
 
-        <h3>Positional embeddings</h3>
+        <h3 id="positional_embedding">Positional embeddings</h3>
 
         <h3>De-embedding</h3>
 
