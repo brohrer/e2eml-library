@@ -1013,8 +1013,23 @@
           <img title=""
             src="images/transformers/embedding_projection.png"
             alt=""
-            style="height:400px;">
+            style="height:350px;">
         </p>
+        <p>
+          This example shows how a one-hot vector, representing for example
+          <em>battery</em>, pulls out the row associated with it,
+          which contains the coordinates of the word in the embedded space.
+          Projection matrices can convert the original collection of one-hot
+          vocabulary vectors into any configuration in a space of whatever
+          dimensionality you want.
+          The biggest trick is finding a useful
+          projection, one that has similar words grouped together, and
+          one that has enough dimensions to spread them out.
+          There are some decent pre-computed embeddings for common langauges,
+          like English. Also, like everything else in the transformer,
+          it can be learned during training.
+        </p>
+
 
 
         <h3 id="positional_embedding">Positional embeddings</h3>
