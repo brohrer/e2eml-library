@@ -924,47 +924,133 @@
         <p>
           The one piece we're not quite ready to describe in detail is
           yet another form of masking, ensuring that when the transformer
-          makes predictions it only looks behind, not ahead. We'll
+          makes predictions it only looks behind, not ahead. It's
+          applied in the block labeled "Masked Multi-Head Attention". We'll
           revisit this later when we can be clearer about how it's done.
         </p>
 
-
-        <h3>Skip connection</h3>
+        <h3 id="embeddings">Embeddings</h3>
         <p>
-        https://theaisummer.com/skip-connections/
-
-https://arxiv.org/abs/1712.09913#
-
-  
+          As we’ve described them so far, transformers are too big.
+          For a vocabulary size <em>N</em> of say 50,000, the transition
+          matrix between all pairs of words and all potential next words
+          would have 50,000 columns and 50,000 squared (2.5 billion) rows,
+          totaling over 100 trillion elements. That is still a stretch,
+          even for modern hardware.
+        </p>
+        <p>
+          It’s not just the size of the matrices that’s the problem.
+          In order to build a stable transition language model, we would
+          have to provide training data illustrating every potential
+          sequence several times at least. That would far exceed
+          the capacity of even the most ambitious training data sets.
+        </p>
+        <p>
+          Fortunately, there is a workaround for both of these problems,
+          embeddings.
+        </p>
+        <p>
+          In a one-hot representation of a language, there is one
+          vector element for each word. For a vocabulary of size <em>N</em>
+          that vector an <em>N</em>-dimensional space. Each word represents
+          a point in that space, one unit away from the origin along
+          one of the many axes. I haven't figured out a great way to
+          draw a high dimensional space, but there's a crude representation
+          of it below.
+        </p>
+        <p style="text-align:center;">
+          <img title=""
+            src="images/transformers/one_hot_vs_embedding.png"
+            alt=""
+            style="height:300px;">
+        </p>
+        <p>
+          In an embedding, those word points are all taken and rearranged
+          (<strong>projected</strong>, in linear algebra terminology)
+          into a lower-dimensional space. The picture above shows what
+          they might look like in a 2-dimensional space for example.
+          Now, instead of needing <em>N</em> numbers to specify a word,
+          we only need 2. These are the (<em>x</em>, <em>y</em>)
+          coordinates of each point in the new space. Here's what a
+          2-dimensional embedding might look like for our toy example,
+          together with the coordinates of a few of the words.
+        </p>
+        <p style="text-align:center;">
+          <img title=""
+            src="images/transformers/embedded_words.png"
+            alt=""
+            style="height:300px;">
+        </p>
+        <p>
+          A good embedding groups words with similar meanings together.
+          A model that works with an embedding learns patterns in the
+          embedded space. That means that whatever it learns to do with
+          one word automatically gets applied to all the words right next
+          to it. This has the added benefit of reducing the amount of
+          training data needed. Each example gives a little bit of
+          learning that gets applied across a whole neighborhood of words.
+        </p>
+        <p>
+          An embedding reduces the number of parameters needed by
+          a tremendous amount. However, the fewer the dimensions in the
+          embedded space, the more information about the original
+          words gets discarded. The richness of a language still
+          requires quite a bit of space to lay out all the important
+          concepts so that they don't step on each other's toes.
+          By choosing the size of the embedded space,
+          we get to trade off computational load for model accuracy.
+        </p>
+        <p>
+          It will probably not surprise you to learn that projecting
+          words from their one-hot representation to an embedded space
+          involves a matrix multiplication. Projection is what matrices
+          do best. Starting with a one-hot matrix that has one row and
+          <em>N</em> columns, and moving to an embedded space of two
+          dimensions, the projection matrix will have <em>N</em> rows
+          and two columns, as shown here.
+        </p>
+        <p style="text-align:center;">
+          <img title=""
+            src="images/transformers/embedding_projection.png"
+            alt=""
+            style="height:400px;">
         </p>
 
-        <h3>Embeddings</h3>
 
         <h3 id="positional_embedding">Positional embeddings</h3>
 
-        <h3>De-embedding</h3>
+        <h3 id="de-embeddings">De-embeddings</h3>
 
-        <h3>Layer normalization</h3>
+        <h3 id="skip_connections">Skip connection</h3>
+        <p>
 
-        <h3>Softmax</h3>
+          <a href="https://theaisummer.com/skip-connections/"></a>
 
-        <h3>Multi-head attention</h3>
+          <a href="https://arxiv.org/abs/1712.09913"></a>
+  
+        </p>
 
-        <h3>Multiple layers</h3>
+        <h3 id="layer_normalization">Layer normalization</h3>
 
-        <h3>Decoder stack</h3>
+        <h3 id="softmax">Softmax</h3>
 
-        <h3>Encoder stack</h3>
+        <h3 id="multihead">Multi-head attention</h3>
 
-        <h3>Cross-attention</h3>
+        <h3 id="layer_stack">Multiple layers</h3>
 
-        <h3>Tokenizing</h3>
+        <h3 id="decoder">Decoder stack</h3>
+
+        <h3 id="encoder">Encoder stack</h3>
+
+        <h3 id="cross_attention">Cross-attention</h3>
+
+        <h3 id="tokenizing">Tokenizing</h3>
       
-        <h3>Byte pair encoding</h3>
+        <h3 id="bpe">Byte pair encoding</h3>
 
-        <h3>Audio speech</h3>
+        <h3 id="audio_speed">>Audio speech</h3>
 
-        <h3>Resources and credits</h3>
+        <h3 id="resources">Resources and credits</h3>
         <ul>
           <li>
             &#9658; The O.G.
