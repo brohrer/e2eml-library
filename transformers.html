@@ -991,6 +991,16 @@
           learning that gets applied across a whole neighborhood of words.
         </p>
         <p>
+          In this illustration I tried to show that by putting important
+          components in one area (<em>battery</em>,
+          <em>log</em>, <em>program</em>), prepositions in another
+          (<em>down</em>, <em>out</em>), and verbs near the center
+          (<em>check</em>, <em>find</em>, <em>ran</em>). In an actual embedding
+          the groupings may not be so clear or intuitive, but the
+          underlying concept is the same. Distance is small between words
+          that behave similarly.
+        </p>
+        <p>
           An embedding reduces the number of parameters needed by
           a tremendous amount. However, the fewer the dimensions in the
           embedded space, the more information about the original
@@ -1019,6 +1029,13 @@
           This example shows how a one-hot vector, representing for example
           <em>battery</em>, pulls out the row associated with it,
           which contains the coordinates of the word in the embedded space.
+          In order to make the relationship clearer,
+          the zeros in the one-hot vector are hidden, as are all the other rows
+          that don't get pulled out of the projection matrix.
+          The full projection matrix is dense, each row containing the
+          coordinates of the word its associated with.
+        </p>
+        <p>
           Projection matrices can convert the original collection of one-hot
           vocabulary vectors into any configuration in a space of whatever
           dimensionality you want.
@@ -1030,9 +1047,12 @@
           it can be learned during training.
         </p>
 
-
-
         <h3 id="positional_embedding">Positional embeddings</h3>
+        <p>
+
+https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
+https://arxiv.org/pdf/1803.02155.pdf
+        </p>
 
         <h3 id="de-embeddings">De-embeddings</h3>
 
