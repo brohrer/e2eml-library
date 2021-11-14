@@ -1020,9 +1020,9 @@
           and two columns, as shown here.
         </p>
         <p style="text-align:center;">
-          <img title=""
+          <img title="A projection matrix describing an embedding"
             src="images/transformers/embedding_projection.png"
-            alt=""
+            alt="A projection matrix describing an embedding"
             style="height:350px;">
         </p>
         <p>
@@ -1049,9 +1049,55 @@
 
         <h3 id="positional_embedding">Positional embeddings</h3>
         <p>
-
-https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
-https://arxiv.org/pdf/1803.02155.pdf
+          Up to this point, we've assumed that the positions of words
+          are ignored, at least for any words coming before the
+          very most recent word. Now we get to fix that using
+          positional embeddings. 
+        </p>
+        <p>
+          There are several ways that position information could be introduced
+          into our embedded represetation of words, but the way it was
+          done in the original transformer was to add a circular wiggle.
+        </p>
+        <p style="text-align:center;">
+          <img title="Positional encoding introduces a circular wiggle"
+            src="images/transformers/positional_embedding.png"
+            alt="Positional encoding introduces a circular wiggle"
+            style="height:350px;">
+        </p>
+        <p>
+          The position of the word in the embedding space acts as the
+          center of a circle. A perturbation is added to it, depending
+          on where it falls in the order of the sequence of words.
+          Words that are close to each other in the sequence have similar
+          perturbations, but words that are far apart are perturbed
+          in different directions.
+        </p>
+        <p>
+          Since a circle is a two dimensional figure, representing
+          a circular wiggle requires modifying two dimensions of the
+          embedding space.
+          If the embedding space consists of more than two dimensions
+          (which it almost always does), the circular wiggle is
+          repeated in all the other pairs of dimensions, but with different
+          angular frequency, that is, it sweeps out a different number of
+          rotations in each case. In some dimension pairs, the wiggle
+          will sweep out many rotations of the circle. In other pairs,
+          it will only sweep out a small fraction of a rotation.
+          The combination of all these circular wiggles of different
+          frequencies gives a good representation of the absolute position
+          of a word within the sequence.
+        </p>
+        <p>
+          I'm still developing my intuition for why this works.
+          It seems to add position information
+          into the mix in a way that doesn't disrupt the learned
+          relationships between words and attention.
+          For a deeper dive into the math and implications,
+          I recommend
+          Amirhossein Kazemnejad's positional encoding
+          <a href="https://kazemnejad.com/blog/transformer_architecture_positional_encoding/">
+          tutorial</a>.
         </p>
 
         <h3 id="de-embeddings">De-embeddings</h3>
