@@ -1073,12 +1073,15 @@
           <img title="Positional encoding introduces a circular wiggle"
             src="images/transformers/positional_encoding.png"
             alt="Positional encoding introduces a circular wiggle"
-            style="height:350px;">
+            style="height:300px;">
         </p>
         <p>
           The position of the word in the embedding space acts as the
           center of a circle. A perturbation is added to it, depending
           on where it falls in the order of the sequence of words.
+          For each position, the word is moved the same distance but
+          at a different angle, resulting in a circular pattern as you
+          move through the sequence.
           Words that are close to each other in the sequence have similar
           perturbations, but words that are far apart are perturbed
           in different directions.
