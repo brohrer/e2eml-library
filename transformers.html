@@ -837,7 +837,7 @@
           like <em>battery, program, ran</em>. If this combination occurred
           commonly enough it would probably end up being represented.
           There wouldn't be any way to indicated what order the words
-          occurred in (at least not <a href="#positional_embedding">yet</a>),
+          occurred in (at least not <a href="#positional_encoding">yet</a>),
           but we could absolutely use their co-occurrence to make predictions.
           It would even be possible to make use of word combos that ignored
           the most recent word, like <em>battery, program</em>. These and
@@ -1046,8 +1046,18 @@
           like English. Also, like everything else in the transformer,
           it can be learned during training.
         </p>
+        <p>
+          In the Figure 1 architecture diagram of the original paper,
+          here's where the embedding happens.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing the embedding block"
+            src="images/transformers/architecture_embedding.png"
+            alt="Transformer architecture showing the embedding block"
+            style="height:450px;">
+        </p>
 
-        <h3 id="positional_embedding">Positional embeddings</h3>
+        <h3 id="positional_encoding">Positional encoding</h3>
         <p>
           Up to this point, we've assumed that the positions of words
           are ignored, at least for any words coming before the
@@ -1061,7 +1071,7 @@
         </p>
         <p style="text-align:center;">
           <img title="Positional encoding introduces a circular wiggle"
-            src="images/transformers/positional_embedding.png"
+            src="images/transformers/positional_encoding.png"
             alt="Positional encoding introduces a circular wiggle"
             style="height:350px;">
         </p>
@@ -1098,6 +1108,17 @@
           Amirhossein Kazemnejad's positional encoding
           <a href="https://kazemnejad.com/blog/transformer_architecture_positional_encoding/">
           tutorial</a>.
+        </p>
+        <p>
+          In the canonical architecture diagram these blocks show the
+          generation of the position code and its addition to the
+          embedded words.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing positional encoding"
+            src="images/transformers/architecture_positional.png"
+            alt="Transformer architecture showing positional encoding"
+            style="height:450px;">
         </p>
 
         <h3 id="de-embeddings">De-embeddings</h3>
