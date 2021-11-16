@@ -1125,6 +1125,56 @@
         </p>
 
         <h3 id="de-embeddings">De-embeddings</h3>
+        <p>
+          Embedding words makes them vastly more efficient to work with,
+          but once the party is over, they need to be converted back to
+          words from the original vocabulary. De-embedding is done the same
+          way embeddings were done, with a projection from one space to
+          another, that is, a matrix multiplication. 
+        </p>
+        <p>
+          The de-embedding matrix is the same shape as the embedding matrix,
+          but with the number of rows and columns flipped. The number of
+          rows is the dimensionality of the space we're converting from.
+          In the example we've been using, it's the size of our embedding
+          space, two. The number of
+          columns is the dimensionality of the space we're
+          converting to &mdash; the size of the one-hot representation of
+          the full vocabulary, 13 in our example.
+        </p>
+        <p style="text-align:center;">
+          <img title="The de-embedding transform"
+            src="images/transformers/de_embedding.png"
+            alt="The de-embedding transform"
+            style="height:400px;">
+        </p>
+        <p>
+          The values in a good de-embedding matrix aren't as straightforward
+          to illustrate as those from the embeding matrix, but the effect
+          is similar. When an embedded vector representing, say, the word
+          <em>program</em> is multiplied by the de-embedding matrix,
+          the value in the corresponding position is high. However, because
+          of how projection to higher dimensional spaces works, the values
+          associated with the other words won't be zero. The words closest
+          to <em>program</em> in the embedded space will also have
+          medium-high values. Other words will have near zero value. And
+          there will likely be a lot of words with negative values.
+          The output vector in vocabulary space will no longer be one-hot
+          or sparse. It will be dense, with nearly all values non-zero.
+        </p>
+        <p style="text-align:center;">
+          <img title="Representative dense result vector from de-embedding"
+            src="images/transformers/de_embedded_results.png"
+            alt="Representative dense result vector from de-embedding"
+            style="height:300px;">
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing de-embedding"
+            src="images/transformers/architecture_de_embedding.png"
+            alt="Transformer architecture showing de-embedding"
+            style="height:450px;">
+        </p>
+
 
         <h3 id="skip_connections">Skip connection</h3>
         <p>
@@ -1153,7 +1203,7 @@
       
         <h3 id="bpe">Byte pair encoding</h3>
 
-        <h3 id="audio_speed">>Audio speech</h3>
+        <h3 id="audio_speed">Audio speech</h3>
 
         <h3 id="resources">Resources and credits</h3>
         <ul>
