@@ -1197,7 +1197,7 @@
           it's better to have a "soft" maximum function, which we get
           from <strong>softmax</strong>. To get the softmax of the
           value <em>x</em> in a vector, divide the exponential
-          of x <em>e^x</em> by the sum of the exponentials of all the
+          of <em>x</em>, <em>e^x</em>, by the sum of the exponentials of all the
           values in the vector.
         </p>
         <p>
@@ -1244,7 +1244,28 @@
             style="height:450px;">
         </p>
 
+        <h3 id="multihead">Multi-head attention</h3>
+        <p>
+          Now that we've made peace with the concepts of
+          projections (matrix multiplications) and
+          spaces (vector sizes), we can revisit the core attention
+          mechanism with renewed vigor.
+        </p>
 
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing de-embedding"
+            src="images/transformers/architecture_single_head.png"
+            alt="Transformer architecture showing de-embedding"
+            style="height:450px;">
+        </p>
+
+
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing de-embedding"
+            src="images/transformers/architecture_multihead.png"
+            alt="Transformer architecture showing de-embedding"
+            style="height:450px;">
+        </p>
         <h3 id="skip_connections">Skip connection</h3>
         <p>
 
@@ -1256,9 +1277,6 @@
 
         <h3 id="layer_normalization">Layer normalization</h3>
 
-        <h3 id="softmax">Softmax</h3>
-
-        <h3 id="multihead">Multi-head attention</h3>
 
         <h3 id="layer_stack">Multiple layers</h3>
 
