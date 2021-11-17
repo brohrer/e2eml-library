@@ -914,7 +914,8 @@
           about are the predicted probabilities for the next word after the
           end of the prompt. There are several ways to go about choosing
           what that word should be, but the most straightforward is
-          called "greedy", picking the word with the highest probability.
+          called <strong>greedy</strong>,
+          picking the word with the highest probability.
         </p>
         <p>
           The new next word then gets added to the sequence, substituted
@@ -1129,7 +1130,7 @@
           Embedding words makes them vastly more efficient to work with,
           but once the party is over, they need to be converted back to
           words from the original vocabulary. De-embedding is done the same
-          way embeddings were done, with a projection from one space to
+          way embeddings are done, with a projection from one space to
           another, that is, a matrix multiplication. 
         </p>
         <p>
@@ -1146,7 +1147,7 @@
           <img title="The de-embedding transform"
             src="images/transformers/de_embedding.png"
             alt="The de-embedding transform"
-            style="height:400px;">
+            style="height:350px;">
         </p>
         <p>
           The values in a good de-embedding matrix aren't as straightforward
@@ -1166,7 +1167,75 @@
           <img title="Representative dense result vector from de-embedding"
             src="images/transformers/de_embedded_results.png"
             alt="Representative dense result vector from de-embedding"
-            style="height:300px;">
+            style="height:250px;">
+        </p>
+        <p>
+          That's OK. We can recreate the one-hot vector by choosing
+          the word associated with the highest value. This operation
+          is also called <strong>argmax</strong>, the argument (element)
+          that gives the maximum value. This is how to do greedy
+          sequence completion, as mentioned
+          <a href="#sequence_completion">above</a>. It's a great
+          first pass, but we can do better.
+        </p>
+        <p>
+          If an embedding maps very well to several words, we might not
+          want to choose the best one every time. It might be only a tiny
+          bit better choice than the others, and adding a touch of
+          variety can make the result more interesting. Also, sometimes
+          it's useful to look several words ahead and consider all the
+          directions the sentence might go before settling on
+          a final choice. In order to do these, we have to first convert
+          our de-embedding results to a probability distribution.
+        </p>
+
+        <h4 id="softmax">Softmax</h4>
+        <p>
+          The argmax function is "hard" in the sense that the highest
+          value wins, even if it is only infinitessimally larger than
+          the others. If we want to entertain several possibilities at once,
+          it's better to have a "soft" maximum function, which we get
+          from <strong>softmax</strong>. To get the softmax of the
+          value <em>x</em> in a vector, divide the exponential
+          of x <em>e^x</em> by the sum of the exponentials of all the
+          values in the vector.
+        </p>
+        <p>
+          The softmax is helpful here for three reasons. First, it
+          converts our de-embedding results vector from an arbitrary set of
+          values to a probability distribution. As probabilities, it becomes
+          easier to compare the likelihood of different words being selected
+          and even to compare the likelihood of multi-word sequences
+          if we want to look further into the future.
+        </p>
+        <p>
+          Second, it thins the field near the top. If one word scores
+          clearly higher than the others, softmax will exaggerate that
+          difference, making it look almost like an argmax, with the
+          winning value close to one and all the others close to zero.
+          However, if there are several words that all come out close
+          to the top, it will preserve them all as highly probable, rather
+          than artifically crushing close second place results.
+        </p>
+        <p>
+          Third, argmax is differentiable,
+          meaning we can calculate
+          how much each element of the results
+          will change, given a small change in any of the input elements.
+          This allows us to use it
+          with backpropagation to train our transformer.
+        </p>
+        <p>
+          If you feel like going deep on your softmax understanding,
+          (or if you have trouble getting to sleep at night)
+          here's a more complete
+          <a href="https://e2eml.school/softmax.html">post</a>
+          on it.
+        </p>
+        <p>
+          Together the de-embedding transform (shown as the Linear block
+          below)
+          and a softmax function complete the de-embedding process.
         </p>
         <p style="text-align:center;">
           <img title="Transformer architecture showing de-embedding"
