@@ -1250,7 +1250,67 @@
           projections (matrix multiplications) and
           spaces (vector sizes), we can revisit the core attention
           mechanism with renewed vigor.
+          It will help clarify the algorithm if we can be more
+          specific about the shape of our matrices at each stage. There
+          is a short list of important numbers for this.
+          <ul>
+            <li>
+              <em>N</em>: vocabulary size. 13 in our example. Typically in
+              the tens of thousands.
+            </li>
+            <li>
+              <em>n</em>: maximum sequence length. 12 in our example. Something
+              like a few hundred in the paper. (They don't specify.)
+              2048 in GPT-3.
+            </li>
+            <li>
+              <em>d_model</em>: number of dimensions in the embedding space
+              used throughout the model. 512 in the paper.
+            </li>
+          </ul>
         </p>
+        <p>
+          The original input matrix is constructed by getting each of the
+          words from the sentence in their one-hot representation, and
+          stacking them such that each of the one-hot vectors is its own row.
+          The resulting input matrix has <em>n</em> rows and <em>N</em>
+          columns, which we can abbreviate as 
+          [<em>n</em> x <em>N</em>].
+        </p>
+        <p style="text-align:center;">
+          <img title="Matrix multiplication changes matrix shapes"
+            src="images/transformers/matrix_multiply_shape.png"
+            alt="Matrix multiplication changes matrix shapes"
+            style="height:350px;">
+        </p>
+        <p>
+          As we illustrated before, the embedding matrix has  
+          <em>N</em> rows and <em>d_model</em>
+          columns, which we can abbreviate as 
+          [<em>N</em> x <em>d_model</em>]. When multiplying two matrices,
+          the result takes its number of rows from the first matrix,
+          and its number of columns from the second. That gives the
+          embedded word sequence matrix a shape of 
+          [<em>n</em> x <em>d_model</em>].
+        </p>
+        <p>
+          We can follow the changes in matrix shape through the transformer
+          as a way to tracking what's going on. After the initial embedding,
+          the positional encoding is additive, rather than a multiplication,
+          so it doesn't change the shape of things. Then the embedded word
+          sequence goes into the attention layers, and comes out the
+          other end in the same shape. (We'll come back to the inner workings
+          of these in a second.) Finally, the de-embedding restores the
+          matrix to its original shape, offering a probability for
+          every word in the vocabulary at every position in the sequence.
+        </p>
+        <p style="text-align:center;">
+          <img title="Matrix shapes throughout the transformer model"
+            src="images/transformers/matrix_shapes.png"
+            alt="Matrix shapes throughout the transformer model"
+            style="height:450px;">
+        </p>
+
 
         <p style="text-align:center;">
           <img title="Transformer architecture showing single head attention"
@@ -1266,6 +1326,23 @@
             alt="Transformer architecture showing multihead attention"
             style="height:350px;">
         </p>
+
+        <p>
+          <ul>
+            <li>
+              <em>d_k</em>: dimensions in the embedding space used
+              for keys and queries. 64 in the paper.
+            </li>
+            <li>
+              <em>d_v</em>: dimensions in the embedding space used
+              for values. 64 in the paper.
+            </li>
+            <li>
+              <em>h</em>: the number of heads. 8 in the paper.
+            </li>
+          </ul>
+        </p>
+
         <h3 id="skip_connections">Skip connection</h3>
         <p>
 
