@@ -1564,10 +1564,10 @@
         <p>
           One piece we haven’t explained yet are skip connections.
           These occur around the Multi-Head Attention blocks,
-          and around the feed forward element wise Feed Forward blocks
+          and around the element wise Feed Forward blocks
           in the blocks labeled "Add and Norm".
           In skip connections, a copy of the input is added to the output
-          of a set if calculations. The inputs to the attention block
+          of a set of calculations. The inputs to the attention block
           are added back in to its output. The inputs to the
           element-wise feed forward block are added to its outputs.
         </p>
@@ -1628,7 +1628,7 @@
           there’s no guarantee that a word will attend to its own position.
           It’s possible for the attention filter to forget entirely about
           the most recent word in favor of watching all of the earlier words
-          that might be relevant. A skip connection preserves takes the
+          that might be relevant. A skip connection takes the
           original word and manually adds it back into the signal,
           so that there’s no way it can be dropped or forgotten.
           This source of robustness may be one of the reasons for
@@ -1637,6 +1637,52 @@
         </p>
 
         <h3 id="layer_normalization">Layer normalization</h3>
+        <p>
+          Normalization is a step that pairs well with skip connections.
+          There's no reason they necessarily have to go together, but
+          they both do their best work when placed after a group of
+          calculations, like attention or a feed forward neural network.
+        </p>
+        <p>
+          The short version of layer normalization
+          is that the values of the matrix are shifted
+          to have a mean of zero and scaled to have a standard deviation of
+          one. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Several distributions being normalized"
+            src="images/transformers/normalization.png"
+            alt="Several distributions being normalized"
+            style="height:250px;">
+        </p>
+        <p>
+          The longer version is that in systems like transformers, where
+          there are a lot of moving pieces and some of them are something
+          other than matrix multiplications (such as softmax operators or
+          rectified linear units), it matters how big values are and
+          how they're balanced between positive and negative. If everything
+          is linear, you can double all your inputs, and your
+          outputs will be twice as big, and everything will
+          work just fine. Not so with neural networks. They
+          are inherently nonlinear, which makes them very expressive
+          but also sensitive to signals' magnitudes and distributions.
+          Normalization is a technique that has proven useful in
+          maintaining a consistent distribution of signal values each
+          step of the way throughout many-layered 
+          neural networks. It encourages convergence of parameter values
+          and ususally results
+          in much better performance.
+        </p>
+        <p>
+          My favorite thing about normalization is that, aside
+          from high level explanations like the one I just gave, no one
+          is completely certain why it works so well. If you'd like
+          to descend a little deeper than this rabbit hole, I wrote
+          up a more detailed
+          <a href="https://e2eml.school/batch_normalization.html">post</a>
+          on batch normalization, a close cousin of the layer normalization
+          used in transformers.
+        </p>
 
 
         <h3 id="layer_stack">Multiple layers</h3>
