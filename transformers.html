@@ -1310,6 +1310,7 @@
             alt="Matrix shapes throughout the transformer model"
             style="height:350px;">
         </p>
+
         <h4>Why we need more than one attention head</h4>
         <p>
           It's finally time to confront some of the simplistic assumptions
@@ -1420,22 +1421,70 @@
             alt="Multihead attention equation from the paper"
             style="height:130px;">
         </p>
-        <h4>Single head attention revisited</h3>
+
+        <h3 id="#attention_revisited">Single head attention revisited</h3>
         <p>
           We already walked through a conceptual illustration
           of attention
-          <a href="#attention">above</a>, the implementation is
+          <a href="#attention">above</a>. The actual implementation is
           a little messier, but out earlier intuition is still helpful.
           The queries and the keys are no longer easy to inspect and
           interpret because they are all projected down onto their own
-          idiosyncratic subspaces. 
-
+          idiosyncratic subspaces. In our conceptual illustration,
+          one row in the queries matrix represents one point in the
+          vocabulary space, which, thanks the one-hot representation,
+          represents one and only one word. In their embedded form,
+          one row in the queries matrix represents one point in the
+          embedded space, which will be near a group of words with similar
+          meanings and usage. The conceptual illustration mapped one query
+          word to a set of keys, which in turn filtered out all the
+          values that are not being attended to.
+          Each attention head in the actual implempentation maps a query
+          word to a point in yet another lower-dimensional embedded space.
+          The result of this that that attention becomes a relationship
+          between word groups, rather than between individual words.
+          It takes advantage of semantic similarities
+          (closeness in the embedded space) to generalize what
+          it has learned about similar words.
+        </p>
+        <p>
+          Following the shape of the matrices through the attention
+          calculation helps to track what it's doing.
         </p>
         <p style="text-align:center;">
           <img title="Transformer architecture showing single head attention"
             src="images/transformers/architecture_single_head.png"
             alt="Transformer architecture showing single head attention"
             style="height:350px;">
+        </p>
+        <p>
+          The queries and keys matrices, <em>Q</em> and <em>K</em>,
+          both come in with shape
+          [<em>n</em> x <em>d_k</em>].
+          Thanks to <em>K</em> being transposed before multiplication,
+          the result of 
+          <em>Q K^T</em>, gives a matrix of 
+          [<em>n</em> x <em>d_k</em>] * 
+          [<em>d_k</em> x <em>n</em> ] = 
+          [<em>n</em> x <em>n</em>].
+
+        </p>
+        <p style="text-align:center;">
+          <img title="The attention equation"
+            src="images/transformers/attention_equation.png"
+            alt="The attention equation"
+            style="height:150px;">
+        </p>
+        <p>
+          Another important difference in how attention is implemented
+          is that it makes use of the order in which words are presented
+          to it in the sequence, and represents attention not as a
+          word-to-word relationship, but as a position-to-position
+          relationship. This helps us to visualize and interpret
+          what it is doing more easily, since it is operating in the
+          embedding space. We are spared the extra step of finding nearby
+          word in the embedding space to represent the relationships
+          between queries and keys.
         </p>
 
         <h3 id="skip_connections">Skip connection</h3>
