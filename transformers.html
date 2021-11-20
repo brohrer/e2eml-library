@@ -1467,7 +1467,22 @@
           [<em>n</em> x <em>d_k</em>] * 
           [<em>d_k</em> x <em>n</em> ] = 
           [<em>n</em> x <em>n</em>].
-
+          Dividing every element of this matrix
+          by the square root of <em>d_k</em> has been shown to keep the
+          magnitude of the values from growing wildly, and helps
+          backpropagation to perform well. The softmax, as we mentioned,
+          shoehorns the result into an approximation of an argmax, tending
+          to focus attention one element of the sequence more than the rest.
+          In this form, the
+          [<em>n</em> x <em>n</em>] attention matrix roughly maps each
+          element of the sequence to one other element of the sequence,
+          indicating what it should be watching in order to get the most
+          relevant context for predicting the next element. It is a filter
+          that finally gets applied to the values matrix <em>V</em>,
+          leaving only a collection of the attended values. This has the
+          effect of ignoring the vast majority of what came before in the
+          sequence, and shines a spotlight on the one prior element that
+          is most useful to be aware of.
         </p>
         <p style="text-align:center;">
           <img title="The attention equation"
@@ -1476,11 +1491,61 @@
             style="height:150px;">
         </p>
         <p>
+          One tricky part about understanding this set of calculations is
+          keeping in mind that it is calculating attention for every element
+          of our input sequence, for every word in our sentence, not just
+          the most recent word. It's also calculating attention for earlier
+          words. We don't really care about these because their next words
+          have already been predicted and established. It's also calculating
+          attention for future words. These don't have much use yet, because
+          they are too far out and their immediate predecessors haven't
+          yet been chosen. But there are indirect paths through which these
+          calculations can effect the attention for the most recent word,
+          so we include them all. It's just that when we get to the end
+          and calculate word probabilities for every position in the
+          sequence, we throw away most of them and only pay attention to
+          the next word.
+        </p>
+        <p>
+          The Mask block enforces the constraint that, at least for this
+          sequence completion task, we can't look into the future.
+          It avoids introducing any weird artifacts from imaginary future
+          words. It is crude and effective - manually set the attention
+          paid to all words past the current position to negative infinity.
+          In
+          <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+          The Annotated Transformer</a>, an immeasurably helpful
+          companion to the paper showing line by line Python implementation,
+          the mask matrix is visualized. Purple cells show where attention
+          is disallowed. Each row corresponds to an element in the sequence.
+          The first row is allowed to attend to itself (the first element),
+          but to nothing after. The last row is allowed to attend to itself
+          (the final element) and everything that comes before.
+          The Mask is an
+          [<em>n</em> x <em>n</em>] matrix. It is applied not with a
+          matrix multiplication, but with a more straightforward
+          element-by-element multiplication. This has the effect of manually
+          going in to the attention matrix and setting all of the purple
+          elements from the mask to negative infinity.
+        </p>
+        <p style="text-align:center;">
+          <img title="An attention mask for sequence completion"
+            src="images/transformers/mask.png"
+            alt="An attention mask for sequence completion"
+            style="height:200px;">
+        </p>
+        <p>
           Another important difference in how attention is implemented
           is that it makes use of the order in which words are presented
           to it in the sequence, and represents attention not as a
           word-to-word relationship, but as a position-to-position
-          relationship. This helps us to visualize and interpret
+          relationship.
+          This is evident in its 
+          [<em>n</em> x <em>n</em>] shape. It maps each element from the
+          sequence, indicated by the row index,
+          to some other element(s) of the sequence, indicated
+          by the column index.
+          This helps us to visualize and interpret
           what it is doing more easily, since it is operating in the
           embedding space. We are spared the extra step of finding nearby
           word in the embedding space to represent the relationships
