@@ -1308,7 +1308,7 @@
           <img title="Matrix shapes throughout the transformer model"
             src="images/transformers/matrix_shapes.png"
             alt="Matrix shapes throughout the transformer model"
-            style="height:450px;">
+            style="height:350px;">
         </p>
         <p>
           It's finally time to confront some of the simplistic assumptions
@@ -1335,23 +1335,25 @@
         <p>
           The solution is to have several different instances of
           attention, or <strong>heads</strong> running at once. 
-
-        <p style="text-align:center;">
-          <img title="Transformer architecture showing single head attention"
-            src="images/transformers/architecture_single_head.png"
-            alt="Transformer architecture showing single head attention"
-            style="height:350px;">
+          This lets the the transformer consider several previous words
+          simultaneously when predicting the next.
+          It brings back the power we had before
+          we pulled the softmax into the picture.
         </p>
-
-
-        <p style="text-align:center;">
-          <img title="Transformer architecture showing multihead attention"
-            src="images/transformers/architecture_multihead.png"
-            alt="Transformer architecture showing multihead attention"
-            style="height:350px;">
-        </p>
-
         <p>
+          Unfortunately, doing this really increases the computational load.
+          Computing attention was already the bulk of the work, and we just
+          multiplied it by however many heads we want to use. To get around
+          this, we can re-use the trick of projecting everything into a
+          lower-dimensional embedding space. This shrinks
+          the matrices involved which dramatically reduces the computation
+          time. The day is saved.
+        </p>
+        <p>
+          To see how this plays out, we can continue looking at matrix shapes.
+          Tracing the matrix shape through the branches and weaves of the
+          multihead attention blocks requires three more numbers.
+
           <ul>
             <li>
               <em>d_k</em>: dimensions in the embedding space used
@@ -1365,6 +1367,20 @@
               <em>h</em>: the number of heads. 8 in the paper.
             </li>
           </ul>
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing multihead attention"
+            src="images/transformers/architecture_multihead.png"
+            alt="Transformer architecture showing multihead attention"
+            style="height:350px;">
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing single head attention"
+            src="images/transformers/architecture_single_head.png"
+            alt="Transformer architecture showing single head attention"
+            style="height:350px;">
         </p>
 
         <h3 id="skip_connections">Skip connection</h3>
