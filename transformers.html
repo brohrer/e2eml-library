@@ -1554,11 +1554,80 @@
 
         <h3 id="skip_connections">Skip connection</h3>
         <p>
-
-          <a href="https://theaisummer.com/skip-connections/"></a>
-
-          <a href="https://arxiv.org/abs/1712.09913"></a>
-  
+          Attention is the most fundamental part of
+          what transformers do. It’s the core mechanism, and we have now
+          traversed it had a pretty concrete level. Everything from here
+          on out is the plumbing necessary to make it work well.
+          It’s the rest of the harness that lets attention
+          pull our heavy workloads.
+        </p>
+        <p>
+          One piece we haven’t explained yet are skip connections.
+          These occur around the Multi-Head Attention blocks,
+          and around the feed forward element wise Feed Forward blocks
+          in the blocks labeled "Add and Norm".
+          In skip connections, a copy of the input is added to the output
+          of a set if calculations. The inputs to the attention block
+          are added back in to its output. The inputs to the
+          element-wise feed forward block are added to its outputs.
+        </p>
+        <p>
+          Skip connections serve two purposes.
+        </p>
+        <p>
+          The first is that they help keep the gradient smooth,
+          which is a big help for backpropagation. Attention is a filter,
+          which means that when it’s working correctly it will block most
+          of what tries to pass through it. The result of this is that
+          small changes in a lot of the inputs may not produce much
+          change in the outputs if they happen to fall into channels
+          that are blocked. This produces dead spots in the gradient
+          where it is flat, but still nowhere near the bottom of a valley.
+          These saddle points and ridges are a big tripping point for
+          backpropagation.
+          Skip connections help to smooth these out. In the case of
+          attention, even if all of the weights were zero and all the
+          inputs were blocked, a skip connection
+          would add a copy of the inputs to the results and ensure that
+          small changes in any of the inputs will still have
+          noticeable changes in the result. This keeps gradient descent
+          from getting stuck far away from a good solution.
+        </p>
+        <p>
+          Skip connections have become popular because of how they
+          improve performance since the days of the ResNet image classifier.
+          They are now a standard feature in neural network architectures.
+          Visually, we can see the effect that skip connections have
+          by comparing networks with and without them.
+          The figure below from this
+          <a href="https://arxiv.org/abs/1712.09913">paper</a>
+          shows a ResNet with and without skip connections.
+          The slopes of the loss function hills are are much more moderate
+          and uniform when skip connections are used.
+          If you feel like taking a deeper dive into how the work and why,
+          there's a more in-depth treatment in this
+          <a href="https://theaisummer.com/skip-connections/">post</a>.
+        </p>
+        <p style="text-align:center;">
+          <img title="Comparison of loss surfaces with and without skip connections"
+            src="images/transformers/skip_connection_gradients.png"
+            alt="Comparison of loss surfaces with and without skip connections"
+            style="height:250px;">
+        </p>
+        <p>
+          The second purpose of skip connections is specific to transformers
+          &mdash;
+          preserving the original input sequence.
+          Even with a lot of attention heads,
+          there’s no guarantee that a word will attend to its own position.
+          It’s possible for the attention filter to forget entirely about
+          the most recent word in favor of watching all of the earlier words
+          that might be relevant. A skip connection preserves takes the
+          original word and manually adds it back into the signal,
+          so that there’s no way it can be dropped or forgotten.
+          This source of robustness may be one of the reasons for
+          transformers' good behavior in so many varied sequence completion
+          tasks.
         </p>
 
         <h3 id="layer_normalization">Layer normalization</h3>
