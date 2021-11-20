@@ -1390,8 +1390,25 @@
           [<em>n</em> x <em>d_v</em>]. It confuses things a little that
           <em>d_k</em> and
           <em>d_v</em> are the same in the paper, but they don't have to be.
+          An important aspect of this setup is that each attention head has
+          its own 
+          <em>Wv</em>, <em>Wq</em>, and <em>Wk</em> transforms. That means
+          that each head can zoom in and expand the parts of the
+          embedded space that it wants to focus on, and it can be different
+          than what each of the other heads is focusing on.
         </p>
-
+        <p>
+          The result of each attention head has the same shape as
+          <em>V</em>. Now we have the problem of 
+          <em>h</em> different result vectors, each attending to different
+          elements of the sequence.
+          To combine these into one,
+          we exploit the powers of linear algebra, and just
+          concatenate all these results into one giant 
+          [<em>n</em> x <em>h * d_v</em>] matrix. Then, to make sure
+          it ends up in the same shape it started, we use one more transform
+          with the shape [<em>h * d_v</em> x <em>d_model</em>].
+        </p>
         <p style="text-align:center;">
           <img title="Transformer architecture showing single head attention"
             src="images/transformers/architecture_single_head.png"
