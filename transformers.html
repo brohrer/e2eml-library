@@ -1310,6 +1310,7 @@
             alt="Matrix shapes throughout the transformer model"
             style="height:350px;">
         </p>
+        <h4>Why we need more than one attention head</h4>
         <p>
           It's finally time to confront some of the simplistic assumptions
           I made during our first pass through explaining the
@@ -1353,7 +1354,6 @@
           To see how this plays out, we can continue looking at matrix shapes.
           Tracing the matrix shape through the branches and weaves of the
           multihead attention blocks requires three more numbers.
-
           <ul>
             <li>
               <em>d_k</em>: dimensions in the embedding space used
@@ -1411,11 +1411,25 @@
           it ends up in the same shape it started, we use one more transform
           with the shape [<em>h * d_v</em> x <em>d_model</em>].
         </p>
+        <p>
+          Here's all of the that, stated tersely.
+        </p>  
         <p style="text-align:center;">
           <img title="Multihead attention equation from the paper"
             src="images/transformers/multihead_attention_equation.png"
             alt="Multihead attention equation from the paper"
-            style="height:150px;">
+            style="height:130px;">
+        </p>
+        <h4>Single head attention revisited</h3>
+        <p>
+          We already walked through a conceptual illustration
+          of attention
+          <a href="#attention">above</a>, the implementation is
+          a little messier, but out earlier intuition is still helpful.
+          The queries and the keys are no longer easy to inspect and
+          interpret because they are all projected down onto their own
+          idiosyncratic subspaces. 
+
         </p>
         <p style="text-align:center;">
           <img title="Transformer architecture showing single head attention"
