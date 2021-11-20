@@ -1377,9 +1377,19 @@
         </p>
         <p>
           The [<em>n</em> x <em>d_model</em>] sequence of embedded words
-          serves as the basis for the values matrix, <em>V</em>, 
+          serves as the basis for everything that follows.
+          In each case there is a matrix,
+          <em>Wv</em>, <em>Wq</em>, and <em>Wk</em>,
+          that transforms the original sequence of embedded words into
+          the values matrix, <em>V</em>, 
           the queries matrix, <em>Q</em>, and the keys matrix,
-          <em>K</em>. In each case it is transformed be 
+          <em>K</em>.
+          <em>K</em> and 
+          <em>Q</em> have the same shape, [<em>n</em> x <em>d_k</em>], but
+          <em>V</em> can be different,
+          [<em>n</em> x <em>d_v</em>]. It confuses things a little that
+          <em>d_k</em> and
+          <em>d_v</em> are the same in the paper, but they don't have to be.
         </p>
 
         <p style="text-align:center;">
