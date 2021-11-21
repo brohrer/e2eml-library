@@ -1835,6 +1835,45 @@
           successive layers provide redundancy and are all cooperating to
           perform the same task.
         </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing cross-attention block"
+            src="images/transformers/architecture_cross_attention.png"
+            alt="Transformer architecture showing cross-attention block"
+            style="height:350px;">
+        </p>
+        <p>
+          To build an intuition for what self-attention and cross-attention
+          are doing, it's helpful to pluck out the attention matrix,
+          softmax(<em>Q K^T</em>), before it's used to filter the values.
+          It shows which elements in the sequence are attending to which
+          other elements and shines light on the core mechanism
+          of transformers. In
+          <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+          The Annotated Transformer</a>
+          the attention matrices for a translation example on a trained
+          transformer are pulled out and visualized.
+        </p>
+        <p>
+          This particular transformer was trained on a sentence translation
+          task, using pairs of English and German sentences to make an
+          English-to-German sentence translator. The example they illustrate
+          shows the translation of the English sentence 
+          "The log file
+          can be sent secretly with email or FTP to a
+          specified receiver." to the German sentence
+          "Die Protokolldatei kann heimlich per E-Mail oder
+          FTP an einen bestimmten Empfänger gesendet werden."
+          In a step called <strong>tokenization</strong>, both the English
+          and German sentences are broken up into words and pieces of words
+          in such a way that the transformer can handle them efficiently.
+          (More on this in a moment.) The tokenized sentences substitute
+          underscores for spaces and look like
+          [<em>▁The,▁log,▁file,
+          ▁can,▁be,▁sent,▁secret,ly,▁with,▁email,▁or,▁FTP,▁to,▁a,
+          ▁specified,▁receiver,.</em>] and
+          [<em>▁Die,▁Protokoll,datei,▁kann,▁,heimlich,▁per,▁E,-,Mail,▁oder,
+          ▁FTP,▁an,▁einen,▁bestimmte,n,▁Empfänger,▁gesendet,▁werden,.</em>].
+        </p>
 
         <h3 id="tokenizing">Tokenizing</h3>
       
