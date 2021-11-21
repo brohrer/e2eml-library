@@ -1785,8 +1785,56 @@
         </p>
 
         <h3 id="encoder">Encoder stack</h3>
+        <p>
+          Almost everything we've learned about the decoder applies to
+          the encoder too. The biggest difference is that there's no
+          explicit predictions being made at the end that we can use
+          to judge the rightness or wrongness of its performance.
+          Instead, the end product of an encoder stack is
+          disappointingly abstract&mdash;a sequence
+          of vectors in an embedded space. It has been described as
+          a pure semantic representation of the sequence, divorced from
+          any particular language or vocabulary, but this feels overly
+          romantic to me. What we know for sure is that it is a useful
+          signal for communicating intent and meaning to the decoder stack.
+        </p>
+        <p>
+          Having an encoder stack opens up the full potential of transformers
+          instead of just generating sequences, they can now translate
+          (or transform) the sequence from one language to another.
+          Training on a translation task is different than training on a
+          sequence completion task. The training data requires both
+          a sequence in the language of origin, and a matching sequence
+          in the target language. The full language of origin is run through
+          the encoder (no masking this time, since we assume that we
+          get to see the whole sentence before creating a translation)
+          and the result, the output of the final encoder layer is provided
+          as an input to each of the decoder layers. Then sequence generation
+          in the decoder proceeds as before, but this time with no prompt
+          to kick it off.
+        </p>
 
         <h3 id="cross_attention">Cross-attention</h3>
+        <p>
+          The final step in getting the full transformer up and running
+          is the connection between the encoder and decoder stacks,
+          the cross attention block. We've saved it for last and, thanks
+          to the groundwork we've laid, there's not a lot left to explain.
+        </p>
+        <p>
+          Cross-attention works just like self-attention with the exception
+          that the key matrix <em>K</em> and value matrix <em>V</em>
+          are based on the output of the final encoder layer, rather than
+          the output of the previous decoder layer. The query matrix
+          <em>Q</em> is still calculated from the results of the previous
+          decoder layer. This is the channel by which information from
+          the source sequence makes its way into the target sequence and
+          steers its creation in the right direction. It's interesting to
+          note that the same embedded source sequence is provided
+          to every layer of the decoder, supporting the notion that
+          successive layers provide redundancy and are all cooperating to
+          perform the same task.
+        </p>
 
         <h3 id="tokenizing">Tokenizing</h3>
       
