@@ -1683,8 +1683,77 @@
           used in transformers.
         </p>
 
-
         <h3 id="layer_stack">Multiple layers</h3>
+        <p>
+          While we were laying the foundations above, we showed that an
+          attention block and a feed forward block with carefully chosen
+          weights were enough to make a decent language model. Most of the
+          weights were zeros in our examples, a few of them were ones, and
+          they were all hand picked. When training from raw data, we won't
+          have this luxury. At the beginning the weights are all chosen
+          randomly, most of them are close to zero, and the few that aren't
+          probably aren't the ones we need. It's a long way from where it
+          needs to be for our model to perform well. 
+        </p>
+        <p>
+          Stochastic gradient descent through backpropagation can do some
+          pretty amazing things, but it relies a lot on luck. If there
+          is just one way to get to the right answer, just one combination
+          of weights necessary for the network to work well, then it's
+          unlikely that it will find its way. But if there are lots of paths
+          to a good solution, chances are much better that the model will
+          get there. 
+        </p>
+        <p>
+          Having a single attention layer (just one multi-head attention block
+          and one feed forward block) only allows for one path to a good
+          set of transformer parameters. Every element of every matrix
+          needs to find its way to the right value to make things work well.
+          It is fragile and brittle, likely to get stuck in a far-from-ideal
+          solution unless the initial guesses for the parameters are very
+          very lucky.
+        </p>
+        <p>
+          The way transformers sidestep this problem is by having multiple
+          attention layers, each using the output of the previous one as
+          its input. The use of skip connections make the overal pipeline
+          robust to individual attention blocks failing or giving wonky
+          results. Having multiples means that there are others waiting
+          to take up the slack. If one should go off the rails, or in any
+          way fail to live up to its potential, there will be another
+          downstream that has another change to close the gap or fix the
+          error. The paper showed that more layers resulted in better
+          performance, although the improvement became marginal after 6.
+        </p>
+        <p>
+          Another way to think about multiple layers is as a
+          converey belt assembly line. Each attention block and feedforward
+          block has the chance to pull inputs off the line, calculate
+          useful attention matrices and make next word predictions.
+          Whatever results they produce, useful or not, get added back onto
+          the conveyer, and passed to the next layer.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer redrawn as a conveyer belt"
+            src="images/transformers/layer_conveyer.png"
+            alt="Transformer redrawn as a conveyer belt"
+            style="height:200px;">
+        </p>
+        <p>
+          This is in contrast to the traditional description of many-layered
+          neural networks as "deep". Thanks to skip connections, successive
+          layers don't provide increasingly sophisticated abstraction as
+          much as they provide redundancy. Whatever opportunities for focusing
+          attention and creating useful features and making accurate
+          predictions were missed in one layer can always be caught by the
+          next. Layers become workers on the assembly line, where each
+          does what it can, but doesn't worry about catching every piece,
+          because the next worker will catch the ones they miss.
+        </p>
+
+
+
+
 
         <h3 id="decoder">Decoder stack</h3>
 
