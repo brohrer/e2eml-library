@@ -1751,11 +1751,38 @@
           because the next worker will catch the ones they miss.
         </p>
 
-
-
-
-
         <h3 id="decoder">Decoder stack</h3>
+        <p>
+          So far we have carefully ignored the encoder stack (the left hand
+          side of the transformer architecture) in favor of the decoder stack
+          (the right hand side). We'll fix that in a few paragraphs. But
+          it's worth noticing that the decoder alone is pretty useful.
+        </p>
+        <p>
+          As we laid out in the sequence completion task
+          <a href="#sequence_completion">description</a>, the decoder
+          can complete partial sequences and extend them as far as you want.
+          OpenAI created the generative pre-training (GPT) family of
+          models to do just this. The architecture they describe in this 
+          <a href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">report</a>
+          should look familiar. It is a transformer with the
+          encoder stack and all its connections surgically removed.
+          What remains is a 12 layer decoder stack.
+        </p>
+        <p style="text-align:center;">
+          <img title="Architecture of the GPT family of models"
+            src="images/transformers/gpt_architecture.png"
+            alt="Architecture of the GPT family of models"
+            style="height:300px;">
+        </p>
+        <p>
+          Any time you come across a generative model, like
+          <a href="https://arxiv.org/pdf/1810.04805v2.pdf">BERT</a>,
+          <a href="https://arxiv.org/abs/1802.05365">ELMo</a>, or
+          <a href="https://copilot.github.com/">Copilot</a>,
+          you're probably seeing a the decoder half of a transformer in
+          action.
+        </p>
 
         <h3 id="encoder">Encoder stack</h3>
 
