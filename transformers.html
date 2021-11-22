@@ -50,14 +50,17 @@
 
         <h3 id="one_hot">One-hot encoding</h3>
         <p>
+          In the beginning were the words. So very many words.
+          Our first step is to convert all the words
+          to numbers so we can do math on them.
+        </p>
+        <p>
           Imagine that our goal is to create the computer that responds
           to our voice commands. It’s our job to build the
           transformer that converts (or <strong>transduces</strong>)
           a sequence of sounds to a sequence of words.
         </p>
         <p>
-          The first step in working with sequences is to convert
-          them to numbers so we can do math on them.
           We start by choosing our <strong>vocabulary</strong>,
           the collection of symbols
           that we are going to be working with in each sequence.
@@ -71,7 +74,7 @@
           and perhaps another few thousand to cover computer-specific
           terminology. That would give us a vocabulary size that is
           the better part of a hundred thousand. One way to convert
-          a word to numbers is to start counting at one and
+          words to numbers is to start counting at one and
           assign each word its
           own number. Then a sequence of words can be represented as a
           list of numbers.
@@ -101,7 +104,8 @@
         </p>
         <p>
           Another way to think about one-hot encoding is that
-          each word still gets assigned its own number, but now it is an
+          each word still gets assigned its own number, but now that number
+          is an
           index to an array. Here is our example above, in one-hot
           notation.
         </p>
@@ -114,7 +118,8 @@
         <p>
           So the sentence "Find my files" becomes a sequence of one-dimensional
           arrays,
-          which quickly starts to look like a two-dimensional array.
+          which, after you squeeze them together,
+          starts to look like a two-dimensional array.
         </p>
         <p style="text-align:center;">
           <img title="A one-hot encoded sentence"
