@@ -18,23 +18,20 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h4>I'm still writing this. I hope it will be done by 2022.</h4>
         <p>
-          I've put off diving into transformers for a few years now,
-          but a few weeks ago someone asked me about them, and the discomfort
-          of not knowing the magic that powers them grew too great for me.
-          This post is a side effect of that dive. Reducing transformers
-          to some prose and diagrams is how I bound them to the
-          scaffolding of my comprehension and memory.
+          I procrastinated a deep dive into transformers for a few years.
+          Finally the discomfort
+          of not knowing what makes them tick grew too great for me.
+          Here is that dive.
         </p>
         <p>
           Transformers were introduced in this 2017
           <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
             paper</a>
           as a tool for sequence transduction&mdash;converting
-          one sequence of symbols into another. The most popular
-          examples of this are translating from one written language
-          to another. It has also been modified to perform sequence
+          one sequence of symbols to another. The most popular
+          examples of this are translation, as in English to German.
+          It has also been modified to perform sequence
           completion&mdash;given a starting prompt, carry on in the
           same vein and style. They have quickly become an indispensible tool
           for research and product development in natural language processing.
@@ -62,7 +59,7 @@
           The first step in working with sequences is to convert
           them to numbers so we can do math on them.
           We start by choosing our <strong>vocabulary</strong>,
-          the collection symbols
+          the collection of symbols
           that we are going to be working with in each sequence.
           In our case, there will be two different sets of symbols,
           one for the input sequence to represent vocal sounds
@@ -74,7 +71,8 @@
           and perhaps another few thousand to cover computer-specific
           terminology. That would give us a vocabulary size that is
           the better part of a hundred thousand. One way to convert
-          a words to numbers is to assign each word its
+          a word to numbers is to start counting at one and
+          assign each word its
           own number. Then a sequence of words can be represented as a
           list of numbers.
         </p>
@@ -1880,8 +1878,6 @@
         <h3 id="tokenizing">Tokenizing</h3>
       
         <h3 id="bpe">Byte pair encoding</h3>
-
-        <h3 id="audio_speed">Audio speech</h3>
 
         <h3 id="resources">Resources and credits</h3>
         <ul>
