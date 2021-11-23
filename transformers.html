@@ -1967,11 +1967,106 @@
           Fortunately, there is an elegant solution to this. Called
           <a href="https://en.m.wikipedia.org/wiki/Byte_pair_encoding">
           byte pair encoding</a>. Starting with the character level
-          representation, each character is assigned a code, one byte.
+          representation, each character is assigned a code, its own
+          unique byte.
           Then after scanning some representative data, the most common
-          pair of bytes is grouped together and assigned a new byte
-          of its own. That is substituted back into the data, and
+          pair of bytes is grouped together and assigned a new byte,
+          a new code.
+          Ths new code is substituted back into the data, and
           the process is repeated.
+        </p>
+        <p>
+          Codes representing pairs of characters can be combined with
+          codes representing other characters or pairs of characters
+          to get new codes representing longer sequences of characters.
+          There's no limit to the length of character sequence a code
+          can represent. They will grow as long as they need to
+          in order to represent commonly repeated sequences.
+          The cool part of byte pair encoding is that in infers which
+          long sequences of characters to learn from the data,
+          as opposed to dumbly representing all possible sequences.
+          it learns to represent long words like <em>transformer</em>
+          with a single byte code, but would not waste a code on an
+          arbitrary string of similar length, such as <em>ksowjmckder</em>.
+          And because it retains all the byte codes for its single
+          character building blocks, it can still represent weird misspellings,
+          new words, and even foreign languages.
+        </p>
+        <p>
+          When you use byte pair encoding, you get to assign it a vocabulary
+          size, ad it will keep building new codes until reaches that size.
+          The vocabulary size needs to be big enough, that the character
+          strings get long enough to capture the semantic content of the
+          the text. They have to mean something. Then they will be
+          sufficiently rich to power transformers.
+        </p>
+        <p>
+          After a byte pair encoder is trained or borrowed, we can use it
+          to pre-process out data before feeding it into the transformer.
+          This breaks it the unbroken stream of text into a sequence
+          of distinct chunks,
+          (most of which are hopefully recognizebable words)
+          and provides a concise code for each one. This is the process
+          called tokenization.
+        </p>
+
+        <h3 id="audio_input">Audio input</h3>
+        <p>
+          Now recall that our original goal when we started this whole
+          adveture was to translate from the audio signal or a spoken
+          command to a text representation. So far all of our examples
+          have been worked out with the assumption that we are working with
+          characters and words of written language. We can extend this
+          to audio too, but that will take an even bolder foray into
+          signal preprocessing.
+        </p>
+        <p>
+          The information in audio signals benefits from some heavy-duty
+          preprocessing to pull out the parts that our ears and brains
+          use to understand speech. The method is called Mel-frequecy
+          cepstrum filtering, and it's every bit as baroque as the name
+          suggests. Here's a well-illustrated
+          <a href="http://www.speech.cs.cmu.edu/15-492/slides/03_mfcc.pdf">
+          tutorial</a> if you'd like to dig into the fascinating details.
+        </p>
+        <p>
+          When the pre-processing is done, raw audio is turned into a
+          a sequence of vectors, where each element represents the change
+          of audio activity in a particular frequency range. It's dense
+          (no elements are zero) and every element is real-valued.
+        </p>
+        <p>
+          On the positive side, each vector makes a good "word" or token
+          for the transformer because it means something. It can be
+          directly translated into a set of sounds that is recognizeable
+          as part of a word.
+        </p>
+        <p>
+          On the other hand, treating each vector as a word is weird because
+          each one is unique. It's extremely unlikely that the same
+          set of vector values will ever occur twice, because there are so
+          many subtly different combination of sounds. Our previous
+          strategies of one-hot representation and byte pair encoding
+          are of no help.
+        </p>
+        <p>
+          The trick here is to notice that dense real-valued vectors
+          like this is what we end up with <em>after</em> embedding words.
+          Transformers love this format. To make use of it, we can use
+          the results of the ceptrum pre-processing as we would the
+          embedded words from a text example. This saves us the steps
+          of tokenization an embedding.
+        </p>
+        <p>
+          It's worth noting that we can do this with any other type of
+          data we want too. Lots of recorded data comes in the form of
+          a sequence of dense vectors. We can plug them right in to
+          a transformer's encoder as if they were embedded words.
+        </p>
+
+        <h3>Wrap up</h3>
+        <p>
+          That's the 
         </p>
 
         <h3 id="resources">Resources and credits</h3>
