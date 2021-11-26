@@ -388,7 +388,7 @@
           <a href="https://en.wikipedia.org/wiki/Markov_property">
             Markov property</a>
           that the probabilities for the next word depend only on
-          recent word. More specifically, it is a first order
+          recent words. More specifically, it is a first order
           Markov model because it only looks at the single most recent word.
           If it considered the two most recent words it would be
           a second order Markov model.
@@ -732,7 +732,7 @@
         <h3 id="rest_stop">Rest Stop and an Off Ramp</h3>
         <p>
           Congratulations on making it this far. You can stop if you want.
-          The selective-second-order-with-skips model is useful way to think
+          The selective-second-order-with-skips model is a useful way to think
           about what transformers do, at least in the decoder side.
           It captures, to a first approximation, what generative
           language models like
@@ -1044,7 +1044,7 @@
         <p>
           In a one-hot representation of a language, there is one
           vector element for each word. For a vocabulary of size <em>N</em>
-          that vector an <em>N</em>-dimensional space. Each word represents
+          that vector is an <em>N</em>-dimensional space. Each word represents
           a point in that space, one unit away from the origin along
           one of the many axes. I haven't figured out a great way to
           draw a high dimensional space, but there's a crude representation
@@ -1125,7 +1125,7 @@
           the zeros in the one-hot vector are hidden, as are all the other rows
           that don't get pulled out of the projection matrix.
           The full projection matrix is dense, each row containing the
-          coordinates of the word its associated with.
+          coordinates of the word it's associated with.
         </p>
         <p>
           Projection matrices can convert the original collection of one-hot
@@ -1518,7 +1518,7 @@
           We already walked through a conceptual illustration
           of attention
           <a href="#attention">above</a>. The actual implementation is
-          a little messier, but out earlier intuition is still helpful.
+          a little messier, but our earlier intuition is still helpful.
           The queries and the keys are no longer easy to inspect and
           interpret because they are all projected down onto their own
           idiosyncratic subspaces. In our conceptual illustration,
@@ -1812,13 +1812,13 @@
           results. Having multiples means that there are others waiting
           to take up the slack. If one should go off the rails, or in any
           way fail to live up to its potential, there will be another
-          downstream that has another change to close the gap or fix the
+          downstream that has another chance to close the gap or fix the
           error. The paper showed that more layers resulted in better
           performance, although the improvement became marginal after 6.
         </p>
         <p>
           Another way to think about multiple layers is as a
-          converey belt assembly line. Each attention block and feedforward
+          conveyor belt assembly line. Each attention block and feedforward
           block has the chance to pull inputs off the line, calculate
           useful attention matrices and make next word predictions.
           Whatever results they produce, useful or not, get added back onto
@@ -1871,7 +1871,7 @@
           <a href="https://arxiv.org/pdf/1810.04805v2.pdf">BERT</a>,
           <a href="https://arxiv.org/abs/1802.05365">ELMo</a>, or
           <a href="https://copilot.github.com/">Copilot</a>,
-          you're probably seeing a the decoder half of a transformer in
+          you're probably seeing the decoder half of a transformer in
           action.
         </p>
 
