@@ -24,7 +24,76 @@
           and its application is still congealing. In the meantime, here is
           a summary of activity to date.
         </p>
+        <h3>Tips and Tricks</h3>
+        <p>
+          These are somethings that have been reported to work so far.
+          If you discover any new tricks please let me know so I can add them
+          to the list!
+          <ul>
+            <li>
+              The big benefit of SCS appears to be parameter efficiency and
+              architecture simplicity. It doesn't look like it's going
+              to beat any accuracy records, and it doesn't run very fast.
+            </li>
+            <li>
+              Skip the nonlinear activation layers, like ReLU and sigmoid,
+              after SCS layers.
+            </li>
+            <li>
+              Skip the normalization layers, like batch normalization
+              or layer normalization, after SCS layers.
+            </li>
+            <li>
+              Use
+              <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/absolute_pooling.py">
+                MaxAbsPool</a> instead of MaxPool. It selects the element with
+              the highest magnitude of activity, even if it's negative.
+            </li>
+            <li>
+              Skip modern optimizers like ADAM or Momentum. It seems to 
+              work best with vanilla Stochastic Gradient Descent.
+            </li>
+            <li>
+              Raising activities to the power <em>p</em> generally doesn't
+              parallelize well on GPUs and TPUs. It will slow your code
+              down a LOT compared to straight convolutions.
+            </li>
+            <li>
+              Disabling the <em>p</em> parameters results in a huge speedup
+              on GPUs, but this takes the "sharpened" out of SCS.
+              Regular old cosine similarity is cool, but it is its own
+              thing with its own limitations.
+            </li>
+          </ul>
+        </p>
 
+        <h3>Reverse Chronology</he>
+
+
+        <p>
+          <strong>2022-02-25</strong>
+          <a href="
+            https://twitter.com/_clashluke/status/1497092150906941442
+          ">
+            experiments and analysis</a> by
+          <a href="https://github.com/ClashLuke/
+          ">Lucas Nestler
+            </a>. TPU implementation of SCS. Runtime performance comparison
+          with and without
+          the <em>p</em> parameter
+        </p>
+        <p>
+          <strong>2022-02-24</strong>
+          <a href="
+        https://github.com/DrJohnWagner/Kaggle-Notebooks
+          ">
+            code</a> by
+          <a href="
+          https://twitter.com/DrJohnWagner/status/1496741769748180994
+          ">Dr. John Wagner
+            </a>. Head to head comparison with convnet on American Sign Language
+            alphabet dataset.
+        </p>
         <p>
           <strong>2022-02-22</strong>
           <a href="
@@ -104,7 +173,7 @@
           <a href="https://github.com/StephenHogg/SCS">
             PyTorch code</a> by
           <a href="https://twitter.com/whistle_posse/status/1488656595114663939?s=20&t=lB_T74PcwZmlJ1rrdu8tfQ">
-            Stephen Hogg</a>. PyTorch implementation of SCS.
+            Stephen Hogg</a>. PyTorch implementation of SCS. MaxAbsPool implementation.
         </p>
         <p>
           <strong>2022-02-01</strong>
