@@ -30,35 +30,35 @@
           If you discover any new tricks please let me know so I can add them
           to the list!
           <ul>
-            <li>
+            <li> &#9658; 
               The big benefit of SCS appears to be parameter efficiency and
               architecture simplicity. It doesn't look like it's going
               to beat any accuracy records, and it doesn't run very fast.
             </li>
-            <li>
+            <li> &#9658; 
               Skip the nonlinear activation layers, like ReLU and sigmoid,
               after SCS layers.
             </li>
-            <li>
+            <li>&#9658; 
               Skip the normalization layers, like batch normalization
               or layer normalization, after SCS layers.
             </li>
-            <li>
+            <li>&#9658; 
               Use
               <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/absolute_pooling.py">
                 MaxAbsPool</a> instead of MaxPool. It selects the element with
               the highest magnitude of activity, even if it's negative.
             </li>
-            <li>
+            <li>&#9658; 
               Skip modern optimizers like ADAM or Momentum. It seems to 
               work best with vanilla Stochastic Gradient Descent.
             </li>
-            <li>
+            <li>&#9658; 
               Raising activities to the power <em>p</em> generally doesn't
               parallelize well on GPUs and TPUs. It will slow your code
               down a LOT compared to straight convolutions.
             </li>
-            <li>
+            <li>&#9658; 
               Disabling the <em>p</em> parameters results in a huge speedup
               on GPUs, but this takes the "sharpened" out of SCS.
               Regular old cosine similarity is cool, but it is its own
