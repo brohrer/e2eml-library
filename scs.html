@@ -39,6 +39,9 @@
               Skip the nonlinear activation layers, like ReLU and sigmoid,
               after SCS layers.
             </li>
+            <li> &#9658; 
+              Skip the dropout layers after SCS layers.
+            </li>
             <li>&#9658; 
               Skip the normalization layers, like batch normalization
               or layer normalization, after SCS layers.
@@ -51,7 +54,8 @@
             </li>
             <li>&#9658; 
               Skip modern optimizers like ADAM or Momentum. It seems to 
-              work best with vanilla Stochastic Gradient Descent.
+              work best with vanilla Stochastic Gradient Descent and
+              a gradual decay, such as exponential.
             </li>
             <li>&#9658; 
               Raising activities to the power <em>p</em> generally doesn't
@@ -67,7 +71,7 @@
           </ul>
         </p>
 
-        <h3>Reverse Chronology</he>
+        <h3>Reverse Chronology</h3>
 
 
         <p>
