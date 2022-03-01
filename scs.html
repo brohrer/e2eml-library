@@ -61,11 +61,6 @@
               the highest magnitude of activity, even if it's negative.
             </li>
             <li>&#9658; 
-              Skip modern optimizers like ADAM or Momentum. It seems to 
-              work best with vanilla Stochastic Gradient Descent and
-              a gradual decay, such as exponential.
-            </li>
-            <li>&#9658; 
               Raising activities to the power <em>p</em> generally doesn't
               parallelize well on GPUs and TPUs. It will slow your code
               down a LOT compared to straight convolutions.
