@@ -49,16 +49,16 @@
         <p>
           The true danger of p-values is not that we will upset
           an academic by doing it wrong. It’s that the conclusions
-          we draw from the p-values will be Very Wrong&mdash;that we will
+          we draw will be Very Wrong&mdash;that we will
           make an expensive change when the smartest move is to do nothing
           or that we will believe something is getting better when
           it’s getting worse.
         </p>
-        </h3>Case Study: Rejecting a change that you should keep</h3>
+        <h3>Case Study: Rejecting a change you should keep</h3>
         <p>
           To illustrate how p-values can cause serious problems for you,
           consider the case of the fictional startup On Belay.
-          This company matches up climbing partners. Users post their
+          This company matches up climbers with each other. Users post their
           profiles and get presented with a series of potential
           climbing partners. They swipe right to indicate they’d like
           to start a chat with a potential partner.
@@ -67,7 +67,8 @@
           Since the inception of the company, On Belay has used an algorithm
           (Algo A) to choose which potential partners to present.
           Now their ML team has recently developed a more sophisticated
-          approach (Algo B) based on the latest and hottest techniques,
+          approach (Algo B) based on the latest and hottest recommender
+          techniques,
           and a decision needs to be made about whether to transition over. 
         </p>
         <p>
@@ -81,8 +82,8 @@
         <p>
           The final p-value came in at 0.08, higher than the 0.05 threshold
           that we all use as the convention for statistical significance.
-          Algo B was not shown to be better than Algo A with statistical
-          significance. Because of this failure to show the advantage
+          Algo B was not shown to be significantly better than Algo A.
+          Because of this failure to show the advantage
           of Algo B, it was rejected.
         </p>
         <p>
@@ -95,13 +96,13 @@
           The outcome we saw was unlikely to occur if there was no difference
           between the Algos. It just happens to fall short of
           the arbitrary 0.05 threshold chosen for p in ages past.
-          If this change is inexpensive to make, switching to Algo B
+          Switching to Algo B
           is clearly the better bet. 
         </p>
         <p>
           The fundamental problem is not that p-values are bad, but
-          that they answer a different question than the one we wanted
-          to answer. We are interested in whether Algo A or B is likely
+          that they answer a different question than the one we care about.
+          We are interested in whether Algo A or B is likely
           to perform better. p-values don’t actually answer this.
           p-values focus on whether B performs better than A
           <em>with high confidence</em>. Many times we are less
@@ -139,12 +140,12 @@
         </p>
         <p>
           For our purposes, what we really want to know is which
-          SRR is likely to be higher than the other. The typical
+          SRR is most likely to be higher than the other. The typical
           way to report these results is to give the densest
           point in each distribution (the peak of the distribution curve here,
           also known as <em>the point estimate</em>) as the actual
-          value, paired with the p-value. This doesn’t answer our
-          question well at all.
+          value, paired with the p-value.
+          This doesn’t answer our question well at all.
         </p>
         <p>
           Instead, we can get a better sense of how wide each
@@ -217,7 +218,7 @@
           If it is not significant, it can be ignored.
         </p>
         <p>
-          Of course we know this is wrong. I suspect that most of
+          Of course we know this is wrong. I suspect most of
           the people who rely on p-values as a cognitive crutch
           would also tell you they know it’s wrong. But that doesn’t
           stop us from doing it. We are not disciplined enough to be
