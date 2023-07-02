@@ -195,12 +195,6 @@ img {
 
   
   box-shadow: 0 0 5px #ebebeb;
-  /*
-  -webkit-box-shadow: 0 0 5px #ebebeb;
-  -moz-box-shadow: 0 0 5px #ebebeb;
-  -o-box-shadow: 0 0 5px #ebebeb;
-  -ms-box-shadow: 0 0 5px #ebebeb;
-  */
 }
 
 p img {
@@ -356,6 +350,15 @@ form {
   padding: 20px;
 }
 
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
 /*******************************************************************************
 Full-Width Styles
 *******************************************************************************/
