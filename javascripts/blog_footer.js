@@ -9,7 +9,7 @@ document.write('\
               <img title="RSS icon"\
                 src="images/rss_icon.png"\
                 alt="The canonical RSS icon"\
-                style="height: 40px;">\
+                style="height: 25px;">\
             </a>\
           </p>\
           <p>\
