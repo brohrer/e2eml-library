@@ -5,11 +5,11 @@ document.write('\
         <section class="clearfix">\
           <p>\
             <a href="https://brandonrohrer.com/feed.xml">\
-            Subscribe to updates 
-              <img title="RSS icon"
-                src="images/rss_icon.png"
-                alt="The canonical RSS icon"
-                style="height: 40px;">
+            Subscribe to updates \
+              <img title="RSS icon"\
+                src="images/rss_icon.png"\
+                alt="The canonical RSS icon"\
+                style="height: 40px;">\
             </a>\
           </p>\
           <p>\
