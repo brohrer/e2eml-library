@@ -109,25 +109,15 @@
         <p>
           (For copy/pasting convenience)
         </p>
-        <code>import sqlite3</code>
-        <br>
-        <code>connection = sqlite3.connect("my_first.db")</code>
-        <br>
-        <code>cursor = connection.cursor()</code>
-        <br>
-        <code>cursor.execute("CREATE TABLE breakfast (day_of_week TEXT, food TEXT)")</code>
-        <br>
-        <code>cursor.execute("INSERT INTO breakfast VALUES ('Monday', 'cereal')")</code>
-        <br>
-        <code>cursor.execute("INSERT INTO breakfast VALUES ('Wednesday', 'eggs')")</code>
-        <br>
-        <code>cursor.execute("SELECT * FROM breakfast")</code>
-        <br>
-        <code>print(cursor.fetchall())</code>
-        <br>
-        <code>connection.close()</code>
-        <br>
-        <br>
+        <pre><code>import sqlite3
+connection = sqlite3.connect("my_first.db")
+cursor = connection.cursor()
+cursor.execute("CREATE TABLE breakfast (day_of_week TEXT, food TEXT)")
+cursor.execute("INSERT INTO breakfast VALUES ('Monday', 'cereal')")
+cursor.execute("INSERT INTO breakfast VALUES ('Wednesday', 'eggs')")
+cursor.execute("SELECT * FROM breakfast")
+print(cursor.fetchall())
+connection.close()</code></pre>
         <script type="text/javascript" src="javascripts/blog_signature.js"></script>
       </section>
     </div>

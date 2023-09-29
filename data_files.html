@@ -76,6 +76,13 @@ with open("data.csv") as csv_file:
 df = pd.read_csv("data.csv")</code></pre>
         </p>
 
+        <h3>Download a csv from a URL</h3>
+        <p>
+<pre><code>import urllib.request
+response = urllib.request.urlopen(csv_url)
+rows = response.read().decode("utf-8").split("\n")</code></pre>
+        </p>
+
         <h3>Convert a JSON string to Python dictionary and back</h3>
         <p>
 <pre><code>import json
