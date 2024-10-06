@@ -1,9 +1,5 @@
 document.write('\
     <!-- FOOTER  -->\
-    <div id='data-ring-dot-list'>\
-        <script type="text/javascript" src="https://randyau.github.io/datawebring/onionring-variables.js"></script>\
-        <script type="text/javascript" src="https://randyau.github.io/datawebring/onionring-widget.js"></script>\
-    </div>\
     <div id="footer_wrap" class="outer">\
       <footer class="inner">\
         <section class="clearfix">\
