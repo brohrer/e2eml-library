@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Convolution in one dimension for neural networks";</script>
+  <script type="text/javascript">var publication_date = "February 29, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 321
+          <a href="https://e2eml.school/321">
+          One Dimensional Convolutional Neural Networks</a></h4>
+        <br>
+        <iframe width="560" height="315"
+          src="https://www.youtube.com/embed/videoseries?list=PLVZqlMpoM6ka9uPzaSCpg75AeS7wPpjl9"
+          frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+        <p style="text-align:center;">
+          <img title="Convolution showing kernel being reproduced by delta function"
+            src="images/conv1d/aa_copy.gif"
+            alt="Convolution showing kernel being reproduced by delta function"
+            style="height: 300px;">
+        </p>
+        <p>
+          Neural networks can now tell
+          with reasonable accuracy whether a photo contains a dog. Not only
+          that, but it can tell you what breed of dog it is more accurately
+          than most humans. The mathematical magic that makes this possible
+          is
+          <a href="
+            https://en.wikipedia.org/wiki/Convolution
+          ">convolution</a>. It
+          <a href="
+            https://e2eml.school/how_convolutional_neural_networks_work.html
+          ">endows the neural network</a> with the ability 
+          to recognize
+          particular patterns within the pixels so that it can
+          distinguish a dalmatian from a dachshund.
+        </p>
+        <p>
+          Convolution is a good way to identify patterns in data that is
+          directly tied to space or time.
+          Adjacent pixels in an image are adjacent for a reason.
+          In the physical world, they collect light from neighboring locations.
+          Time series data has a similar structure.
+          Neighboring data points were produced close together in time
+          and are much more likely to be related then points far apart.
+          This inherent structure is what convolution exploits.
+          It finds local patterns that reoccur in the data.
+          It would not be effective, for instance, if we first
+          scrambled the pixels in an image.
+          That would hide the patterns, the spatial relationships,
+          that convolution tries to learn.
+        </p>
+        <p>
+          The math behind convolution is an artful combination of
+          multiplication and addition. 
+          We can best get a feel for convolution by looking at a
+          one dimensional signal. In this animation, we see
+          a shorter sequence, the kernel, being convolved with a
+          longer sequence, the signal. The math behind convolution
+          doesn’t actually care which of these is longer, but it is
+          convenient for us to assign this convention as we develop
+          them for neural networks.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution showing kernel being reproduced by several delta functions"
+            src="images/conv1d/bb_copy.gif"
+            alt="Convolution showing kernel being reproduced by several delta functions"
+            style="height: 300px;">
+        </p>
+
+        <p>
+          The recipe for convolution is surprisingly short:
+          <ol>
+            <li>Flip the kernel left to right</li>
+            <li>Step the kernel along the signal one data point at a time</li>
+            <li>At each position, calculate the dot product of the two</li>
+              <ul>
+                <li>3.1 Multiply each pair of aligned values together</li>
+                <li>3.2 Add up those products</li>
+              </ul>
+            <li>The resulting sequence of dot products is the convolution
+              of the kernel with the signal</li>
+          </ol>
+        </p>
+        <p>
+          The formal definition of convolution extends from minus infinity
+          to plus infinity. You can imagine both the signal and the kernel
+          being padded with zeros out forever in both directions.
+          The only non-zero values come when there is any overlap between
+          the non-zero parts of the signal and the kernel.
+        </p>
+        <p>
+          In practice, you can choose to keep every part of the convolution
+          that is non-zero, or you can limit your results to just those
+          convolution values where the kernel completely overlaps the signal.
+          You can also choose a compromise, which is to trim the convolution
+          result to be the same length as the signal.
+          For simplicity, we'll use this last option to start with.
+        </p>
+        <p>
+          We can rewrite this visualization as a sequence of equations.
+          We will start by specifying that our signal, <em>x</em>
+          is of length </em>m</em>,
+          our kernel, <em>w</em>, is of length <em>n</em>
+          and both are made up of
+          real values. The result, <em>y</em> will be the same size as
+          <em>x</em>.
+        <p>
+
+        <p style="text-align:center;">
+          <img title="Signal and kernel definitions"
+            src="images/conv1d/defs_1_eq.png"
+            alt="Signal and kernel definitions"
+            style="width: 600px;">
+        </p>
+
+        </p>
+          To simplify the notation for ourselves later, we will
+          add the additional constraint that <em>n</em> is odd, and that the
+          length of our kernel can also be expressed as <em>2p+1</em>.
+          <em>p</em> in this case is a little less
+          than half the length of the kernel.
+          For a kernel with <em>n=5</em>,<em>p</em> would be 2. 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Signal and kernel definitions"
+            src="images/conv1d/defs_2_eq.png"
+            alt="Signal and kernel definitions"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Then, by walking through the recipe for convolution for a few
+          steps, we can write out longhand the equations for each
+          value of <em>y</em>, using the signal <em>x</em> and the kernel
+          <em>w</em>.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution calculations, longhand"
+            src="images/conv1d/conv_long_1_eq.png"
+            alt="Convolution calculations, longhand"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Thankfully we can use the summation shorthand to represent this
+          more concisely. In this formulation, any time we refer to a
+          signal value outside the non-zero range of [0, <em>m</em>-1],
+          we substitute in a zero. 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution calculations, with summations"
+            src="images/conv1d/conv_sum_eq.png"
+            alt="Convolution calculations, with summations"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          And we can shorten it further by indexing on the signal position.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution definition"
+            src="images/conv1d/conv_1_eq.png"
+            alt="Convolution definition"
+            style="width: 600px;">
+        </p>
+
+        <h4 id="xcorr">Convolution vs. cross-correlation</h4>
+        <p>
+          There is understandable confusion between
+          <a href="
+            https://en.wikipedia.org/wiki/Convolution
+          ">convolution</a> and
+          <a href="
+            https://en.wikipedia.org/wiki/Cross-correlation
+          ">cross-correlation</a>. For discrete arrays of values,
+          like we are showing
+          here and like what would be used in any neural network,
+          they are identical except that in cross-correlation the
+          kernel is not flipped left-to-right before calculating the sliding
+          dot product.  
+        </p>
+        <p>
+          The distinction gets blurrier if you simply store and
+          handle the
+          convolution kernel in its pre-flipped state. Then it looks
+          <em>exactly</em> like cross-correlation. Avoiding the kernel
+          flip every time through the network may save some
+          computation time. My understanding is that this is what
+          PyTorch and TensorFlow do under the hood.
+        </p>
+        <p>
+          As a side note, you can cross-correlate a signal
+          with itself, and the result is called an autocorrelation.
+          (
+          <a href="
+            https://youtu.be/ZjaBn93YPWo
+          ">An alternative interpretation of autocorrelation</a> is
+          that is shows how well
+          a signal correlates with itself when shifted by a certain number
+          of time steps.)
+        </p>
+
+        <h3>Differentiation</h3>
+        
+        <p>
+          Since we are planning to use convolution in our network,
+          we are only halfway done. Neural networks rely on backpropagation
+          to learn their parameters, and backpropagation needs every step
+          of the computation to be differentiable. We can stack any
+          type of layer we want in a neural network, as long as we can
+          take its derivative.
+        </p>
+        <p>
+          The process for setting up a layer for backpropagation is similar
+          no matter what that layer does. The output gradient
+          (the partial derivative of the loss function with respect
+          to each of the layer's outputs) is the starting point.
+        </p>
+        <p>
+          To make backpropagation work, we have to calculate two groups
+          of derivatives, the input gradient 
+          (the partial derivative of each of the layer's inputs
+          with respect to the loss function), and the parameter gradient
+          (the partial derivative
+          of each or of the layer's adjustable parameters with respect
+          to the loss function).
+        </p>
+        <p>
+          The input gradient is passed back to the previous layer
+          in the network, which continues the process on up the line.
+          The parameter gradient is used with an optimizer, like stochastic
+          gradient descent, to adjust parameter values in an effort
+          to get value of the loss function as low as possible.
+        </p>
+        <p>
+          Here we will step through the process of calculating
+          the input gradient and the parameter gradient
+          for one dimensional convolution. Keep in mind that you can follow
+          a similar process for any differential computation that you
+          would like to build into a neural network layer.
+        </p>
+
+        <h4>Input gradient</h4>
+        <p>
+          By the chain rule,
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the input gradient"
+            src="images/conv1d/input_grad_1_eq.png"
+            alt="Calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          To find the input gradient we'll have to find the derivative of
+          every input with respect to every output. To get at that, we
+          can go back to one of our outputs at position <em>j</em>, not too
+          close to either end of the array and write out the convolution
+          equation for it.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="More calculation of the input gradient"
+            src="images/conv1d/input_grad_2_eq.png"
+            alt="More calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          In this form, we can take the derivative of each input with
+          respect to the outputs it contributes to.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Yet more calculation of the input gradient"
+            src="images/conv1d/input_grad_3_eq.png"
+            alt="Yet more calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          With some rearranging, we can group the terms by input.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Even more calculation of the input gradient"
+            src="images/conv1d/input_grad_4_eq.png"
+            alt="Even more calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          At this point a neat pattern appears. We can use this to re-write
+          the full expression for the input gradient from above.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Simplified calculation of the input gradient"
+            src="images/conv1d/input_grad_5_eq.png"
+            alt="Simplified calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          If we adopt the notation of a left-facing arrow over an array to
+          indicate that it has been reversed, left-to-right, pivoting
+          about zero, then we can
+          rewrite the input gradient as another convoltion with the reversed
+          kernel. Note that <em>i</em> here varies between 0 and <em>m</em>-1,
+          and that any values outside the range of the output
+          gradient are assumed to be zero.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Concise calculation of the input gradient"
+            src="images/conv1d/input_grad_6_eq.png"
+            alt="Concise calulation of the input gradient"
+            style="width: 600px;">
+        </p>
+
+        <h4>Parameter gradient</h4>
+        <p>
+          As with inputs, the goal is to find the partial derivative
+          of the loss function with respect to each of the parameters, that is,
+          each of the element values within the kernel.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient"
+            src="images/conv1d/param_grad_1_eq.png"
+            alt="Calulation of the parameter gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          We can make use of the expanded formulas for the outputs above
+          to calculate the components of the parameter gradients too.
+          Each of these expressions can be differentiated with respect
+          to the parameters:
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Expanded calculation of the parameter gradient"
+            src="images/conv1d/param_grad_2_eq.png"
+            alt="Expanded calulation of the parameter gradient"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          yielding 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, derivatives"
+            src="images/conv1d/param_grad_3_eq.png"
+            alt="Calulation of the parameter gradient, derivatives"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Now that we have some practice, we can pull out a similar pattern
+          and simplify the expressions.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, simplified"
+            src="images/conv1d/param_grad_4_eq.png"
+            alt="Calulation of the parameter gradient, simplified"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          In this form, it is amenable to translating to computer code.
+          However, for you who enjoy the mathematical pleasures of
+          symmetry,
+          the final result can be massaged into convolution if we again
+          flip the array of input values left-to-right, pivoting around zero. 
+          Note that <em>k</em> here varies between <em>-p</em>,and <em>p</em>,
+          and that any values outside the range of the output
+          gradient are assumed to be zero.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Calculation of the parameter gradient, concise"
+            src="images/conv1d/param_grad_5_eq.png"
+            alt="Calulation of the parameter gradient, concise"
+            style="width: 600px;">
+        </p>
+
+        <h3 id="padding">Handling the beginning and the end</h3>
+        <p>
+          In order to make our output array <em>y</em> the same size as our
+          input array <em>x</em>, we added a few extra zeros to each end of
+          our input array. This practice is called padding.
+          It’s pretty helpful when you need an array that’s a different
+          size than the one you have.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with zeroes"
+            src="images/conv1d/pad_zeros.png"
+            alt="Convolution signal padded with zeroes"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          The downside of padding an array with zeros is that we are actually
+          fabricating data, and when we do this it’s possible to corrupt our
+          signal. For instance, if our one dimensional data was
+          a sequence of stock prices, adding zeros at the beginning
+          and the end might make investors nervous.
+          They don’t reflect reality. The desire is to extend the data
+          with neutral points. In this case, zeros would be
+          anything but neutral.
+        </p>
+        <p>
+          Another option for padding that can be quite benign is
+          padding wtih non-zero constant values. We can choose some constant,
+          such as the median of the array, or the average of the first
+          six data points, or even the value of the first point, and pad
+          the array with that.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with constant values"
+            src="images/conv1d/pad_const.png"
+            alt="Convolution signal padded with constant values"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Another option is mirror padding. In this case, we take whatever
+          the length of the additional pad needs to be, pull that many values
+          off the beginning (or the end), flip them around left-to-right,
+          and attach them as the pad. This results in a short tail that is
+          the mirror image of the original beginning (and end) of the data.
+          For some data sets this creates a nice neutral set of data points
+          that doesn’t change the meaning of the data. However, consider
+          the case for you have daily time series data and a very
+          big difference between weekday values and weekend values.
+          In this case, taking a mirror image of the last few data points
+          may get you two weekends in a row, or no weekends at all for
+          10 days. This would not result in a neutral extension of the data.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with mirrored values"
+            src="images/conv1d/pad_mirror.png"
+            alt="Convolution signal padded with with mirrored values"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          Yet another trick is circular padding. In this case, the last
+          few elements are taken off the end of the array and copied over
+          and tacked onto the beginning. Similarly, a copy of the first
+          few elements is tacked onto the end. This makes the array appear
+          as if it was part of a circular, repeating pattern. This can make
+          good sense for time series data that is chopped into
+          an whole number of weeks, or of years, or of whatever
+          time interval is fundamental to the process being measured.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal padded with circular shifting"
+            src="images/conv1d/pad_circular.png"
+            alt="Convolution signal padded with circular shifting"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          If you look carefully, all these different padding strategies
+          generate different results. Padding is a fine idea as long
+          as you have a good feeling for how to extend the data set
+          in a way that doesn't corrupt it or change its meaning
+          dramatically.
+        </p>
+        <p>
+          In a convolutional neural network, 
+          there’s nothing that says that our output array needs to be
+          the same size as our input array. One very safe way to make sure
+          all of our data is valid is to limit our convolutions to the
+          positions in which the kernel is completely supported by the input.
+          When we do this, our output is shorter than our input by the
+          length of our kernel minus one. It also gives us
+          peace of mind that every single output point is the result of
+          a valid convolution. It frees us up from having to
+          invent plausible data.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution signal unpadded"
+            src="images/conv1d/no_pad.png"
+            alt="Convolution signal unpadded"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          When we limit ourselves to valid convolutions, the math changes
+          only superficially. Instead of both the input and output having
+          the same length <em>m</em>, our input will have length <em>m_x</em>,
+          and our output will have length <em>m_y</em>, equal to
+          <em>m_x - n + 1</em>, where <em>n</em>  is the length of the kernel.
+          In the equations above where we calculate <em>y</em> all we have
+          to do is limit our <em>y</em> indices to the valid positions.
+        </p>
+        <p>
+          Another way to think about this is that we still start
+          with a <em>y</em> array the same size as our <em>x</em> array,
+          but the only values we calculate are the valid,
+          fully supported ones. The others
+          stay empty and don’t get passed on to the next layer as outputs.
+        </p>
+        <p>
+          When calculating gradients, we can do the reverse. We track the
+          valid values for <em>dL/dy</em>, and
+          if the equation asks for any not-valid value it gets a zero instead.
+          This helps it to ignore all of the locations that don’t have an
+          output gradient associated with them.
+        </p>
+
+        <h4>Python implementation</h4>
+
+        <p>
+          Numpy‘s <code>convolve()</code> function handles one dimensional
+          convolution seamlessly. You can specify
+          <code>mode="full"</code> to keep all the non-zero values,
+          <code>mode="valid"</code> to only keep the completely overlapping
+          values, or <code>mode="same"</code> to ensure the result is the
+          sampe length as the signal.
+          What we described here is equivalent to working
+          with the <code>mode="same"</code> condition.
+        </p>
+        <p>
+          To take advantage of Numpy's full collection of padding tools,
+          <a href="
+            https://docs.scipy.org/doc/numpy/reference/generated/numpy.pad.html
+          ">check out the documention for the pad() function</a>.
+        </p>
+
+        <h3 id="stride">Stride</h3>
+        <p>
+          Another useful trick in calculating convolutions for neural networks
+          is to not calculate them for every pixel, but to skip to every
+          second or third value. This skip is called a stride. Calculating
+          the convolution at every location corresponds to a stride of one.
+          Skipping every second value is a stride of two, and so forth.
+          The number of calculations that you have to do for one dimensional
+          convolution is one over the stride, so you can see the
+          efficiency motivator behind it.
+        </p>
+
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 1"
+            src="images/conv1d/stride_1.gif"
+            alt="Convolution with stride 1"
+            style="width: 400px;">
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 2"
+            src="images/conv1d/stride_2.gif"
+            alt="Convolution with stride 2"
+            style="width: 400px;">
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution with stride 4"
+            src="images/conv1d/stride_4.gif"
+            alt="Convolution with stride 4"
+            style="width: 400px;">
+        </p>
+
+        <p>
+          When we go to implement a stride convolution, we can use
+          the same trick of initializing an output array the same size as
+          our input array, then step through it and only calculate
+          convolutions for the locations that match our stride.
+          Then when we’re done, we pull out and condense just the calculated
+          convolutions and pass them on as the output.
+        </p>
+        <p>
+          Then when we go to backpropagate the output gradient,
+          we can create a full array of zeros that matches the size if the
+          input array, and we can populate it with all of the strided
+          output gradient values. Then, it will look like a complete,
+          dense set of output gradients, but with all of the skipped values
+          as zeros. From there, we can treat it as we would any other
+          complete set of output gradients, and the zeros in the skipped
+          positions will ensure that they get handled appropriately.
+        </p>
+        <p>
+        The fastest computations are the ones you never have to do,
+        so introducing a stride can speed up a neural network considerably.
+        </p>
+
+
+        <h3 id="multichannel"> Multiple channels </h3>
+        <p>
+          One dimensional data often comes in the form of
+          several parallel channels or streams.
+          Economic data can be collected as many different indices
+          (say, the price of a barrel of oil, the gross domestic product,
+          and the unemployment rate) collected over the same time period
+          at the same intervals. Weather data can be organized as
+          hourly temperature
+          measurements collected at different locations.
+          Electroencephalographic recordings come in a bundle of 128 channels.
+        </p>
+        <p>
+          What defines a multichannel signal
+          is that the signals within it share a common axis &mdash;
+          in these examples, all measurements were made at the same times.
+          The order of events on this organizaing axis matters.
+          Rearranging the items in a time sequence scrambles the meaning
+          out of it. What makes these different than a true two dimensional
+          signal is that the order of the channels themselves doesn't matter.
+          You can re-order the list of cities in a set of temperature
+          measurements and it doesn't change what the data means.
+          If the temperature-by-city data were represented in a table,
+          with each row being a city and each column being an hourly
+          measurement, then we can see how rearranging the rows
+          wouldn't mess up the data set, but rearranging the columns would
+          make it much harder to interpret. Another way to say that is
+          that the row order doesn't contain any information, but
+          the column ordering does.
+        </p>
+        <p>
+          In a multichannel signal, we can treat teach channel independently,
+          as its own flavor or color of data, not to be mingled with
+          the others. Because of this, we can't expect that the same
+          kernel structure will be meaningful across different channels.
+          To handle this, we instead create and learn multi-channel kernels
+          &mdash; a stack of kernels bound together, one for each channel.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Multi-channel convolution"
+            src="images/conv1d/multichannel.gif"
+            alt="Multi-channel convolution"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          The math for multi-channel convolution looks almost the same
+          as for single channel, except for an additional summation
+          over all the channels. For gradient calculations it's even
+          more similar. You just have to work with one channel at a time.
+          In the equations below, <em>c</em> is the channel index.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Multichannel convolution equations"
+            src="images/conv1d/conv_multichannel_eq.png"
+            alt="Multichannel convolution equations"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          The result of a multichannel convolution is a single channel
+          output. Because the sliding dot product covers all the channels
+          at once, they all get summed together and reduced down to a
+          single channel. 
+          However, a convolutional layer will have several kernels.
+          Each kernel acts as a feature detector, so the result
+          of the convolution is sometimes called a <em>feature map</em>,
+          a map that shows where in the signal the kernel occurred.
+          The combined result of a set of kernels is a collection
+          of feature maps. For one dimensional data, this is a
+          multichannel one dimensional signal.
+          (Typically the number of kernels in a layer is a small exponent
+          of two, like 16 or 64.
+          The exact number is a hyperparameter that can be adjusted
+          based on the particular problem you are working on.)
+        </p>
+        <p>
+          Now we've closed the circle on
+          one dimensional convolution layers.
+          A convolution layer accepts a multichannel one dimensional signal,
+          convolves it with each of its multichannel kernels, and
+          stacks the results together into a new multichannel signal
+          that it passes on to the next layer. Because its outputs
+          look like its inputs, it means we can stack as many of them together
+          as we like, just like Lego bricks.
+        </p>
+
+        <h3 id="bias">Bias</h3>
+        <p>
+          The only piece we are missing now is the bias. Each output
+          has a learned bias value that is added into the result of
+          the convolution. It’s a constant value, <em>b</em>.
+          It is similar to the bias node in a dense neural network.
+          It provides a constant offset to a given output whenever
+          it's advantageous to do so.
+        </p>
+        <p>
+          Because the bias stands alone, it doesn’t show up anywhere
+          in the input gradient. The derivative of the output with
+          respect to a constant bias is always one, making a
+          trivial addition to the collection of parameter gradients.
+        </p>
+        <p>
+          The final set of equations looks like this: 
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Convolution equations with bias"
+            src="images/conv1d/conv_bias_eq.png"
+            alt="Convolution equations with bias"
+            style="width: 600px;">
+        </p>
+        <hr>
+        <p>
+          To walk through the process of implementing this in a Python
+          machine learning framework, come join us in
+          <a href="https://e2eml.school/321">e2eML Course 321</a>.
+          It's a work in progress, to be complete June 1.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

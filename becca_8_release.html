@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Brandon Rohrer: Becca 8 Release.">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+
+    <title>Becca 8 Release</title>
+    </head>
+
+  <body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">Becca 8 Release</h1>
+          <h2><a id="project_tagline" href="blog.html">
+            Brandon Rohrer's Blog</a></h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        
+        <a href="https://github.com/brohrer/becca">
+          <img src="images/logo_plate.png" alt="Becca" style="height: 125px;" />
+        </a>
+        
+        <p>
+          <a href="https://github.com/brohrer/becca/releases/tag/0.8.1">Becca 8</a>
+          is out and it has some big improvements. 
+        </p>
+        <h3>Performance</h3>
+        <p>
+          Becca 8 is performing well on its ten test worlds. Each one presents a different type 
+          of reinforcement learning task. None of them are exceptionally challenging, 
+          but for one algorithm to perform  well on all of them (as Becca does) 
+          requires an exceptionally robust approach.
+        </p>
+        <p>
+          In order to make Becca run comfortably on laptops, most of the computation 
+          is streamlined. Although it's written in python, Becca uses numba to compile 
+          the hardest working parts into C. Those bits run very fast.
+        </p>
+        <a href="https://github.com/brohrer/becca">
+          <img src="images/becca_8_performance.png" alt="Becca" style="height: 350px;" />
+        </a>
+        <p> &nbsp </p>
+
+        <h3>Ease of use</h3>
+        <p>
+          Installing Becca is a one-line job on the command line.
+          <pre><code>pip install becca</code></pre>
+        </p>
+        <p>
+          Running the test worlds is easy too. In python:
+          <pre><code>import becca_test.test
+becca_test.test.suite()</code></pre>
+        </p>
+        <p> &nbsp </p>
+
+        <h3>Next Steps</h3>
+        <p>
+          The good folks at
+          <a href="https://gym.openai.com/">OpenAI</a>
+          have created a playground called Gym for Becca and agents like it.
+          Learning on simulated robots of all types and complexities is a great
+          opportunity to show what Becca can do. Getting Becca integrated with Gym
+          is my next development goal. There are some intermediate steps, and
+          I'll be working through them for the next several months.
+        </p>
+        <p> &nbsp </p>
+
+        <p>
+          If you have questions or want to chat, please join us on 
+          <a href="https://gitter.im/brohrer/becca">Gitter</a>.
+          Making
+          <a href="https://github.com/brohrer/becca">Becca</a>
+          faster, smarter and easier to use are baby steps toward 
+          it's larger purpose - to be useful. I hope you enjoy working with it.
+        </p>
+        <p> &nbsp </p>
+        <p>
+          <a href="http://e2eml.school/index.html">Brandon</a>
+          <br>
+          August 5, 2016
+        </p>
+        <p>
+          Follow me on <a href="https://twitter.com/_brohrer_">Twitter</a>
+          or connect with me on 
+          <a href="https://www.linkedin.com/in/brohrer">LinkedIn</a>
+        </p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <section class="clearfix">
+          <a id="project_tagline" href="blog.html"><span>Blog</span></a>
+          &nbsp &nbsp &nbsp
+          <a id="project_tagline" href="index.html"><span>Home</span></a>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>

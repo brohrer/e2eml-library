@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Markers in Matplotlib";</script>
+  <script type="text/javascript">var publication_date = "March 29, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+        
+        <table>
+          <tr>
+            <td>
+              <a target="_self" href="#size">
+                <img title="large markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_large.png"
+                  alt="thumbnail of a scatterplot using large circular markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#size">
+                <pre><code>ax.scatter(x, y, s=80)</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#sized">
+                <img title="various sized markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_sized.png"
+                  alt="thumbnail of a scatterplot using circular markers of differing sizes"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#sized">
+<pre><code>sizes = np.random.sample(size=x.size)
+ax.scatter(x, y, s=sizes)</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#triangle">
+                <img title="triangle markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_triangle.png"
+                  alt="thumbnail of a scatterplot using triangular markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#triangle">
+                <pre><code>ax.scatter(x, y, marker="v")</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#styled">
+                <img title="varying marker styles"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_styled.png"
+                  alt="thumbnail of a scatterplot using a variety of markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#styled">
+<pre><code>ax.scatter(x1, y1, marker="o")
+ax.scatter(x2, y2, marker="x")
+ax.scatter(x3, y3, marker="s")</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#orange">
+                <img title="orange markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_orange.png"
+                  alt="thumbnail of a scatterplot using orange markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#orange">
+                <pre><code>ax.scatter(x, y, c="orange")</code></pre>
+              </a>
+            </td>
+
+          </tr>
+          
+          <tr>
+
+            <td>
+              <a target="_self" href="#colors">
+                <img title="colorful markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_colors.png"
+                  alt="thumbnail of a scatterplot using colorful markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#colors">
+                <pre><code>ax.scatter(x, y, c=x-y)</code></pre>
+              </a>
+            </td>
+
+          </tr>
+          
+          <tr>
+
+            <td>
+              <a target="_self" href="#transparent">
+                <img title="transparent markers"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_transparent.png"
+                  alt="thumbnail of a scatterplot using transparent markers"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#transparent">
+<pre><code>ax.scatter(x, y, alpha=.05)</code></pre>
+              </a>
+            </td>
+          </tr>
+          
+        </table>
+
+
+        <h3 id="width">Make your points expressive</h3>
+
+        <p>
+          Being able to show individual data points is a powerful way to
+          communicate. Being able to change their appearance can make the story
+          they tell much richer.
+        </p>
+
+        <p>
+          A note on terminology: In Matplotlib, plotted points are called
+          "markers". In plotting, "points" already refers to a unit of measure,
+          so calling data points "markers" disambiguates them. Also, as we'll
+          see, markers can be far richer than a dot, which earns them a more
+          expressive name.
+        </p>
+
+        <p>
+          We'll get all set up and create a few data points to work with.
+          If any part if this is confusing,
+          <a href="matplotlib_going_deeper.html#agg_section">
+            take a quick look at why it's here</a>.
+        </p>
+
+<pre><code>import matplotlib
+matplotlib.use("agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(-1, 1)
+y = x + np.random.normal(size=x.size)
+
+fig = plt.figure()
+ax = fig.gca()</code></pre>
+
+
+        <h3 id="size">Change the size</h3>
+
+        <pre><code>ax.scatter(x, y, s=80)</code></pre>
+
+        <p>
+          Using the <code>s</code> argument, you can set the size of
+          your markers, in points squared. If you want a marker 10 points
+          high, choose <code>s=100</code>.
+        </p>
+
+        <img title="large markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_large.png"
+          alt="scatterplot using large circular markers"
+          style="height: 440px;">
+
+
+        <h3 id="sized">Make every marker a different size</h3>
+
+        <p>
+          The real power of the <code>scatter()</code> function somes out when
+          we want to modify markers individually.
+        </p>
+
+<pre><code>sizes = (np.random.sample(size=x.size) * 10) ** 2
+ax.scatter(x, y, s=sizes)</code></pre>
+
+        <p>
+          Here we created an array of sizes, one for each marker.
+        </p>
+
+        <img title="various sized markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_sized.png"
+          alt="scatterplot using circular markers of differing sizes"
+          style="height: 440px;">
+
+        <h3 id="triangle">Change the marker style</h3>
+        <p>
+          Sometimes a circle just doesn't set the right tone. Luckliy
+          Matplotlib has you covered. There are 
+          <a href="https://matplotlib.org/api/markers_api.html">
+            dozens of options</a>, plus the ability to create custom
+          shapes of any type.
+        </p>
+
+<pre><code>ax.scatter(x, y, marker="v")</code></pre>
+
+        <p>
+          Using the <code>marker</code> argument and the right character code,
+          you can choose whichever style
+          you like. Here are a few of the common ones. 
+        </p>
+
+        <ul>
+          <li>".": point</li> 
+          <li>"o": circle</li> 
+          <li>"s": square</li> 
+          <li>"^": triangle</li> 
+          <li>"v": upside down triangle</li> 
+          <li>"+": plus</li> 
+          <li>"x": X</li> 
+        </ul>
+
+        <img title="triangle markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_triangle.png"
+          alt="scatterplot using triangular markers"
+          style="height: 440px;">
+
+        <h3 id="styled">Make multiple marker types</h3>
+
+        <p>
+          Having differently shaped markers is a great way to distinguish
+          between different groups of data points. If your control group is
+          all circles and your experimental group is all X's the difference
+          pops out, even to colorblind viewers.
+        </p>
+
+<pre><code>N = x.size // 3
+ax.scatter(x[:N], y[:N], marker="o")
+ax.scatter(x[N: 2 * N], y[N: 2 * N], marker="x")
+ax.scatter(x[2 * N:], y[2 * N:], marker="s")</code></pre>
+
+        <p>
+          There's no way to specify multiple marker styles in a single
+          <code>scatter()</code> call, but we can separate our data out
+          into groups and plot each marker style separately. Here we chopped
+          our data up into three equal groups.
+        </p>
+
+        <img title="varying marker styles"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_styled.png"
+          alt="scatterplot using a variety of markers"
+          style="height: 440px;">
+
+        <h3 id="orange">Change the color</h3>
+
+        <p>
+          Another great way to make your markers express your data story is by
+          changing their color.
+        </p>
+
+<pre><code>ax.scatter(x, y, c="orange")</code></pre>
+
+        <p>
+          The <code>c</code> argument, together with any of the color names
+          (<a href="matplotlib_lines.html#color">
+            as described in the post on lines</a>) lets you change your
+          markers to whatever shade of the rainbow you like.
+        </p>
+
+        <img title="orange markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_orange.png"
+          alt="scatterplot using orange markers"
+          style="height: 440px;">
+
+         <h3 id="colors">Change the color of each marker</h3>
+
+         <p>
+           If you want to get extra fancy, you can control the color of
+           each point individually. This is what makes <code>scatter()</code>
+           special.
+         </p>
+
+<pre><code>ax.scatter(x, y, c=x-y)</code></pre>
+
+        <p>
+          One way to go about this is to specify a set of numerical values
+          for the color, one for each data point. Matplotlib automatically
+          takes them and translates them to a nice color scale.
+        </p>
+        
+        <img title="colorful markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_colors.png"
+          alt="scatterplot using colorful markers"
+          style="height: 440px;">
+
+        <h3 id="transparent">Make markers transparent</h3>
+
+        <p>
+          This is particularly useful when you have lots of overlapping markers
+          and you would like to get a sense of their density.
+        </p>
+
+<pre><code>x = np.linspace(-1, 1, num=1e5)
+y = x + np.random.normal(size=x.size)</code></pre>
+
+        <p>
+          To illustrate this, we first create <em>a lot</em> of data points.
+        <p>
+
+<pre><code>ax.scatter(x, y, marker=".", alpha=.05, edgecolors="none")</code></pre>
+
+        <p>
+          Then by setting the <code>alpha</code> argument to something small,
+          each individual point only contributes a small about of digital ink
+          to the picture. Only in places where lots of points overlap is the
+          result a solid color. <code>alpha=1</code> represents no transparency
+          and is the default.
+        </p>
+
+        <p>
+          The <code>edgecolors="none"</code> is necessary to remove the marker
+          outlines. For some marker types at least, the <code>alpha</code>
+          argument doesn't apply to the outlines, only the solid fill.
+        </p>
+
+        <img title="transparent markers"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/markers_transparent.png"
+          alt="scatterplot using transparent markers"
+          style="height: 440px;">
+
+        <h3>and even more...</h3>
+        <p>
+          If you are curious and want to explore all the other crazy things you
+          can do with markers and scatterplots,
+          <a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.scatter.html#matplotlib.axes.Axes.scatter">
+            check out the API</a>.
+        </p>
+
+        <p>
+          We've only scratched the surface. Want to see what else you can
+          change in your plot?
+          <a href="https://end-to-end-machine-learning.teachable.com/p/navigating-matplotlib-tutorial-how-to/">
+          Come take a look at the full set of tutorials</a>.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

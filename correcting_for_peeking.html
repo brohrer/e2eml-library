@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Peek at Your Statistical Tests Without Breaking Them";</script>
+  <script type="text/javascript">var publication_date = "July 5, 2023";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          <strong>tl;dr:</strong> To counteract the significance inflation
+          that comes from peeking during sequential experiments,
+          multiply the standard error by φ = 1.618.
+        </p>
+        <hr>
+        <p>
+          A watched pot never boils, but a watched plot (of a running t-test)
+          boils over too soon. Continuously monitoring A/B tests results
+          in a considerable over-estimation of statistical significance.
+          Many tests that should not be considered significant
+          get misinterpreted.
+        </p>
+        <p>
+          My first recommendation is
+          <a href="https://e2eml.school/p_values_rant.html">
+          don't use p-values</a>.
+          They are deeply
+          problematic and will only make you regret your decisions.
+          But if you are unable or unwilling to cut them out of your life,
+          read on.
+        </p>
+
+        <h3>You will always peek</h3>
+        <p>
+          Significance testing and power analyses are built around
+          the assumption that an experiment will run for a given
+          amount of time, terminate, and only then will the results be examined.
+          It's only valid if you wait until the end before looking.
+          But try telling that to a product manager who wants early
+          indicators about how a new feature is performing, and wants
+          to know whether that bump in engagement is statistically significant.
+          Or the stakeholder who asks you to put a running p-value in
+          the dashboard so that statistical significance trends can be checked
+          throughout an experiment. Or a graduate student who runs participants
+          one at a time until their results become significant,
+          out of a desperate desire to finish their dissertation and escape.
+          We are not disciplined enough to wait until the end.
+          We will always peek. The question is not how to prevent peeking,
+          but how to account for it so it doesn't give us the wrong answer.
+        </p>
+        <p>
+          To understand how big the peeking problem is, let's look at
+          a simulated A/B test where we already know what the answer should be.
+          We'll set up our fake A/B test so that there is no difference between
+          the two groups; we know that the difference between the actual
+          means is zero. A t-test at the 95% significance level should
+          fail to reject the null hypothesis 95% of the time.
+          Only 5% of simulation runs should show p &lt; 0.05. 
+        </p>
+
+        <h3>Calculating 95% statistical significance</h3>
+        <p>
+          At any given point, having collected N observations from both
+          group A and group B, we can run a t-test and calculate a p-value
+          for the difference between the groups. It's helpful to ignore the
+          first ~100 observations. They swing wildly, and I'm assuming that
+          we're looking at testing scenarios involving a minimum of
+          1,000 observations. (If we're doing A/B testing on &lt; 100
+          observations that's a different problem.)
+        </p>
+        <p>
+          At N &gt; 100 we can ignore the subtleties of unbiased estimation
+          and degrees of freedom and conduct a z-test. If 𝜇<sub>A</sub>
+          is the average
+          of all the observed values of group A, 𝜇<sub>B</sub> is the average of
+          all the observed values of group B, and 𝜎<sub>A</sub><sup>2</sup>
+          and 𝜎<sub>B</sub><sup>2</sup> are the
+          calculated variances of each group, then the pooled variance,
+          𝜎<sub>p</sub><sup>2</sup>, is
+        </p>
+        <p style="text-align: center;">
+          𝜎<sub>p</sub><sup>2</sup> = 𝜎<sub>A</sub><sup>2</sup> / N
+          + 𝜎<sub>A</sub><sup>2</sup> / N
+        </p>
+        <p>
+          and the standard error, 𝜎<sub>e</sub>, is
+        </p>
+        <p style="text-align: center;">
+          𝜎<sub>e</sub> = &radic;( 2𝜎<sub>p</sub><sup>2</sup> / N )
+        </p>
+        <p>
+          and the z-statistic is
+        </p>
+        <p style="text-align: center;">
+          z = ( 𝜇<sub>A</sub> - 𝜇<sub>B</sub> ) / 𝜎<sub>e</sub> 
+        </p>
+        <p>
+          The z-statistic can be converted to a p-value via a table or
+          statistical software package. For two-sided tests, z &gt;
+          1.96 corresponds to p &lt; 0.05, a.k.a. the 95% threshold
+          for statistical significance.
+        </p>
+        <h3>Experiments pop in and out of significance</h3>
+        <p>
+          We are not expecting an all-or-nothing, always correct answer.
+          With statistical testing, we only deal in probabilities and
+          possibilities. The nature of the p &lt; 0.05 threshold is that,
+          even when there is no difference between the population means
+          (as is our case) the test will still show a statistically
+          significant difference 5% of the time. As we collect more
+          observations, our estimates of the means and their variances
+          will fluctuate, and so will the p-value of the test.
+        </p>
+        <p>
+          If we repeat this experiment 10,000 times we can verify that,
+          for any given sample size N, about 5% of experiments (500 of them)
+          will register as statistically significant at the 95% level.
+          This is exactly what we would expect. It's reassuring to verify
+          that statistics works as advertised.
+        </p>
+        <p style="text-align: center;">
+        <img title="Running violations of the 95% significance threshold"
+          src="images/correcting_for_peeking/running_violations.png"
+          alt="Plot of fraction of statistically significant experiments
+            vs. number of observations.
+            Observations vary between 0 and 100 thousand.
+            Fraction varies between about .045 and .055 throughout the range."
+          style="height: 450px;">
+        </p>
+        <p>
+          What this means is that if we were disciplined enough to set up
+          an A/B test, choose our N, and not peek at the results until
+          it had run its course, then we could have confidence in the results.
+          Only one time in twenty would we expect two groups with the same
+          mean to come up as significantly different.
+        </p>
+        <p>
+          But sadly this is not how it will play out.
+        </p>
+        <h3>Most experiments drift below the p &lt; 0.05 threshold</h3>
+        <p>
+          Because we are impatient and under outside pressures and
+          are personally invested in our experimental outcomes we will all
+          peek at the results. Most often this involves watching the p-value
+          like a hawk and declaring significance once it falls below 0.05.
+          Because significance levels weave around like a sleepy toddler,
+          most (if not all) experiments eventually cross this line.
+        </p>
+        <p>
+          To measure the impact of continuous peeking we can keep track of
+          the cumulative fraction of experiments that have reached
+          significance at some point previously. In our simulation we can see
+          that after 100 thousand observations of each group, a full 60% of
+          the simulations have supposedly reached significance.
+          Because we designed this example from the ground up we know that
+          number to be grossly incorrect.
+        </p>
+        <p style="text-align:center;">
+        <img title="Cumulative violations of the 95% significance threshold"
+          src="images/correcting_for_peeking/cumulative_violations.png"
+          alt="Plot of cumulative fraction of statistically
+            significant experiments
+            vs. number of observations.
+            Observations vary between 0 and 100 thousand.
+            Fraction climbs to over 0.6 as it traverses the range."
+          style="height: 450px;">
+        </p>
+
+        <h3>How long you look matters</h3>
+        <p>
+          To make things worse, the longer you look the worse it gets.
+          I ran experiments out to N = 10 million and the curve retained its
+          roughly logarithmic shape. It grew more slowly, creeping up with each
+          order of magnitude, but never fully plateaued. I expect that if you
+          look long enough (say, until the heat death of the universe) the
+          curve will climb arbitrarily close to 1.
+        </p>
+
+        <h3>How often you check matters</h3>
+        <p>
+          It also matters how often you peek. Experiments sometimes cross
+          the significance threshold very briefly. If you recalculate the
+          p-value after every new observation you will catch every crossing,
+          but if you only peek every 10 or 100 or 1,000 observations you'll
+          miss some of those forays. The more often we peek, the greater
+          the significance inflation. To remove this additional source of
+          variability from the analysis, I'll assume that peeking occurs
+          with every observation. 
+        </p>
+
+        <h3>A fix: The Optimizely correction</h3>
+        <p>
+          The problem of peeking in A/B tests was addressed in a paper
+          <a href="http://library.usc.edu.ph/ACM/KKD%202017/pdfs/p1517.pdf">
+          Peeking at A/B Tests: Why it matters, and what to do about it</a>
+          by Ramesh Johari, Pete Koomen, Leonid Pekelis, and David Walsh.
+          It describes work done at Optimizely that was integrated into the
+          Optimize Stats Engine, an integral part of its product offerings.
+          The paper develops a variant of p-value that lets you check it
+          as often as you like without introducing a bias for false positives,
+          an “always valid p-value for sequential testing.”
+        </p>
+        <p>
+          The key result is Equation 11 from the paper.
+        </p>
+        <p style="text-align:center;">
+        <img title="Equation 11 from the paper"
+          src="images/correcting_for_peeking/eq_11.png"
+          alt="Equation describing the relationship between the
+          pooled variance, point estimate of sample differences,
+          number of observations collected to lambda, the reciprocal
+          of the p-value."
+          style="height: 80px;">
+        </p>
+        <p>
+          where p<sub>n</sub> = 1 / 𝚲<sub>n</sub>
+        </p>
+        <p>
+          In Python this looks like 
+        </p>
+        <p>
+          <pre code>Lambda = np.sqrt((2 * var_p) / (2 * var_p + n * tau**2)) * np.exp(
+    (n**2 * tau**2 * (estimate) ** 2)
+    / (4 * var_p * (2 * var_p + n * tau**2) + epsilon)
+)</pre code>
+        </p>
+        <p>
+          with the variable name substitutions
+        </p>
+        <p>
+          <code>var_p</code> =  𝜎<sup>2</sup> <br>
+          <code>tau</code> = 𝜏 <br>
+          <code>estimate</code> = Y<sub>N</sub> - X<sub>N</sub> =
+          𝜇<sub>A</sub> - 𝜇<sub>B</sub>
+        </p>
+        <p>
+          and <code>epsilon</code> is a small number added
+          for numerical stability.
+          Find <a href="https://github.com/brohrer/p-value-peeking">
+          the full implementation here</a>.
+        </p>
+        <p>
+          The one quantity not fully specified in the Optimizely equation is 𝜏.
+          This is an arbitrary constant, subject to selection and adjustment.
+          𝜏 = 1 seems to be a good, justifiable place to start based on other
+          examples in the paper. Optimizely’s secret sauce is a combination
+          of simulations, user studies, and empirical analyses on their data
+          to determine how best to tweak 𝜏.
+        </p>
+        <p>
+          We can verify the Optimizely correction in our simulation.
+          On the bright side, it eliminates the problem of significance
+          inflation. However, it may overcorrect for it. In the majority of
+          the examples I ran, there was no value of 𝜏 I could find that
+          correctly calibrated the p-value and resulted in a cumulative
+          significance of 0.05. For those that failed, the cumulative
+          significance never got higher than 2-3%. For the minority of cases
+          that did reach 5% significance, successful values of 𝜏 ended up
+          being in the 0.05 - 0.10 range. 
+        </p>
+
+        <h3>A simpler fix: Adjusting the standard error</h3>
+        <p>
+          While it avoids reporting inflated significance levels,
+          the Optimizely solution is somewhat convoluted and often
+          overly conservative. And although it is principled, it still
+          requires some manual tuning of the 𝜏 parameter. This raises the
+          question of whether we can find a simpler method that might
+          get equally good results. It turns out we can.
+        </p>
+        <p>
+          Multiplying the standard error by a constant
+          φ, when calculating
+          the z-statistic can generate a similar effect. 
+        </p>
+        <p style="text-align: center;">
+          z = ( 𝜇<sub>A</sub> - 𝜇<sub>B</sub> ) / φ 𝜎<sub>e</sub> 
+        </p>
+        <p>
+          Through trial and error, the mathematical constant known as
+          <a href="https://en.wikipedia.org/wiki/Golden_ratio">
+          the Golden Ratio</a>
+          (about 1.618), did the job well. Up to N = 100K, φ = 1.618 keeps
+          the fraction of significance violations hovering
+          close to 5% on average.
+        </p>
+        <p>
+           (φ is the Greek
+           transliteration of
+           the English letter <strong><u>f</u></strong>,
+           as in <strong><u>f</u></strong>alse
+           signi<strong><u>f</u></strong>icance
+           <strong><u>f</u></strong>udge
+           <strong><u>f</u></strong>actor.)
+        </p>
+        <p style="text-align:center;">
+        <img title="Cumulative violations of the 95% significance threshold,
+          corrected for peeking"
+          src="images/correcting_for_peeking/corrected_violations.png"
+          alt="Plot of cumulative fraction of statistically
+            significant experiments
+            vs. number of observations, corrected for continuous peeking
+            by multiplying standard error by phi.
+            Observations vary between 0 and 100 thousand.
+            Fraction climbs to just over 0.05 as it traverses the range."
+          style="height: 450px;">
+        </p>
+        <p>
+          While this approach lacks the principled justification
+          (and intimidating equations) of the Optimizely work,
+          it is much easier to implement and faster to compute.
+        </p>
+        <p>
+          Also, the Golden Ratio! That has to mean something right?
+          OK, it’s probably just a coincidence, but it's a cool coincidence.
+          And who knows, maybe a better mathematician than me will come up
+          with a reason why it has to be that way.
+        </p>
+        <h3>Other significance levels</h3>
+        <p>
+          Another good reason to believe that φ = the Golden Ratio is
+          just a happy accident is that it only holds for p = 0.05.
+          Different p-value targets require different amounts of adjustment
+          to account for peeking.
+        </p>
+        <table>
+          <tr>
+            <th>Target p-value</th>
+            <th>z-statistic</th>
+            <th>Range for φ</th>
+            <th>Mnemonic</th>
+          </tr>
+          <tr>
+            <td>0.01</td>
+            <td>2.576</td>
+            <td>1.39 to 1.46</td>
+            <td>&#8731; e (1.396)</td>
+          </tr>
+          <tr>
+            <td>0.05</td>
+            <td>1.960</td>
+            <td>1.59 to 1.62</td>
+            <td>the Golden Ratio (1.618)</td>
+          </tr>
+          <tr>
+            <td>0.10</td>
+            <td>1.645</td>
+            <td>1.75 to 1.78</td>
+            <td>&radic; π (1.772)</td>
+          </tr>
+          <tr>
+            <td>0.20</td>
+            <td>1.282</td>
+            <td>2.03 to 2.06</td>
+            <td>45 / 22 (2.044)</td>
+          </tr>
+        </table>
+        <p>
+          All of these are empirical estimates. You can find the best φ
+          for the particular p-target, sample sizes, and peeking
+          frequency of your use case by modifying the code and running
+          your own simulations. 
+        </p>
+        <h3>Non-Normality</h3>
+        <p>
+          Technically this approach assumes normally-distributed data,
+          but we can skirt this qualification criterion thanks to the
+          magic of statistics, a.k.a. the Central Limit Theorem.
+        </p>
+        <p>
+          I tested the φ correction against other distributions to check
+          how sensitive it would be to non-normality. It worked well
+          for uniform and binary distributions. I was only able to see
+          a slight degradation in performance when I went to an extremely
+          long-tailed example–a 
+          <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">
+          log-normal distribution</a> that spanned about
+          8 orders of magnitude. I'm comfortable claiming that for
+          all practical purposes the method is insensitive
+          to the shape of the distribution.
+        </p>
+        <h3>Caveats</h3>
+        <p>
+          To be totally clear, this method is a hack. It is not endorsed 
+          by any person or organization. It is not common practice in
+          any community that I know of. It was an investigation driven
+          purely by curiosity, and I was so pleased with what I found
+          I wanted to share it.
+        </p>
+        <p>
+          There is a real possibility that I incorrectly implemented
+          the Optimizely correction. I did my best to follow the paper,
+          but I had to make a couple of small leaps.
+          If you find any errors, please let me know.
+        </p>
+        <p>
+          The Bayesians among you will notice the glaring lack of mention
+          of priors and credibile intervals. I know, I know. Philosophically
+          I can't deny that Bayesian methods are a better way to get at
+          what we're seeking here. But practically, introducing them
+          to a broad audience in domains with generations
+          of frequentist precendents is not a small thing. And even in 
+          a team that is prepared for them, when it
+          comes to putting the methods into practice there is still the
+          question of how to come up with domain-appropriate priors
+          that aren't overly subjective, opening the another door
+          for our external incentives to influence our analyses. It's
+          a bear I'm still wrestling with.
+        </p>
+        <p>
+          This post is my own best shot at addressing the peeking problem,
+          and I bear full responsibility for its shortcomings.
+          I expect there are many and I look forward to hearing about them.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

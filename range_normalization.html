@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Normalize a Signal by Minimum and Maximum";</script>
+  <script type="text/javascript">var publication_date = "April 13, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          It's often useful to take a signal and shift and scale it so that
+          it has a particlar minimum and maximum value, such as [0, 1].
+          This is known as
+          <a href="https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)">
+            min-max normalization</a>.
+        </p>
+        <p>
+          For a signal, <em>s</em> having a minimum and maximum value
+          <em>s_min</em> and <em>s_max</em>, you can transform it to a
+          signal <em>s_norm</em> having
+          a minimum of 0 and a maximum of 1 with <br>
+          <code>s_norm = (s - s_min) / (s_max - s_min)</code>.
+        </p>
+        <p>
+          That in turn can be transformed to a signal <em>t</em>
+          having any <em>t_min</em> and <em>t_max</em> with <br>
+          <code>t = s_norm * (t_max - t_min) + t_min</code>
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

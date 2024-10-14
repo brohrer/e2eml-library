@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "From csv to database with Python";</script>
+  <script type="text/javascript">var publication_date = "September 28, 2023";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+        <h2>Databases are the new Dataframes</h2>
+
+        <p>
+          Not really, but join me in a thought experiment.
+        </p>
+        <p>
+          Imagine you wanted to do some data analysis, but also
+          wanted to avoid importing any external libraries into Python.
+          This is not just an academic exercise. A large part of
+          the challenge of working in Python is managing dependencies,
+          environments, and breaking updates.
+          Sticking with base Python and the libraries it ships with
+          would make your code considerably more robust and
+          lower maintenance.
+        </p>
+
+        <p>
+          We can do exactly this with SQLite3.
+          To demonstrate how we would ingest a csv to a Dataframe will
+          use the most excellent
+          <a href="https://allisonhorst.github.io/palmerpenguins/">
+            Palmer Penguins Data Set</a><sup>1</sup>.
+        </p>
+
+        <p style="text-align:center;">
+          <img width="75%"
+            alt="Illustrated Chinstrap, Gentoo, and Adelie Penguins"
+            src="https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
+          >
+        </p>
+        <p style="text-align:center;">
+          Artwork by <a href="https://allisonhorst.github.io/">
+            @allison_horst</a>
+        </p>
+
+        <p>
+          Created by Allison Horst,
+          Alison Hill, and Kristen Gorman, using
+          raw data collected by Kristen Gorman, the simplified version
+          has eight columns of data on 344 individual penguins.
+          For this example, we'll assume that the data
+          has already been downloaded from
+          <a href="https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv">
+            this URL</a>
+          to a local file named penguins.csv.
+        </p>
+
+        <p>
+          In the time honored tradition of all cooking websites,
+          I put the actual recipe at the end. If that’s what you’re
+          looking for, skip to the bottom. In the meantime, there are
+          some interesting pieces I want to shine a light on.
+        </p>
+
+        <p>
+          This example will extend the first database we created in
+          <a href="db_first_db.html">this post</a> and take advantage of
+          the improved mental model we outlined in
+          <a href="db_awkwardness.html">this post</a>. Thanks to the
+          foundation we've built, the basic structure will be familiar.
+          Again, in keeping with tradition, I will first tell a long
+          winded story about each ingredient.
+        </p>
+
+        <h2>Schema</h2>
+
+        <p>
+          Schema is the official database word for how our table is laid out.
+          In its full glory, there are a lot of things a schema can cover,
+          like which columns allow NULL values, and which columns are
+          likely to be linked to by other tables. But for our purposes,
+          we’re just interested in the name of each column and the
+          type of data it is expected to contain. This is enough to
+          create a table and prepare it to accept our penguin data.
+        </p>
+        <p>
+          SQLite has <a href="https://www.sqlite.org/datatype3.html">
+            a few basic data types</a> to choose from.
+          <ul>
+            <li>
+              <strong>INTEGER</strong>, a signed integer like Python's
+              <code>int</code>. Conveniently,
+              SQLite decides how many bytes to use
+              for it based on its size.
+            </li>
+            <li>
+              <strong>REAL</strong>, a floating point number, analogous
+              to Python's <code>float</code>.
+            </li>
+            <li>
+              <strong>TEXT</strong>, just like sounds. Analogous to
+              Python's <code>str</code>.
+            </li>
+            <li>
+              <strong>BLOB</strong>, a
+              <a href="https://en.wikipedia.org/wiki/Binary_large_object">
+                Binary Large OBject</a>, this can be literally anything&mdash;
+              image, video, executable&mdash;and is a catch-all data type
+              that turns SQLite into a multi-tool for the power user.
+            </li>
+            <li>
+              <strong>NULL</strong>, what we would call <code>None</code>
+              in Python. You'd never have a column of all NULL values, but you
+              may get to a point where you want to be explicit about
+              whether a column is allowed to have any NULL values. This
+              fun topic we will save for later.
+            </li>
+          </ul>
+          Other
+          flavors of SQL have a richer collection of types, but really these are
+          enough to do 95% of everything we need.
+        </p>
+        <p>
+          Before creating our table, we have to look at our data and
+          understand it well enough to know what each column means
+          and what type of data we want it to have. This step is worth
+          taking your time on. If anyone else ends up using your database
+          (including a future of you) naming a column well will save
+          them frustration and heartbreak.
+        </p>
+
+<pre><code>CREATE TABLE IF NOT EXISTS penguins (
+    species TEXT,
+    island TEXT,
+    bill_length_mm REAL,
+    bill_depth_mm REAL,
+    flipper_length_mm REAL,
+    body_mass_g REAL,
+    sex TEXT,
+    year INTEGER)</pre></code>
+
+        <p>
+          Also, the decision of which data type to use is not always
+          straightforward. A classic example of this is money,
+          dollars and cents in the US. It has a decimal place,
+          so it seems that it should obviously be a REAL value.
+          But if you calculate interest and come up with a fractional cent,
+          what does that even mean? To avoid confusion should we represent
+          money as an INTEGER number of cents? I assume there are some
+          detailed accounting rules for how to handle this in
+          our modern era, but I want to illustrate that this is a
+          potentially deep topic. Any amount of time you spend thinking
+          through how your data will be used and how it should be best
+          represented to facilitate that use, will be worth it ten times over.
+        </p>
+
+        <h2>Data</h2>
+
+        <p>
+          The next step is mechanical. Using established Python processes
+          we can open the csv and read it in one row at a time.
+          The format we need it to be in is a list of rows,
+          where each row is a list of the values in each column.
+          (Nerd note: Representing each row as a tuple will also work
+          and is more consistent with
+          the philosophy of the tuple and list data types.)
+        </p>
+
+<pre><code>with open("penguins.csv", "rt") as penguin_file:
+    reader = csv.reader(penguin_file)
+    rows = list(reader)</pre></code>
+
+        <h2>Ingestion</h2>
+
+        <p>
+          Ingestion is the fancy database word for grabbing your data 
+          from somewhere and sucking it into the database,
+          getting it safely tucked away where it can be found and
+          retrieved quickly.
+          It’s also the technical word for what a toddler does with
+          goldfish crackers.
+        </p>
+        <p>
+          The convenient command that ingests our list of lists
+          is <code>executemany()</code>. It automatically iterates over
+          our list of rows and loads each one into the database.
+          We call it with a "?" placeholder for every column. This tells
+          the VALUES command how many column values to look for in the data.
+        </p>
+
+<pre><code>cursor.executemany("""
+    INSERT INTO penguins VALUES (?,?,?,?,?,?,?,?)
+""", rows)</pre></code>
+
+        <p>
+          Using the question mark is an important part of this.
+          It’s possible to do clever Python string substitution,
+          and explicitly write the values to be ingested into the SQL query.
+          But this is a bad, bad thing. If you are using data
+          that someone else generated, and that someone wanted to be
+          a real jerk, they could hand craft data that looks like
+          SQL commands. If your Python script substitutes that
+          data in verbatim, then your database will do whatever
+          your adversary wants. They could change values, add rows,
+          delete rows, or even delete the whole database.
+          This is called a
+          <a href="https://en.wikipedia.org/wiki/SQL_injection">
+            SQL injection attack</a>,
+          and it’s definitely
+          not something you want to experience firsthand.
+        </p>
+
+        <p style="text-align:center;">
+          <img width="90%"
+            title="Her daughter is named Help I'm trapped in a driver's license factory."
+            alt="xkcd 327, Exploits of a Mom. Did you really name your son Robert; DROP TABLE students; --?
+            Oh yes. Little Bobby Tables we call him."
+            src="https://imgs.xkcd.com/comics/exploits_of_a_mom.png"
+          >
+        </p>
+        <p style="text-align:center;">
+          <a href="https://xkcd.com/327/"> xkcd comic #327 </a>
+          by Randall Munroe
+        </p>
+
+        <p>
+          Fortunately, using the "?" placeholder allows SQLite to use its
+          built-in checks to prevent this. The question marks are your
+          security guards.
+        </p>
+
+          <h2>Committing</h2>
+
+        <p>
+          The final piece is a <code>commit()</code> statement.
+          So far everything we’ve done to the database is just a rough draft.
+          If we close the database and open it up again, it will be as
+          if we never ingested anything. To make it permanent
+          we need to add a final stamp of approval,
+          and if you have commitment issues, now is the time to face them.
+        </p>
+<pre><code>connection.commit()</code></pre>
+        <br>
+        <br>
+
+        <p>
+          That wraps up the bits that we haven’t covered in previous posts.
+          The rest hopefully looks familiar.
+          Here’s the whole concoction when it’s been mixed together
+          and baked for 45 minutes at 350 degrees.
+        </p>
+
+        <pre><code>import csv
+import sqlite3
+
+connection = sqlite3.connect("penguins.db")
+cursor = connection.cursor()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS penguins (
+    species TEXT,
+    island TEXT,
+    bill_length_mm REAL,
+    bill_depth_mm REAL,
+    flipper_length_mm REAL,
+    body_mass_g REAL,
+    sex TEXT,
+    year INTEGER)
+""")
+
+with open("penguins.csv", "rt") as penguin_file:
+    reader = csv.reader(penguin_file)
+    rows = list(reader)
+    cursor.executemany("INSERT INTO penguins VALUES (?,?,?,?,?,?,?,?)", rows)
+connection.commit()
+
+cursor.execute("SELECT * FROM penguins")
+print(cursor.fetchall())
+connection.close()</code></pre>
+
+
+        <p>
+          <sup>1</sup> Horst AM, Hill AP, Gorman KB (2020).
+          palmerpenguins: Palmer Archipelago (Antarctica) penguin data.
+          R package version 0.1.0.
+          https://allisonhorst.github.io/palmerpenguins/.
+          doi:10.5281/zenodo.3960218.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

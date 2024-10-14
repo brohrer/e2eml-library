@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "k-sparse layer";</script>
+  <script type="text/javascript">var publication_date = "January 29, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3><em>k</em>-sparse layer for neural networks</h3>
+        <p>
+          This layer type enforces L0 sparsity in node activities
+          by setting all but <em>k</em> node activities to zero.
+          <a href="https://arxiv.org/pdf/1312.5663.pdf">
+            <em>k</em>-sparse autoencoders
+            were originally developed and presented by Alireza Makhzani
+            and Brendan Frey.</a>
+          This implementation differs in some small ways. I use
+          <em>alpha = 1</em>, rather than the 2 or 3 used by the authors.
+          I tried a variation of their <em>k</em> scheduling and
+          found that it didn't work well for my application.
+          Instead I used adaptive sensitivity, a mechanism
+          for rarely selected nodes to learn more rapidly when given the
+          opportunity. As far as I can tell, sensitivity is a
+          a new contribution.
+        </p>
+
+        <h3>Method</h3>
+        <p>
+          The mechanism for doing this is a <em>k</em>-sparse layer,
+          implemented in the
+          <a href="https://e2eml.school/cottonwood">
+            Cottonwood machine learning framework</a>
+          as an experimental class.
+        </p>
+        <p>
+          The <em>k</em>sparse layer is initialized with a set number
+          of active nodes, <em>k</em>. On each forward pass, the <em>k</em>
+          nodes with
+          the highest activity are left unchanged, and all other node
+          activities are set to zero. Then forward propagation
+          continues with the next layer.
+        </p>
+        <p>
+          On the backpropagation pass, gradients for all the nodes
+          that had been set to zero are also set to zero before passing
+          them back to the previous layer.
+        </p>
+        <p>
+          There are a couple of things to keep in mind when using
+          a sparsification layer in a neural network &mdash how to
+          initialize the weights of the next layer and how to
+          modify the gradient during backpropagation.
+          I didn't come across these in the original paper,
+          but in my work they proved important.
+        </p>
+
+        <h4>Initialization</h4>
+        <p>
+          Some weight initialization
+          methods use the number of inputs to the layer or "fan in" to
+          choose appropriate values. If the full number of inputs is
+          <em>M</em>,
+          a sparsification layer effectively
+          reduces the number of inputs to <em>k</em>,
+          the number of non-zero inputs.
+          Initialization methods work best when they account for this.
+        </p>
+        <p>
+          In He and Glorot initializers, this means adjusting the parameters
+          of the distribution from which the weights are drawn to use
+          <em>k</em>
+          instead of <em>M</em>.
+        </p>
+        <p>
+          Similarly in the LSUV initializer, this means scaling
+          the distribution by <em>sqrt(M/k)</em>.
+          This ensures that with the reduced number of non-zero inputs,
+          the variance of the output nodes will still be near 1.
+        </p>
+
+        <h4>Sensitivity</h4>
+        <p>
+          Because the nodes with the highest activity are selected on each
+          pass, it's possible that some nodes will only be selected very
+          rarely. These nodes are an untapped resource. They have the
+          potential to represent structure in the data that would otherwise
+          contribute to the error. However, because they are selected so
+          rarely it takes them a long time to train. This is particularly
+          the case for rarely occurring patterns in the data.
+        </p>
+        <p>
+          In order to speed up this process of learning rare patterns,
+          nodes that haven't been selected in a while develop a sensitivity,
+          meaning that when they are finally selected, they adapt more
+          readily during backpropagation. In this way, they can migrate
+          to where they can do the most good,
+          even though the patterns they represent might be uncommon.
+        </p>
+        <p>
+          Sensitivity, <em>s</em>, is a multiplicative factor on the
+          gradient on a node-by-node basis. It starts at 1, and gradually
+          increases toward an upper limit, <em>s_max</em>, with each time step
+          the node is not selected. The adaptation occurs with a time
+          constant of <em>tau</em>. At each time step, the new sensitivity for
+          unselected nodes, <em>s_new</em>, is a function of their
+          previous sensitivity, <em>s_old</em>:
+        </p>
+        <p>
+          <em>&nbsp &nbsp &nbsp &nbsp s_new = s_old + (s_max - s_old) / tau</em>
+        </p>
+        <p>
+          Empirically, <em>s_max = 10</em> and <em>tau = 100</em>
+          have proven to work well,
+          but it's possible that other values may work even better.
+          Sensitivity is the piece of this work that is novel,
+          as far as I can tell.
+        </p>
+
+        <h3>Example implementation</h3>
+        <p>
+          We can see qualitatively how the sparse layer changes the features
+          that a network learns by looking at an autoencoder. In
+          <a href="https://gitlab.com/brohrer/study-mars-images">
+            a case study using an autoencoder to compress images from Mars</a>,
+          there is a ready-made testbed. The file
+          <a href="https://gitlab.com/brohrer/study-mars-images/-/blob/master/sparse_compressor.py">
+            sparse_compressor.py</a> has the code used for this demonstration.
+        </p>
+
+        <p>
+          The autoencoder used takes an 11 x 11 pixel patch (121 pixels), and
+          passes it through 2-layers, a 256-node hidden layer and a 121-node
+          output layer. The representation of each hidden node was found
+          by setting its activity to 1, and the activity of all other hidden
+          nodes to 0, and observing the output pixel activity that resulted.
+          For more details on the architecture and its implementation,
+          please refer to the README in the case study code.
+        </p>
+        
+        <p>
+          The autoencoder was trained on 10 million image patches under two
+          different conditions. In the dense condition,
+          all 256 of the hidden nodes were
+          updated on every iteration. This is standard procedure.
+          In the sparse condition, only the 9 nodes with the highest magnitude
+          activities were allowed to stay active. The rest were set to zero.
+        </p>
+        <p style="text-align:center;">
+          <img title="The output representation of a few nodes from the hidden dense layer"
+            src="images/sparsify/dense_hidden_layer.png"
+            alt="The output representation of a few nodes from the hidden dense layer"
+            style="height: 320px;">
+        </p>
+        <p>
+          The output representation of a few nodes from the hidden dense layer.
+          The nodes are information-dense, but visually indistinct.
+          They look like static.
+        </p>
+        <p style="text-align:center;">
+          <img title="The output representation of a few nodes from the hidden sparse layer"
+            src="images/sparsify/sparse_hidden_layer.png"
+            alt="The output representation of a few nodes from the hidden sparse layer"
+            style="height: 320px;">
+        </p>
+        <p>
+          The output representation of a few nodes from the hidden sparse layer.
+          Many of the hidden nodes took on clear spatial patterns.
+        </p>
+        <p>
+          The differences between the two sets of hidden node representations
+          is striking. In the sparse layer, the patterns became identifiable
+          and varied in spatial frequency, complexity, and orientation.
+        </p>
+
+        <h3>With convolutional layers</h3>
+        <p>
+          When you're working with a convolutional neural network, there's
+          an alternative way to apply sparsity. Instead of choosing just
+          <em>k</em> non-zero values from the entire layer's output,
+          you can choose the output of <em>k</em> channels at each position
+          in the image or signal. This method is implemented in
+          Cottonwood's
+          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/experimental/sparsify.py">
+            SparsifyByChannel2D block</a>.
+        </p>
+
+        <h3>Motivation</h3>
+        <p>
+          Neural networks are very flexible, because they have so many
+          parameters that can be adjusted. Sometimes it feels like too many.
+          It’s like having a wall full of knobs for adjusting the sound
+          in the recording studio, only some of the knobs do the same
+          things as others . Sometimes, it’s nice to simplify it a
+          little bit — to reduce the number of knobs you have to adjust.
+        </p>
+        <p>
+          In neural networks this is achieved through regularization.
+          Regularization is the mathy way of nudging the solution in
+          a particular direction, in this case in the direction of having
+          fewer knobs to adjust. If we can take a fraction of those
+          parameters and set them to zero, then we can put Scotch tape
+          over those knobs and pretend they don’t exist. This flavor of
+          regularization is a trick to set as many of those knobs to zero
+          (or at least a small value) as we can without hurting performance.
+        </p>
+        <p>
+          This is regularization for sparsity, sparsity being the state
+          where lots of values are set to zero, and the nonzero values
+          then become rare, sparse. The most common types of regularization
+          operate on the weights in a neural network. They aim to make
+          weight values small or zero. They are called L1 regularization,
+          also known as ridge regression, and L2 regularization,
+          also known as LASSO or least squares regression.
+          L1 and L2 refer to the proper mathematical names of the function
+          norm that is used in each of these.
+        </p>
+        <p>
+          Although having sparsity in the weights is desirable,
+          having sparsity in the node activities is even better.
+          It is more theoretically interesting, because it suggests that
+          only part of the network is working at any given time,
+          and it’s of practical interest, because it can be used to reduce
+          the computations that have to be made.
+        </p>
+        <p>
+          Sparsity in node activities is a type of group sparsity.
+          It’s not a quantity that we get to adjust directly during
+          backpropagation, but one that emerges through a combination
+          of many weights and previous layers' activities.
+        </p>
+        <p>
+          L1 and L2 node activity sparsity regularization have been
+          presented previously. The <em>k</em>-sparse layer is a method for
+          L0 node sparsity, that is, keeping the number of active nodes
+          low.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

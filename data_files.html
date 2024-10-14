@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Read and Write Data Files in Python";</script>
+  <script type="text/javascript">var publication_date = "November 16, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+      
+        <h4>part of Course 131
+          <a href="https://e2eml.school/131">
+          Data Munging Tips and Tricks</a></h4>
+        <br>
+        <p>
+          This is a list of snippets for reading and writing data
+          files in Python. It's not encyclopedic, but it's a convenient
+          collection of the things I google regularly.
+        </p>
+        <h3>Read a text file</h3>
+
+        <p>
+<pre><code>with open("filename.txt", "rt") as f:
+    data_lines = f.readlines()</code></pre>
+        </p>
+
+        <h3>Save a Python object</h3>
+        <p>
+<pre><code>import pickle as pkl
+with open("filename.pkl", "wb") as f:
+    pkl.dump(object, f) </code></pre>
+        </p>
+
+        <h3>Load a Python object</h3>
+        <p>
+<pre><code>import pickle as pkl
+with open("filename.pkl", "rb") as f:
+    object = pkl.load(f)</code></pre>
+        </p>
+
+        <h3>Load an image as a Numpy array</h3>
+        <p>
+<pre><code>import numpy as np
+from PIL import Image
+img = np.asarray(Image.open("image_filename.jpg"))</code></pre>
+        </p>
+
+        <h3>Save a Matplotlib image</h3>
+        <p>
+<pre><code>import matplotlib.pyplot as plt
+# Create image in Figure named fig
+fig.savefig("filename.png", dpi=300)</code></pre>
+        </p>
+
+        <h3>Load a csv as a Python list of dictionaries</h3>
+        <p>
+<pre><code>import csv
+with open("data.csv") as csv_file:
+    list_of_dicts = list(csv.DictReader(csv_file))</code></pre>
+        </p>
+
+        <h3>Load a csv as a Pandas DataFrame</h3>
+        <p>
+<pre><code>import pandas as pd
+df = pd.read_csv("data.csv")</code></pre>
+        </p>
+
+        <h3>Download a csv from a URL</h3>
+        <p>
+<pre><code>import urllib.request
+response = urllib.request.urlopen(csv_url)
+rows = response.read().decode("utf-8").split("\n")</code></pre>
+        </p>
+
+        <h3>Convert a JSON string to Python dictionary and back</h3>
+        <p>
+<pre><code>import json
+json_dict = json.loads(json_formatted_string)
+json_formatted_string = json.dumps(json_dict)</code></pre>
+        </p>
+          <img title="Hi Ryan!        https://twitter.com/_brohrer_/status/1195844296643092480?s=20"
+            src="images/image_processing/hi_ryan.png"
+            alt="Hi Ryan!"
+            style="height: 3px;">
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

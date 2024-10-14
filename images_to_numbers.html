@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Convert a Picture to Numbers";</script>
+  <script type="text/javascript">var publication_date = "November 13, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+      
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          The experience of seeing the world around us is all but impossible
+          to capture in a handful of words,
+          from the careful steps
+          of a marching ant,
+          to the works of Pablo Picasso and Beatrix Potter,
+          to a solitary oak tree, twisted and dignified.
+          It's ridiculous to think that we could ever reduce it all to
+          ones and zeros. Except that we have. In fact,
+          our images are so realistic now that we go to pains to 
+          re-introduce artifacts, like the
+          washed out colors of Polaroids or the scratches on celluloid.
+        </p>
+        <p>
+          This may be a blow to romanticism, but it's great luck for
+          machine learning practitioners. Reducing images to numbers
+          makes them amenable to computation.
+        </p>
+        <p style="text-align:center;">
+          <img title="Image quantification montage"
+            src="images/image_processing/rgb_title_image.png"
+            alt="Image quantification montage"
+            style="height: 300px;">
+        </p>
+        <h3>Color perception</h3>
+        <p>
+          Color fascinates me because it is less about physics than it
+          is about the physiology and psychology of human perception.
+          All our standards are determined by
+          what humans perceive. The range that needs to
+          be covered, the number of channels necessary to
+          represent a color, the resolution with which a color must be
+          specified, and hence the information density and
+          storage requirements, all depend on human retinas and
+          visual cortices.
+        </p>
+        <p>
+          It also means that, as with everything
+          human, there is a great deal of variability.
+          There are deficiencies like
+          <a href="https://en.m.wikipedia.org/wiki/Color_blindness">
+            color blindness</a>
+          (I myself experience
+          <a href="https://en.m.wikipedia.org/wiki/Color_blindness#Deuteranomaly">
+            deuteranomaly</a>, a type of
+          red-green colorblindness) and there are those with unusual
+          abilities, like
+          <a href="https://en.m.wikipedia.org/wiki/Tetrachromacy">
+            tetrachromats</a>, who have not three types of
+          color receptors, but four, and can distinguish colors
+          that the rest of us can’t.
+          Because of this, keep in mind that all of the statements
+          we can make about perception are generalizations only,
+          and there will be individual differences.
+        </p>
+        <p>
+          Although photons vibrate at all frequencies,
+          we have three distinct types of color-sensing cones,
+          each with its characteristic frequency response, a particular
+          color that it responds strongly to.
+          That means that a combination of just three light sources
+          with carefully chosen colors
+          in carefully chosen intensities can make us experience
+          any color that we're
+          capable of seeing in the natural world.
+        </p>
+        <h3>Making color</h3>
+        <p>
+          In computer screens, this is done with a red, a green, and a blue
+          light, often light-emitting diodes (LEDs).
+        </p>
+        <p style="text-align:center;">
+          <img title="A pixel composed of red, green, and blue LEDs"
+            src="images/image_processing/rgb_pixel.png"
+            alt="A pixel composed of red, green, and blue LEDs"
+            style="height: 200px;">
+        </p>
+        <p>
+          In practice the red, green, and blue LEDs in a computer
+          screen can’t represent all the colors we can see. To make
+          a colored LED, a chemical is introduced that fluoresces
+          at about the right color. These are close to ideal
+          red, blue, and green but they aren’t perfect. For this
+          reason there is a bit of a gap between the range of
+          colors that you can see in the real world (the
+          <a href="https://en.wikipedia.org/wiki/Gamut">gamut</a>)
+          and what you can see on a computer screen.
+        </p>
+        <p>
+          As a side note, lasers are capable of
+          producing color much closer to the ideal. Commercially available laser
+          projection systems cover much more of the human perceivable
+          gamut, and laser micro arrays for computer screens are
+          a current topic of research and development.
+        </p>
+        <h3>Turning color into numbers</h3>
+        <p>
+          Each pixel in a screen is a triplet of a red, a green, and a blue
+          light source, but when you look at them from far enough away
+          they are too small for your eye to distinguish, and they look
+          like a single small patch of color. One way to determine which color
+          is produced is to specify the intensity levels of each of the
+          light sources. Since the
+          <a href="https://en.wikipedia.org/wiki/Just-noticeable_difference">
+            just noticeable difference (JND)</a> 
+          in human perception of color intensity tends to stay in the
+          neighborhood of
+          one part in a hundred, using 256 discrete levels gives
+          enough fine-grained control that color gradients
+          look smooth.
+        </p>
+        <p style="text-align:center;">
+          <img title="An array of pixels composed of red, green, and blue LEDs"
+            src="images/image_processing/rgb_pixel_array.png"
+            alt="An array of pixels composed of red, green, and blue LEDs"
+            style="height: 300px;">
+        </p>
+        <p>
+          256 intensity levels can be represented with 8 bits or 1 byte. It can
+          also be represented with two hexadecimal numbers, between 0x00
+          for zero brightness
+          and 0xff for maximum brightness.
+          Specifying the intensity of three colors takes triple that: 
+          6 hexidecimal numbers (24 bits or 3 bytes).
+          The hex representation gives a concise way to call out a
+          red-green-blue color. The first two digits show the red level,
+          the second two correspond to the green level, and the
+          third pair correponds to the blue level. Here are a few extremes.
+        </p>
+        <p style="text-align:center;">
+          <img title="Hex codes of a few colors"
+            src="images/image_processing/color_hex.png"
+            alt="Hex codes of a few colors"
+            style="height: 400px;">
+        </p>
+        <p>
+          There are a lot more useful
+          <a href="https://www.color-hex.com/">color hex codes here</a>.
+          For convenience and code readability, colors can also be represented
+          as triples of decimals, as in (255, 255, 255) for white
+          or (0, 255, 0) for green.
+        </p>
+        <h3>Building an image from pixels</h3>
+        <p>
+          To recreate an entire image,
+          computers use their reliable trick of simply chopping it up into
+          small pieces. To make high quality images,
+          it's necessary to make the pieces are so small that the
+          human eye has trouble seeing them individually. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Progressive zoom showing pixels in an image"
+            src="images/image_processing/zoom_pixels.png"
+            alt="Progressive zoom showing pixels in an image"
+            style="height: 160px;">
+          Image credit: Diane Rohrer
+        </p>
+        <p>
+          The color of each pixel can be represented as a 6-digit hex
+          number or a triple of decimal numbers ranging from 0 to 255.
+          During image processing it's customary to do the latter.
+          For convenience, the red, green, and blue pixel values are
+          separated out into their own arrays.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Arrays of pixel colors broken down into red, green, and blue"
+            src="images/image_processing/rgb_arrays.png"
+            alt="Arrays of pixel colors broken down into red, green, and blue"
+            style="height: 600px;">
+        </p>
+
+        <h3>Reading images into Python code</h3>
+        <p>
+          A reliable way to read images into Python is with
+          <a href="https://pillow.readthedocs.io/en/stable/">
+            Pillow</a>, an actively maintained fork of the
+          classic Python Image Library or PIL, and Numpy.
+        </p>
+        <p>
+<pre><code>import numpy as np
+from PIL import Image
+img = np.asarray(Image.open("image_filename.jpg"))</code></pre>
+        </p>
+        <p>
+          When reading in a color image, the resulting object
+          <code>img</code> is a three-dimensional
+          Numpy array. The data type is often
+          <a href="https://docs.scipy.org/doc/numpy/user/basics.types.html">
+            <code>numpy.uint8</code></a>, which is a natural and efficient
+          way to represent color levels between 0 and 255. I haven't
+          been able to determine that this is always the case, so it's
+          safest to confirm for the images in your dataset before you
+          start operating on them.
+        </p>
+        <p>
+          In order to facilitate calculations, I find it most convenient
+          to convert the image values to floats between 0 and 1.
+          In python3, the easiest way to do this is to divide by 255:
+          <code>img *= 1/255</code>
+        </p>
+        <p>
+          It's helpful to remember that when images are stored and
+          transmitted, they can be represented using
+          a dizzying variety of formats. Parsing these is a separate
+          effort. We'll rely on <code>Image.open()</code> and
+          <code>numpy.asarray()</code> to do all those conversions for us.
+          I still haven't found a way around having to verify your
+          pixels' range and data types without checking, but I'll keep
+          my eyes open.
+        </p>
+        <p>
+          Now we have all the image information in a compact collection
+          of numbers. In our array, dimension 0 represents pixel rows,
+          from the top to the bottom of the image. Dimension 1 represents columns
+          from left to right. And dimension 2 represents color channels
+          red, green, and blue, in that order.
+        </p>
+        <p style="text-align:center;">
+          <img title="Three dimensional image array structure"
+            src="images/image_processing/three_d_array.png"
+            alt="Three dimensional image array structure"
+            style="height: 400px;">
+        </p>
+        <p>
+          In this format you can get at any value you need with
+          <code>img[row, column, channel]</code>. The green value
+          for top left pixel is given by
+          <code>img[0, 0, 1]</code>. The red value for the bottom left
+          pixel is <code>img[2, 0, 0]</code>. You have all the
+          <a href="https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html">
+            slicing and indexing tools of Numpy</a> at your disposal.
+        </p>
+        <p>
+          Don't get tripped up by the fact that row 0 is at the top of the
+          image. As you count up through row numbers, you move down toward
+          the bottom of the image. This doesn't match with our convention
+          of an (x, y) coordinate axis, but it matches perfectly with our
+          [row, column] layout of two dimensional arrays.
+        </p>
+        <p>
+          There can also be a fourth color channel representing the
+          transparency of pixel, called alpha. It controls how
+          much of whatever is underneath the image shines through.
+          If the pixel range is 0 to 1 then an alpha of 1 is completely
+          opaque and an alpha of 0 is completely transparent.
+          If it's not present, alpha is assumed to be completely opaque.
+        </p>
+        <p>
+          Another special case is the grayscale image, where all three
+          color channels for each pixel have the same value. Because of the
+          repetition, it's more space efficient to store just one color
+          channel, leaving the others implied.
+          A two-dimensional array can also be used for
+          monochrome images of any sort. By definition they have only
+          one color channel.
+        </p>
+        <h3>Let the fun begin</h3>
+        <p>
+          Now that we can convert an image into an array of floats, we
+          can really go to town. Addition, multiplication,
+          and rearranging of pixel values are open to us. We can tint
+          and brighten, crop and filter. We can remove errant pixels
+          and even, with the help of neural networks, recognize different
+          breeds of dog. All because the thing we can see is now in
+          a numerical format.
+        </p>
+        <p>
+          Far from profaning the image, converting it to
+          numbers pays homage to it.
+          The process requires care and a deep respect for the medium.
+          It also requires a lot of disk space.
+          An 8 megapixel color image occupies 24 megabytes uncompressed.
+          They say a picture is worth a thousand words, but they were wrong
+          on that point. It's worth millions.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

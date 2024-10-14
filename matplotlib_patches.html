@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Patches in Matplotlib";</script>
+  <script type="text/javascript">var publication_date = "May 13, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+
+        <h3>Patches</h3>
+<pre><code>import matplotlib.patches as patches
+path = [[.1, .4], [.2, .9], [.7, .3]]
+ax.add_patch(patches.Polygon(path))</code></pre>
+<br>
+        <p>
+          For me, the biggest reason to use Matplotlib is the unlimited
+          power it gives you over your plots. To fully unlock this power,
+          you need patches. Here's a self-contained example of how to
+          make one.
+        </p>
+<pre><code>import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+fig = plt.figure()
+ax = fig.gca()
+path = [
+    [.1, .3],
+    [.2, .9],
+    [.8, .4],
+]
+ax.add_patch(patches.Polygon(path))
+fig.savefig("patch.png")</code></pre>
+
+        <img title="a triangle patch"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/triangle_patch.png"
+          alt="a triangle patch"
+          style="height: 440px;">
+        <p>
+          Patches are arbitrary two dimensional regions.
+          There are a lot of 
+          <a href="https://matplotlib.org/3.2.1/api/patches_api.html">
+            fancy wrappers and helpers</a>,
+          like Rectangles, Circles, Boxes, and Ellipses, but if you want
+          a single approach that will meet nearly all of your needs, stick
+          with
+          <a href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.patches.Polygon.html">
+            Polygons</a>. They let you define the outline of any
+            two dimensional shape you want, no matter how complex.
+        </p>
+        <h4>Create the path</h4>
+        <p>
+          To initialize a Polygon, it needs a set of points defining its
+          vertices, an outline path. This will need to be in the form
+          of a 2D array with 2 columns, or a similarly shaped list of lists,
+          as we used in the exaple above. No need to repeat the start vertex.
+          By default, the Polygon closes itself.
+        </p>
+        <h4>Personalize it</h4>
+
+<pre><code> ax.add_patch(patches.Polygon(
+  path,
+  alpha=.7,
+  edgecolor="darkblue",
+  facecolor="red",
+  hatch="+",
+  joinstyle="miter",
+  linestyle="--",
+  linewidth=5,
+)) </code></pre>
+        <img title="a triangle patch with a lot of customization"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/fancy_patch.png"
+          alt="a triangle patch with a lot of customization"
+          style="height: 440px;">
+
+        <p>
+          Patches are customizable in all the typical Matplotlib ways.
+          Go wild.
+        </p>
+        <p>
+          Heads up: Unilike lines and points, when you add patches
+          to and Axes object, it doesn't automatically change the axis limits
+          to include it. You may have to use ax.set_xlim() and ax.set_ylim()
+          to expand your Axes so that they show the patch.
+          high level functions like plot() and scatter(). 
+        </p>
+
+        <p>
+          <a href="https://github.com/brohrer/taming_matplotlib/blob/master/patch_examples.py">
+            Find the full code here</a>.
+        </p>
+
+        <p>
+          I've had to google this more times than I can count.
+          No more!
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

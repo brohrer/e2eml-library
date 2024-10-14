@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Parameter Efficiency Leaderboard";</script>
+  <script type="text/javascript">var publication_date = "March 13, 2022";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3><a name="mnist_99"></a>MNIST, 99% accuracy</h3>
+        <p>
+          <ul>
+            <li>
+              <strong>1,398</strong> parameters.
+              Three-layer Sharpened Cosine Similarity
+              with paired depthwise and pointwise operations.
+              (<a href="
+                https://colab.research.google.com/drive/1Lo-P_lMbw3t2RTwpzy1p8h0uKjkCx-RB?usp=sharing
+                ">code</a>)
+            </li>
+          </ul>
+        </p>
+
+        <h3><a name="fashion_90"></a>Fashion MNIST, 90% accuracy</h3>
+        <p>
+          <ul>
+            <li>
+              <strong>7,659</strong> parameters.
+              Three-layer Sharpened Cosine Similarity
+              with 12 5x5 kernels in each layer.
+              (<a href="
+                https://github.com/brohrer/scs_torch_gallery/blob/main/fashion_90_7659.py
+                ">code</a>)
+            </li>
+          </ul>
+        </p>
+
+        <h3><a name="cifar10_80"></a>CIFAR-10, 80% accuracy</h3>
+        <p>
+          <ul>
+            <li>
+              <strong>47,643</strong> parameters.
+              Three-layer Sharpened Cosine Similarity
+              with 30 5x5 kernels in each layer.
+              (<a href="
+              https://github.com/brohrer/scs_torch_gallery/blob/main/cifar10_80_47643.py
+              ">code</a>)
+            </li>
+          </ul>
+        </p>
+
+        <h3><a name="cifar10_90"></a>CIFAR-10, 90% accuracy</h3>
+        <p>
+          <ul>
+            <li>
+              <strong>103,000</strong> parameters.
+              ConvMixer-256/8 (Patches Are All You Need?), achieved 91.26%.
+              (<a href="
+              https://arxiv.org/pdf/2201.09792v1.pdf
+              ">paper</a>,
+              <a href="
+              https://github.com/locuslab/convmixer
+              ">code</a>)
+            </li>
+            <li>
+              <strong>639,702</strong> parameters.
+              kEffNet-B0, an EfficientNet with paired
+              pointwise convolutions, achieved 91.64%.
+              (<a href="
+https://www.researchgate.net/publication/355214501_Grouped_Pointwise_Convolutions_Significantly_Reduces_Parameters_in_EfficientNet/fulltext/6168f71b66e6b95f07cb7118/Grouped-Pointwise-Convolutions-Significantly-Reduces-Parameters-in-EfficientNet.pdf
+              ">paper</a>)
+            </li>
+            <li>
+              <strong>1.2M</strong> parameters.
+              SCS-based network achieved 91.3%.
+              (<a href="
+              https://github.com/hukkelas/sharpened_cosine_similarity_torch/blob/main/sharpened_cosine_similarity.py
+              ">code</a>)
+            </li>
+          </ul>
+        </p>
+
+        <h3><a name="imagenet_top1_80"></a>ImageNet top-1, 80% accuracy</h3>
+        <p>
+          <ul>
+            <li>
+              <strong>21.1M</strong> parameters.
+              ConvMixer-768/32 (Patches Are All You Need?), achieved 80.16%.
+              (<a href="
+              https://arxiv.org/pdf/2201.09792v1.pdf
+              ">paper</a>,
+              <a href="
+              https://github.com/locuslab/convmixer
+              ">code</a>)
+            </li>
+          </ul>
+        </p>
+
+        <h3>Why parameter efficiency?</h3>
+        <p>
+          There are a lot of different dimensions to a model's performance
+          and parameter efficiency is one that gets overlooked. If two
+          models have similar accuracy, but one has fewer parameters
+          it will probably be cheaper to store, run, distribute,
+          and maintain.
+          Some model families are inherently more parameter efficient than
+          others, but those differences aren't showcased in accuracy
+          leaderboards. This is a chance for parameter efficient
+          architectures to get their time in the spotlight.
+        </p>
+        <h3>Isn't this just a cherry-picked metric that
+          sharpened cosine similarity does well on?</h3>
+        <p>
+          Yes.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

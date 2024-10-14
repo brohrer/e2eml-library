@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Online Batch Normalization";</script>
+  <script type="text/javascript">var publication_date = "April 13, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>DEPRECATED</h1>
+        <p>
+          Since writing this, I learned about
+          <a href="http://papers.nips.cc/paper/9051-online-normalization-for-training-neural-networks.pdf">
+            a paper describing Online Normalization</a>, solving the
+          problem I was trying to solve here, but doing a much better job.
+          If you use the method I describe below, it probably won't
+          work well. Luckily now I have a simplified version of this
+          implemented in Cottonwood. As of version 28, a line like
+<pre><code>import cottonwood.experimental.online_normalization.OnlineNormalization</code></pre>
+          will get it into your code. To get a deeper sense of what batch
+          normalization is doing and how,
+          <a href="https://e2eml.school/batch_normalization.html">
+            check out this post</a> on the topic.
+        </p>
+        <hr>
+        <hr>
+
+        <p>
+        Batch Normalization (BN) is a learned element-wise shift
+        and scale transformation used in deep neural networks.
+        (Originally presented in<br>
+        <a href="https://arxiv.org/abs/1502.03167">
+        Batch Normalization: Accelerating Deep Network Training
+        by Reducing Internal Covariate Shift<br>
+        by Sergey Ioffe and Christian Szegedy<br>
+        https://arxiv.org/abs/1502.03167</a>)<br>
+        Nobody is completely sure why, but everyone agrees that it works
+        really well. It's not perfect. There are variations and improvements
+        with names like Batch Renormalization, Streaming Normalization,
+        Online Normalization, and Filter Response Normalization.
+        But straight up BN has been used for so long in so many places
+        that it can't be ignored.
+        </p>
+
+        <p>
+        The challenge of using BN is that it operates on entire batches
+        of inputs at once, up to several thousand. It uses the mean
+        and variance of individual neurons across the entire batch to
+        make adjustments to the scale and shift it applies
+        to that neuron's activity. This can require a tremendous amount
+        of memory. 
+        This is well suited to large parallel computation hardware, such as
+        GPUs (and often runs into resource limitations even there),
+        but it's not well suited to users running ML on their local CPUs.
+        <a href="https://e2eml.school/cottonwood">Cottonwood</a>
+        is committed to remain CPU-friendly, but until this point
+        has lacked BN capability.
+        This implementation has been modified to be <em>online</em>, that is,
+        it operates on one input at a time.
+        </p>
+
+        <p>
+        There are two modifications to the original BN method
+        necessary to make this happen. (This explanation assumes you are
+        familiar with BN. Feel free to refer the original
+        paper or to the informative
+        <a href="https://en.wikipedia.org/wiki/Batch_normalization">
+          Wikipedia page</a>.)
+        First, the batch statistics, batch mean and batch variance,
+        as well as the partial derivatives of the batch statistics,
+        dL_d(batch mean) and dL_d(batch variance),
+        are taken from the <em>previous</em>
+        batch, rather than the current one. They can only be calculated at the
+        end of a batch, so they are not available for the current batch.
+        </p>
+
+        <p>
+        Second, the updated shift (beta) and scale (gamma) parameters
+        aren't applied to the current batch, but to the following batch.
+        The update can't take place until the gradient of both
+        dL_d(shift) and dL_d(scale) are calculated, which doesn't happen until
+        the batch is complete.
+        </p>
+
+        <p>
+        As a result of these two changes, forward and backward passes are
+        calculated using parameters from the <em>previous</em>
+        batch rather than the
+        current one. I expect shift and scale to change
+        only gradually, so using
+        the one-batch-delayed version of them
+        should not introduce a significant deviation in results.
+        The dL_d(batch mean) and dL_d(batch variance) are a different story.
+        They may change more significantly from batch to batch. If they do,
+        they might introduce some instabilities.
+        It may mean that this online variant of BN can't get
+        quite as aggressive with its learning rates as original BN.
+        </p>
+
+        <p>
+        A gratuitous modification I made was to calculate a running estimate
+        of the population statistics, population mean and variance, and
+        to use these (rather than batch statistics)
+        as the basis for normalizing inputs in the forward pass.
+        I estimate population mean and population variance using an
+        exponential-decay weighted average, which is elegant to compute online.
+        This serves two purposes. The exponential decay
+        serves both to emphasize
+        the most recent batches (which may be different from early batches)
+        and also to mitigate sensitivity to individual noisy batches. It is
+        also a nice middle ground between using batch statistics during
+        training and population statistics during evaluation. It has the
+        important attributes of both (current relevance and long memory)
+        and so does not require BN to know whether
+        you are training or evaluating.
+        it allows you to use the same forward pass for both.
+        </p>
+
+        <p>
+        Online Batch Normalization is implemented in Cottonwood, and
+        resides in the <code>experimental/blocks/normaliztion.py</code>
+        module.
+        <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/experimental/blocks/normalization.py">
+          Check it out</a>
+        if you'd like to learn more.
+        </p>
+
+        <p>
+        You can check out other research ideas and things that I've built
+        <a href="https://e2eml.school/lab">here</a>.
+        </p>
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

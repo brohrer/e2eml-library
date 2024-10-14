@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Play and Record Sound";</script>
+  <script type="text/javascript">var publication_date = "November 30, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          Working with sound is cool because it's one of very few ways
+          that the outside world can touch the inside of a computer.
+          When I talk, I shake atoms back and forth, which push and pull
+          on a microphone, which pushes and pulls on electrons in a wire,
+          which gets converted to a voltage, which gets represented as
+          a floating point number for my program to work with. And as
+          a bonus it can turn around and do the reverse. It's all the
+          hardware connections we need to re-create the Star Trek computer
+          voice interface. (The algorithms still need some work.)
+        </p>
+        <h3>Installation</h3>
+        <p>
+          To get set up for sound in Python, you'll need the
+          <a href="https://pypi.org/project/sounddevice/">sounddevice</a>
+          package.
+          This is a cross platform tool
+          (it works on Mac, Windows, and Linux) that
+          talks to your machine's speakers and microphone.
+          It converts sound to and from
+          NumPy arrays, which is perfect if you want to use it for
+          signal processing and machine learning applications, which we do.
+        </p>
+        <p>
+          At the command line run
+        </p>
+<pre><code>python3 -m pip install sounddevice</pre></code>
+        <p>
+          Heads up: if you're working on Linux, you may get
+          <a href="https://techoverflow.net/2019/08/05/how-to-fix-pyaudio-fatal-error-portaudio-h-no-such-file-or-directory/">
+            this "missing portaudio.h" error</a> during the pip installs.
+          If that happens, you'll have to manually install PortAudio,
+          another library that sounddevice relies on. On my Ubuntu machine
+          that is done with
+        </p>
+<pre><code>sudo apt install portaudio19-dev</code></pre>
+
+        <h3>Recording sound</h3>
+        <p>
+          To start recording, we have to specify the number of channels
+          (1 for mono, 2 for stereo) and the number of samples.
+          If our device has a sampling rate of 44,100 samples per
+          second and we want to record for 2 seconds, that would
+          give total of n_samples = 44,100 x 2 = 88,200. (44,100
+          or 48,000 samples per second are what you're most likely
+          to see on your computer.)
+        </p>
+<pre><code>import sounddevice as sd  
+recorded_array = sd.rec(n_samples, channels=2, blocking=True)</code></pre>
+        <p>
+          The <code>blocking=True</code> option forces the rest of your code to
+          wait until the recording is complete before it carries on.
+          This records the audio as a NumPy array, which sets it up for
+          whatever signal processing or machine learning shenanigans
+          you can dream up.
+        </p>
+
+        <h3>Playing sound</h3>
+        <p>
+          There's a complementary one liner to
+          play back a NumPy array as sound.
+        </p>
+<pre><code>sd.play(recorded_array, blocking=True)</code></pre>
+        <p>
+          This level of convenience for turning arrays into sound opens
+          up a lot of possibilities for turning data into
+          "auralizations" &mdash; audio representations of data.
+          (<a href="https://python-sounddevice.readthedocs.io/en/0.4.1/api/convenience-functions.html">
+            Here are the docs for <em>play</em> and <em>rec</em>.</a>)
+        </p>
+        <p>
+          Knock yourself out!
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Multiprocessing for Real-Time Applications";</script>
+  <script type="text/javascript">var publication_date = "January 2, 2021";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+        <p>
+          <strong>Problem: Data processing and machine learning
+          computation can become a pipeline bottleneck</strong>
+        </p>
+        <p>
+          <strong>One solution: Break heavy computations out into
+          a separate Python process</strong>
+        </p>
+        <p>
+          There are a few reasons you might want to use more than one
+          process in your pipeline.
+        </p>
+        <p>
+          <strong>1. You are using all your CPU cycles.</strong>
+          This is the most common one.
+          Running a Python script usually starts up a single process,
+          which means that it can at most make use of one core. Your
+          computer probably has two or more, so you have room to
+          expand if you need it. Splitting your job up into two
+          processes gives you twice as many cycles to work with.
+        </p>
+        <p>
+          <strong>2. One part runs more often than another.</strong>
+          I wrote some code
+          that collects audio data from a microphone, then
+          calculates its frequency components. The collection has to
+          happen often (audio data is sampled 44,000 times per second),
+          but I only needed to recalculate the frequency components
+          a few times per second. The timing mismatch here meant that
+          the fast part would sometimes have to wait around for the slow
+          part to run. Splitting this into separate processes decoupled
+          them so that they could both operate comfortably at their own
+          cadence.
+        </p>
+        <p>
+          <strong>3. It has to run in real time.</strong>
+          If you are working with sensors that sample from the physical
+          world, like cameras, take actions in the physical world,
+          like climate controls, or systems that do both, like robots,
+          then your code needs to be reliably synced to a wall clock.
+          This doesn't always mesh well with demanding computational
+          modeling or machine learning algorithms, which can take
+          long, uncertain periods of time to reach a result. Breaking
+          these out into separate processes ensures that sensors can
+          be read and actions can be taken regularly using the
+          most current information available at the time, while large
+          computations whirr away happily in the background. 
+        </p>
+        <p>
+          Here's a working example. Commentary below.
+        </p>
+<pre><code>import multiprocessing as mp
+import numpy as np
+import time
+
+
+shared_values = mp.Array('d', range(2))
+
+def heavy_pipeline_task(shared_values):
+    counter = 0
+    while True:
+        shared_values[0] = counter
+        shared_values[1] = np.sum(np.random.normal(size=(1000, 1000)))
+        counter += 1
+
+
+pipeline_job = mp.Process(
+    target=heavy_pipeline_task,
+    args=(shared_values,),
+    daemon=True)
+pipeline_job.start()
+
+for i in range(1000):
+    time.sleep(.4)
+    print(f"pass {i}: {int(shared_values[0])}, {shared_values[1]}")
+</code></pre>
+
+        <p>
+          This code creates a separate process to run a heavy array
+          computation, then polls it periodically to pull the most
+          recent result.
+        </p>
+
+        <p>
+          <code>shared_values = mp.Array('d', range(2))</code><br>
+          Create <a href="https://docs.python.org/3/library/multiprocessing.html#shared-ctypes-objects">
+          a special object</a> for sharing values between
+          the two processes. This is the dead drop where one process
+          can write a set of values and the other can read from it.
+          All of the trickiness of making sure both processes know where
+          in memory to find this object and preventing them both from
+          changing it at the same time is taken care of for you. This
+          is a wonderful convenience and makes for clean code.
+          This particular object is a two-element array of doubles ('d').
+          There are also objects available for single values and
+          <a href="https://docs.python.org/3/library/multiprocessing.html#exchanging-objects-between-processes">queues</a>,
+          and if those aren't enough for you, you can use a
+          <a href="https://docs.python.org/3/library/multiprocessing.html#managers">Manager</a> to
+          share any other object type you want.
+        </p>
+      
+        <p>
+          <code>def heavy_pipeline_task(shared_values):</code><br>
+          There's nothing special about this function declaration
+          except that it accepts the shared variable as an argument.
+          The function itself performs a pointless but expensive
+          array operation, and also maintains a counter so that you
+          can see missed and repeated readings in the other thread.
+        </p>
+        <p>
+          <code>pipeline_job = mp.Process(</code><br>
+          Initialize a separate process.
+        </p>
+        <p>
+          <code>target=heavy_pipeline_task,</code><br>
+          Identify the function that the process will run.
+        </p>
+        <p>
+          <code>args=(shared_values,),</code><br>
+          Provide all the input arguments for the function in the form of
+          a tuple.
+        </p>
+        <p>
+          <code>daemon=True)</code><br>
+          Declare the new child process to be a daemon. This means that
+          when the parent process dies for any reason, the child process
+          will be killed too. This saves you from having to explicitly
+          track and clean up after each process separately. However, if you
+          need to close your child process explicitly,
+          for instance, to gracefully shut down a
+          connection or close a file, you can skip the daemon argument
+          and use an
+          <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event"</a>Event</a>
+          to coordinate the shutdown.
+        </p>
+        <p>
+          <code>pipeline_job.start()</code><br>
+          Kick of the new process.
+        </p>
+        <p>
+          <code>print(f"pass {i}: {int(shared_values[0])}, {shared_values[1]}")</code><br>
+          Reference the shared object as often as you like from the parent
+          process. In this code, you might read the same thing more than once,
+          and you might miss a lot of updates, but you have the benefit of
+          fully decoupled processes. (If you want to get all the updates
+          once and only once, a
+          <a href="https://docs.python.org/3/library/multiprocessing.html#exchanging-objects-between-processes">queue</a>
+          is your best bet.)
+        </p>
+
+
+        </p>
+        <h2>What about threading?</h2>
+        <p>
+          In situations where you're not running low on CPU cycles,
+          <a href="https://docs.python.org/3/library/threading.html">
+            Python's threading library</a> is a fine alternative for
+          decoupling your code.
+          (<a href="https://e2eml.school/threading.html">
+            Here's an example of how</a>.)
+          There's about 90% similarity between the two libraries,
+          so you can almost copy and paste multiprocessing code to
+          get multi-threaded code.
+        </p>
+        <p>
+          Threading helps different code snippets to run
+          asynchronously, while keeping the code easy to read. But it's
+          ideally suited to cases where the bottleneck is due to waiting
+          around, for example, waiting for some external input/output
+          process to provide or read a value. It still limits your
+          code to running in a single process. If you have expensive
+          computations, like large array operations, they still can
+          block the other thread from running because the process can only
+          do one thing at a time. Running multiple processes is a better
+          way to ensure that the two tasks really are parallel and that
+          one won't gum up the other.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

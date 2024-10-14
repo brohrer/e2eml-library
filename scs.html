@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Sharpened Cosine Similarity";</script>
+  <script type="text/javascript">var publication_date = "February 19, 2022";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2><a href="https://github.com/brohrer/sharpened-cosine-similarity">This page has moved</a></h2>
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>
+          One day there will be a comprehensive post and paper describing
+          sharpened cosine similarity (SCS), but today is not that day. The concept
+          and its application is still congealing. In the meantime, here is
+          a summary of activity to date.
+        </p>
+        <h3>Tips and Tricks</h3>
+        <p>
+          These are somethings that have been reported to work so far.
+          If you discover any new tricks please let me know so I can add them
+          to the list!
+          <ul>
+            <li> &#9658; 
+              Here's a
+              <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch">
+                PyTorch implementation</a> and here are
+              <a href="https://github.com/brohrer/scs_torch_gallery">
+                a handful of examples</a>. Links to TensorFlow
+              implementations and other examples below.
+            </li>
+            <li> &#9658; 
+              The big benefit of SCS appears to be parameter efficiency and
+              architecture simplicity. It doesn't look like it's going
+              to beat any accuracy records, and it doesn't run very fast.
+            </li>
+            <li> &#9658; 
+              Skip the nonlinear activation layers, like ReLU and sigmoid,
+              after SCS layers.
+            </li>
+            <li> &#9658; 
+              Skip the dropout layers after SCS layers.
+            </li>
+            <li>&#9658; 
+              Skip the normalization layers, like batch normalization
+              or layer normalization, after SCS layers.
+            </li>
+            <li>&#9658; 
+              Use
+              <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/absolute_pooling.py">
+                MaxAbsPool</a> instead of MaxPool. It selects the element with
+              the highest magnitude of activity, even if it's negative.
+            </li>
+            <li>&#9658; 
+              Raising activities to the power <em>p</em> generally doesn't
+              parallelize well on GPUs and TPUs. It will slow your code
+              down a LOT compared to straight convolutions.
+            </li>
+            <li>&#9658; 
+              Disabling the <em>p</em> parameters results in a huge speedup
+              on GPUs, but this takes the "sharpened" out of SCS.
+              Regular old cosine similarity is cool, but it is its own
+              thing with its own limitations.
+            </li>
+          </ul>
+        </p>
+
+        <h3>Reverse Chronology</h3>
+
+
+        <p>
+          <strong>2022-03-11</strong>
+          <a href="
+          https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/demo_fashion_mnist_lightning.py
+          ">
+            code</a> by
+          <a href="https://twitter.com/PSodmann
+          ">Phil Sodmann
+            </a>. PyTorch Lightning demo on the Fashion MNIST data.
+        </p>
+        <p>
+          <strong>2022-02-25</strong>
+          <a href="
+            https://twitter.com/_clashluke/status/1497092150906941442
+          ">
+            experiments and analysis</a> by
+          <a href="https://github.com/ClashLuke/
+          ">Lucas Nestler
+            </a>. TPU implementation of SCS. Runtime performance comparison
+          with and without
+          the <em>p</em> parameter
+        </p>
+        <p>
+          <strong>2022-02-24</strong>
+          <a href="
+        https://github.com/DrJohnWagner/Kaggle-Notebooks
+          ">
+            code</a> and
+          <a href="
+          https://twitter.com/DrJohnWagner/status/1496741769748180994
+          ">analysis
+            </a> by <a href="https://twitter.com/DrJohnWagner">
+            Dr. John Wagner</a>.
+          Head to head comparison with convnet on American Sign Language
+          alphabet dataset.
+        </p>
+        <p>
+          <strong>2022-02-22</strong>
+          <a href="
+            https://github.com/hukkelas/sharpened_cosine_similarity_torch/blob/main/sharpened_cosine_similarity.py
+          ">
+            code</a> by
+          <a href="
+            https://github.com/hukkelas
+          ">
+            Håkon Hukkelås </a>. Reimplementation of SCS in PyTorch with a
+            performance boost from using Conv2D. Achieved 91.3% CIFAR-10
+            accuracy with a model of 1.2M parameters.
+        </p>
+        <p>
+          <strong>2022-02-21</strong>
+          <a href="
+            https://github.com/zimonitrome/scs_gan
+          ">
+            code</a> by
+          <a href="
+            https://twitter.com/zimonitrome/status/1495906518876794881?s=20&t=f8MNbUaIMWB4qhWChDZoEw
+          ">
+            Zimonitrome
+          </a>. An SCS-based GAN, the first of its kind.  
+        </p>
+        <p>
+          <strong>2022-02-20</strong>
+          <a href="
+            https://github.com/brohrer/sharpened_cosine_similarity_torch/pull/6
+          ">
+            code</a> by
+          <a href="
+            https://twitter.com/jatentaki/status/1495520542295789570?s=20&t=f8MNbUaIMWB4qhWChDZoEw
+          ">
+            Michał Tyszkiewicz</a>. Reimplementation of SCS in PyTorch with a
+            performance boost from using Conv2D.
+        </p>
+        <p>
+          <strong>2022-02-20</strong>
+          <a href="https://gist.github.com/ClashLuke/8f6521deef64789e76334f1b72a70d80">
+            code</a> by
+          <a href="https://twitter.com/_clashluke/status/1495534576399175680?s=20&t=f8MNbUaIMWB4qhWChDZoEw">
+            Lucas Nestler</a>. Reimplementation of SCS in PyTorch with a
+            performance boost and CUDA optimizations.
+        </p>
+        <p>
+          <strong>2022-02-18</strong>
+          <a href="https://www.rpisoni.dev/posts/cossim-convolution-part2/">
+            blog post</a> by
+          <a href="https://twitter.com/ml_4rtemi5/status/1494651965036548099?s=20&t=pOd3c_k9VWHlUtMTh-9WtA">
+            Raphael Pisoni</a>. SOTA parameter efficiency on MNIST.
+            Intuitive feature interpretation.
+        </p>
+        <p>
+          <strong>2022-02-17</strong>
+          <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/model_cifar10_15_9.py">
+            PyTorch code</a> by
+          <a href="https://twitter.com/_brohrer_/status/1494059462172319744">
+            Brandon Rohrer</a>. SCS model with 95.3k parameters and 15.9% error on CIFAR-10.
+        </p>
+        <p>
+          <strong>2022-02-16</strong>
+          <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch/blob/main/model_cifar10_18_4.py">
+            PyTorch code</a> by
+          <a href="https://twitter.com/_brohrer_/status/1494059462172319744">
+            Brandon</a>. SCS model with 68k parameters and 18.4% error on CIFAR-10.
+        </p>
+        <p>
+          <strong>2022-02-14</strong>
+          <a href="https://github.com/brohrer/sharpened_cosine_similarity_torch">
+            PyTorch code</a> by
+          <a href="https://twitter.com/_brohrer_/status/1493233643652894730?s=20&t=pOd3c_k9VWHlUtMTh-9WtA">
+            Brandon</a>. PyTorch implementation of SCS running on Fashion MNIST.
+        </p>
+        <p>
+          <strong>2022-02-01</strong>
+          <a href="https://github.com/StephenHogg/SCS">
+            PyTorch code</a> by
+          <a href="https://twitter.com/whistle_posse/status/1488656595114663939?s=20&t=lB_T74PcwZmlJ1rrdu8tfQ">
+            Stephen Hogg</a>. PyTorch implementation of SCS. MaxAbsPool implementation.
+        </p>
+        <p>
+          <strong>2022-02-01</strong>
+          <a href="https://github.com/oliver-batchelor/scs_cifar">
+            PyTorch code</a> by
+          <a href=" https://twitter.com/oliver_batch/status/1488695910875820037?s=20&t=QOnrCRpXpOuC0XHApi6Z7A">
+            Oliver Batchelor</a>. PyTorch implementation of SCS.
+        </p>
+        <p>
+          <strong>2022-01-31</strong>
+          <a href="https://github.com/ZeWang95/scs_pytorch">
+            PyTorch code</a> by
+          <a href=" https://twitter.com/ZeWang46564905/status/1488371679936057348?s=20&t=lB_T74PcwZmlJ1rrdu8tfQ">
+            Ze Wang</a>. PyTorch implementation of SCS.
+        </p>
+        <p>
+          <strong>2022-01-30</strong>
+          <a href=" https://colab.research.google.com/drive/1zeh6_Opjehy_EUwnBDHtyWIC74dxfBu1">
+            Keras code</a> by
+          <a href=" https://twitter.com/_brohrer_/status/1487928078437396484?s=20&t=pOd3c_k9VWHlUtMTh-9WtA">
+            Brandon</a>. Keras implementation of SCS running on Fashion MNIST.
+        </p>
+        <p>
+          <strong>2022-01-17</strong>
+          <a href="
+        https://colab.research.google.com/drive/1Lo-P_lMbw3t2RTwpzy1p8h0uKjkCx-RB?usp=sharing#scrollTo=eIX0XryJbvUk
+          ">
+            code</a> by
+          <a href="
+          https://twitter.com/ml_4rtemi5
+          ">
+            Raphael</a>. Implementation of SCS in paired depthwise/pointwise
+          configuration, the key element of the
+          <a href="https://arxiv.org/pdf/2201.09792v1.pdf">
+            ConvMixer</a> architecture.
+        </p>
+        <p>
+          <strong>2022-01-06</strong>
+          <a href="https://gist.github.com/4rtemi5/607909e6ac1ef3cfb54d5b85111f92b9">
+            Keras code</a> by
+          <a href="https://gist.github.com/4rtemi5">
+            Raphael</a>. Keras implementation of SCS.
+        </p>
+        <p>
+          <strong>2020-02-24</strong>.
+          <a href="https://twitter.com/_brohrer_/status/1232063619657093120">
+            Twitter thread</a> by
+          <a href="https://twitter.com/_brohrer_">Brandon</a>.
+          Justification and introduction of SCS.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

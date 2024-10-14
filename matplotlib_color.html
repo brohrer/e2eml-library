@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Color";</script>
+  <script type="text/javascript">var publication_date = "September 9, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+        <br>
+        <h3>Choosing a color</h3>
+        <p>
+          You don't need to be bound to Matplotlib's default color
+          palette. You can customize the color for every element you draw.
+          There are
+          <a href="https://matplotlib.org/api/colors_api.html">
+            several ways to specify colors</a>,
+          and covering all of them deserves its own tutorial, but the simplest
+          way is to call out the (English) name of a color. Matplotlib
+          can recognize a shocking variety of them. Here are some samples.
+          They include the named CSS colors.
+        </p>
+
+        <a href="https://matplotlib.org/gallery/color/named_colors.html">
+          <img
+            src="https://github.com/brohrer/taming_matplotlib/raw/master/images/css_colors.png"
+            alt="named CSS colors" style="width: 440px;">
+        </a>
+
+        <p>
+         There is also a dazzling collection of 954 colors curated by xkcd,
+         including "kermit green" and "heliotrope". Keep in mind that whenever
+         you want to use one of these you'll have to call it by
+         its full name &mdash; "xkcd:kermit green" or "xkcd:heliotrope".
+        </p>
+        <a href="https://xkcd.com/color/rgb/">
+          <img
+            src="https://github.com/brohrer/taming_matplotlib/raw/master/images/xkcd_colors.png"
+            alt="named colors from xkcd survey" style="width: 440px;">
+        </a>
+        <p>
+          And if you find it helpful, you can also use
+          <a href="https://www.w3schools.com/colors/colors_hexadecimal.asp">
+            a color's hex string</a>. (Here's
+          <a href="https://e2eml.school/images_to_numbers.html">
+            a deeper dive on the topic</a> if you're interested.)
+          If your monitor can show it,
+          you can draw with it in Matplotlib.
+        </p>
+
+        <h3>Choosing colors</h3>
+        <p>
+          Choosing the right color combination for your project is a special
+          skill, and not one I feel confident in. I'm convinced that
+          visual designers are wizards. Wherever your own color perception
+          skills are, there are a couple of
+          tools that will help you level up.
+          <a href="http://colorizer.org/">Colorizer.org</a> has a slick
+          set of sliders you can adjust to choose the right color
+          combo in any one of several color spaces. And if you'd like
+          a primer to color selection and design,
+          <a href="https://blog.datawrapper.de/beautifulcolors/index.html">
+            this post by Lisa Charlotte Rost</a> is shockingly accessible.
+        </p>
+
+        <h3>Colormaps</h3>
+        <p>
+          When creating an image from a single channel (a two-dimensional
+          array),
+          <a href="https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html">
+          Matplotlib gives you lots of different
+          options</a> for how to color it. 
+        </p>
+
+        <a href="https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html">
+          <img src="https://github.com/brohrer/taming_matplotlib/raw/master/images/colormaps.png"
+            alt="matplotlib colormaps" style="width: 440px;">
+        </a>
+
+        <p>
+          To choose your color scheme, pass the colormap by name to
+          <tt>imshow()</tt>, like this:
+        </p>
+<pre><code>ax.imshow(image, cmap="inferno")</code></pre>
+
+        <h3>Create a custom colormap</h3>
+        <p>
+          Matplotlib also gives you complete control in
+        <a href="https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html">
+          creating your own colormaps</a>. There are several ways to go
+          about it, but my favorite is this: make a list of colors you'd
+          like the colormap to hit, and let
+          <a href="https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.colors.LinearSegmentedColormap.html#matplotlib.colors.LinearSegmentedColormap.from_list">
+            LinearSegmentedColormap.from_list()</a>
+          do the rest.
+        </p>
+<pre><code>from matplotlib.colors import LinearSegmentedColormap
+custom_cmap = LinearSegmentedColormap.from_list("my_cmap", ["red", "black", "white"])</code></pre>
+        <img src="https://github.com/brohrer/taming_matplotlib/raw/master/images/RdBkWh_colormap.png"
+            alt="custom red-black-white colormap" style="width: 440px;">
+
+        <p>
+          This colormap transitions smoothly (linearly) from red to black to
+          white at regular intervals along the scale. It's a colormap I
+          find useful for visualizing arrays of values, but doesn't
+          currently exist in the Matplotlib library.
+        </p>
+        <p>
+          Whatever you do, please colormap responsibly. If you do this
+          the Internet will get angry:
+        </p>
+        <img src="https://github.com/brohrer/taming_matplotlib/raw/master/images/atrocious_colormap.png"
+            alt="a horrible colormap" style="width: 440px;">
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

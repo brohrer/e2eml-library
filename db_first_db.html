@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "A Pythonista's First Database";</script>
+  <script type="text/javascript">var publication_date = "September 19, 2023";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+        <p>
+          It's a familiar story. Your friends all brag about their
+          humongous databases. They go on and on about MySQL this and
+          Redis that, and "oh can you believe they swapped out
+          Mongo for Snowflake!?!" and they all laugh and you pretend
+          to laugh along. But inside you're sad because you don't have
+          a database. Well today is your lucky day. Today you get
+          a database of your very own.
+        </p>
+        <p>
+          One of the sleekest and slickest databases out there is
+          <a href="https://www.sqlite.org/index.html">SQLite</a>.
+          It's so lean that it got folded right into standard Python as
+          <a href="https://docs.python.org/3/library/sqlite3.html">
+          the sqlite3 library</a>. It's the single most used database in
+          the world, and its code is entirely open source,
+          in the public domain.
+        </p>
+
+        <p>
+          If you're already working in Python, you have SQLite installed.
+        </p>
+
+        <p>
+          <code>import sqlite3</code>
+        </p>
+
+        <p>
+          Create a new database and give it a filename.<br>
+          Open it up and get a cursor, a way to run commands and get results.
+        </p>
+
+        <p>
+          <code>connection = sqlite3.connect("my_first.db")</code>
+          <br>
+          <code>cursor = connection.cursor()</code>
+        </p>
+
+        <p>
+          Create a new table within the database.<br>
+          Name each column and declare the type of data it will hold.
+        </p>
+
+        <p>
+          <code>cursor.execute("CREATE TABLE breakfast (day_of_week TEXT, food TEXT)")</code>
+        </p>
+
+        <p>
+          Add a couple of rows to the table.
+        </p>
+
+        <p>
+          <code>cursor.execute("INSERT INTO breakfast VALUES ('Monday', 'cereal')")</code>
+          <br>  
+          <code>cursor.execute("INSERT INTO breakfast VALUES ('Wednesday', 'eggs')")</code>
+        </p>
+
+        <p>
+          Read those rows back out.
+        </p>
+
+        <p>
+          <code>cursor.execute("SELECT * FROM breakfast")</code>
+        </p>
+
+        <p>
+          Show off the results.
+        </p>
+
+        <p>
+          <code>print(cursor.fetchall())</code>
+        </p>
+
+        <p>
+          Wrap up the database session.
+        </p>
+
+        <p>
+          <code>connection.close()</code>
+        </p>
+
+        <p>
+          Congratulations! You have a database of your own to use
+          for whatever you want! Now you can feel sad about other things.
+        </p>
+
+        <br>
+        <p>
+          (For copy/pasting convenience)
+        </p>
+        <pre><code>import sqlite3
+connection = sqlite3.connect("my_first.db")
+cursor = connection.cursor()
+cursor.execute("CREATE TABLE breakfast (day_of_week TEXT, food TEXT)")
+cursor.execute("INSERT INTO breakfast VALUES ('Monday', 'cereal')")
+cursor.execute("INSERT INTO breakfast VALUES ('Wednesday', 'eggs')")
+cursor.execute("SELECT * FROM breakfast")
+print(cursor.fetchall())
+connection.close()</code></pre>
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

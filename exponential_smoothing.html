@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Exponential Smoothing";</script>
+  <script type="text/javascript">var publication_date = "April 13, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          Time series data can be noisy and jumpy. To separate the trend
+          from the noise its helpful to do a bit of smoothing.
+          Straight averaging has the disadvantage of weighting observations
+          from the past just as strongly as the most recent ones. If there
+          is an underlying trend, this is not ideal, since the trend line
+          will have shifted over that period. A good compromise between
+          recency and smoothness is
+          <a href="https://en.wikipedia.org/wiki/Exponential_smoothing">
+            exponential smoothing</a>.
+        </p>
+        <p>
+          Exponential smoothing also has the wonderful property of being
+          simple to calculate. It is a weighted average of the most
+          recent smoothed value, <em>y_(t-1)</em> with
+          the new observed value <em>x_t</em>:
+          <code>y_t = &alpha; * x_t + (1 - &alpha;) * y_(t-1)</code>,
+          where &alpha; is between 0 and 1. For &alpha; close to 1
+          recent observations are weighted more heavily, and minimal
+          smoothing takes place. For &alpha; close to 0 the new observation
+          counts for little, and the subsequent smoothed value will be close
+          to the previous one. In that case smoothing is heavy.
+        </p>
+        <p>
+          As a rule of thumb, if you want the smoothed signal to reflect
+          changes that occur over &tau; time steps, you case use
+          <code>&alpha; = 1 / &tau;</code> as a weighting factor.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Adaptive feature weighting in <em>k</em>-nearest neighbors";</script>
+  <script type="text/javascript">var publication_date = "March 3, 2021";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          <em>k</em>-nearest neighbors is remarkably powerful right out of the box with the exception that it can be quite sensitive to how features are weighted. The first line of defense is to normalize all of the features to have a variance of one.
+          This helps to ensure that a unit change in each feature is comparable to a unit change in any other. It's a desirable characteristic to have when computing a distance metric in a space composed of all these features. However, this doesn’t account for the fact that some features can be much more important than others. 
+        </p>
+        <h3>Not everything about a cat distinguishes it from a dog</h3>
+        <p>
+          Take for example a <em>k</em>-NN classifier that categorized animals
+          as cats or dogs, based on a collection of characteristics. Color
+          is not likely to be a strong way to distinguish. Presence of fur
+          gives no help at all. But retractible claws would be highly
+          discriminative. It's a far more important feature than the other
+          two. The ability to stare you in the face while disobeying you 
+          may be a strong feature too, but that is still under active
+          investigation.
+        </p>
+        <h3>Feature weighting</h3>
+        <p>
+          A feature can be assigned additional weight by scaling it up, that is,
+          by multiplying all instances of it by a constant. The result of this is that small differences in that feature value will be exaggerated. Nearest neighbors will then be much more likely to be similar in that feature than in the others.
+        </p>
+        <p>
+          On the other hand, features can be made less important by scaling them down, by dividing by a constant. The result of this would be that large changes in that feature's value would only have a modest impact in distance. It might tip the balance between two otherwise identical data points, but all by itself it’s not going to determine which data points fall within the nearest neighborhood of another.
+        </p>
+        <p>
+          The problem of assigning feature weights is that of choosing one scalar multiplier per feature. It is an <em>N</em>-dimensional optimization problem, where N is the number of features. This family of problems has a broad toolbox of solutions. Here I describe one that is simplistic, but has proven to be robust and well-suited to the quirks of the <em>k</em>-nearest neighbor feature weighting problem.
+        </p>
+        <h3>Method</h3>
+        <p>
+          <ol>
+          <li>
+          Start with features that have been normalized to have a unit variance.
+          </li>
+          <li>
+          Initialize weights for all features to be one.
+          </li>
+          <li>
+          Iteratively try out new sets of feature weights.
+          </li>
+          <li>
+          If the new set gives a better performance, keep it.
+          Otherwise reject it and try another.
+          </li>
+          </ol>
+
+          The new set of weights to try at each iteration is obtained by
+          <ol>
+          <li>
+          taking the best set so far,
+          </li>
+          <li>
+          randomly choosing one of them, and
+          </li>
+          <li>
+          deciding by a virtual coin flip to either multiply or divide it by a factor, weight_scale_step.
+          </li>
+          </ol>
+        </p>
+        <p>
+          In practice, although the feature weights can have a powerful influence on the performance of <em>k</em>-nearest neighbors, they tend to be rather insensitive to small changes. This 
+          <code>weight_scale_step</code> factor for multiplying or dividing a feature weight at each iteration to get a new candidate can be large. I’ve had good success with
+          <code>weight_scale_step = 2</code>. This is a hyperparameter for the method, and one that can be experimented with.
+        </p>
+        <h3>Termination</h3>
+        <p>
+          The method doesn’t have any intrinsic termination condition, but like most optimization processes, can be terminated either when it ceases to improve the results after some number of iterations, or when you run out of patience.
+        </p>
+
+        <h3>Online implementation</h3>
+        <p>
+          This method is well-suited to an incremental or online version of
+          <em>k</em>-nearest neighbors. The feature weighting method has
+          to be modified, since there is not a testing data set to work with in that case. Instead, the performance of the candidate feature weights can be determined by comparing the results of a leave-one-out cross validation (LOO-CV). In LOO-CV the entire set of previously seen data points serves as the training data set, except for one removed at random. The predicted value of that point is compared to its actual value, and the score obtained. This is repeated for every data point in the set. The aggregate score represents the ovearll LOO-CV performance. If the new feature weights give a better LOO-CV score, then they are retained, and if not then the previous set of weights is kept.
+        </p>
+        <p>
+          This method introduces two new parameters. The first is a waiting period of how many data points to collect before first trying to adjust feature weights,
+          <code>weight_adjustment_delay</code>. Starting with too few data points could lead to some degenerate optimization runs and poor feature weights. The other parameter is how often to try a new set of feature weights,
+          <code>weight_adjustment_interval</code>. In practice, on a data set with over 40,000 points, I have found that a
+          <code>weight_adjustment_delay = 1000</code> and a
+          <code>weight_adjustment_interval = 10</code> works well, but my experimentation suggests that performance is not very sensitive to either of those numbers.
+        </p>
+        <h3>Prior work?</h3>
+        <p>
+          It is possible that this method has been described already. I haven’t performed A literature search to check. My purpose in documenting it here is to have a record of what I did and why, and to share the method in case it’s useful to anyone else. If you’re aware of similar or identical work, please let me know and I will happily add the citation here.
+        </p>
+        <p>
+          You can find implementations of this method
+          <a href="https://gitlab.com/brohrer/e2eml-course-221/-/blob/main/zoo_04.py">here</a>, and an online, incremental implementation
+          <a href="https://gitlab.com/brohrer/study-knn-cottonwood/-/blob/main/knn_d.py">here</a>.
+        </p>
+
+        <h3>Limitations</h3>
+        <p>
+          This method has some similarities to Powell's method which performs a form of gradient descent in one dimension at a time. There are some differences. Here the step size is fixed, and it is geometric. Also the dimensions are not handled in a cyclical fixed order, but at random. However, this doesn’t escape the fact that the method is subject to local minima just like Powell's method is. It’s possible that the optimum combination of feature weights lies in a global minimum well that can’t be reached by gradient descent. My conjecture is that for all but the most pathological data sets, the optimization landscape for this problem is broad and shallow and that local optimization is likely to find the global optimum. However I have nothing to back this up other than intuition. It remains the subject of future research.
+        </p>
+        
+        <h3>Strengths</h3>
+        <p>
+          The strength of this method is that it requires very little twiddling . While there are hyperparameters to choose, the
+          <code>weight_scale_step</code>, the termination criterion, and for the online implementation,
+          the <code>weight_adjustment_delay</code> and
+          <code>weight_adjustment_interval</code>, experience suggests that the results are insensitive to the exact values of these and that reasonable defaults provide results every bit as good as carefully chosen values. The ability to get high-quality answers without extensive fiddling makes this method a rarity.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

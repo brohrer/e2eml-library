@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Transformers from Scratch";</script>
+  <script type="text/javascript">var publication_date = "October 29, 2021";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          I procrastinated a deep dive into transformers for a few years.
+          Finally the discomfort
+          of not knowing what makes them tick grew too great for me.
+          Here is that dive.
+        </p>
+        <p>
+          Transformers were introduced in this 2017
+          <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
+            paper</a>
+          as a tool for sequence transduction&mdash;converting
+          one sequence of symbols to another. The most popular
+          examples of this are translation, as in English to German.
+          It has also been modified to perform sequence
+          completion&mdash;given a starting prompt, carry on in the
+          same vein and style. They have quickly become an indispensible tool
+          for research and product development in natural language processing.
+        </p>
+        <p>
+          Before we start, just a heads-up.
+          We're going to be talking a lot about matrix
+          multiplications and touching on backpropagation
+          (the algorithm for training the model), but you don't
+          need to know any of it beforehand. We'll add the concepts we need
+          one at a time, with explanation.
+        </p>
+        <p>
+          This isn't a short journey, but I hope you'll be glad you came.
+        </p>
+
+        <ul>
+          <li>
+            &#9658; <a target="_self" href="#one_hot">One-hot encoding</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#dot_product">Dot product</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#matrix_multiplication">Matrix multiplication</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#table_lookup">Matrix multiplication as a table lookup</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#markov_chain">First order sequence model</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#second_order">Second order sequence model</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#second_order_skips">Second order sequence model with skips</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#masking">Masking</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#rest_stop">Rest Stop and an Off Ramp</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#attention">Attention as matrix multiplication</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#second_order_matrix_mult">
+              Second order sequence model as matrix multiplications</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#sequence_completion">Sequence completion</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#embeddings">Embeddings</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#positional_encoding">Positional encoding</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#deembeddings">De-embeddings</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#softmax">Softmax</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#multihead">Multi-head attention</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#attention_revisited">Single head attention revisited</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#skip_connections">Skip connection</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#layer_stack">Multiple layers</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#decoder">Decoder stack</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#encoder">Encoder stack</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#cross_attention">Cross-attention</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#tokenizing">Tokenizing</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#bpe">Byte pair encoding</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#audio_input">Audio input</a>
+          </li>
+          <li>
+            &#9658; <a target="_self" href="#resources">Resources and credits</a>
+          </li>
+        </ul>
+
+        <h3 id="one_hot">One-hot encoding</h3>
+        <p>
+          In the beginning were the words. So very many words.
+          Our first step is to convert all the words
+          to numbers so we can do math on them.
+        </p>
+        <p>
+          Imagine that our goal is to create the computer that responds
+          to our voice commands. It’s our job to build the
+          transformer that converts (or <strong>transduces</strong>)
+          a sequence of sounds to a sequence of words.
+        </p>
+        <p>
+          We start by choosing our <strong>vocabulary</strong>,
+          the collection of symbols
+          that we are going to be working with in each sequence.
+          In our case, there will be two different sets of symbols,
+          one for the input sequence to represent vocal sounds
+          and one for the output sequence to represent words.
+        </p>
+        <p>
+          For now, let's assume we're working with English.
+          There are tens of thousands of words in the English language,
+          and perhaps another few thousand to cover computer-specific
+          terminology. That would give us a vocabulary size that is
+          the better part of a hundred thousand. One way to convert
+          words to numbers is to start counting at one and
+          assign each word its
+          own number. Then a sequence of words can be represented as a
+          list of numbers.
+        </p>
+        <p>
+          For example, consider a tiny language with a vocabulary size
+          of three: <em>files</em>, <em>find</em>, and <em>my</em>.
+          Each word could be swapped
+          out for a number, perhaps
+          <em>files</em> = 1, <em>find</em> = 2, and <em>my</em> = 3.
+          Then the sentence "Find my files", consisting of the word sequence
+          [
+          <em>find</em>,
+          <em>my</em>,
+          <em>files</em>
+          ]
+          could be represented instead as the sequence of numbers [2, 3, 1].
+        </p>
+        <p>
+          This is a perfectly valid way to convert symbols to numbers,
+          but it turns out that there's another format that's even
+          easier for computers to work with, <strong>one-hot encoding</strong>.
+          In one-hot encoding a symbol is represented by an array of
+          mostly zeros, the same length of the vocabulary, with only a single
+          element having a value of one. Each element in the array corresponds
+          to a separate symbol. 
+        </p>
+        <p>
+          Another way to think about one-hot encoding is that
+          each word still gets assigned its own number, but now that number
+          is an
+          index to an array. Here is our example above, in one-hot
+          notation.
+        </p>
+        <p style="text-align:center;">
+          <img title="A one-hot encoded vocabulary"
+            src="images/transformers/one_hot_vocabulary.png"
+            alt="A one-hot encoded vocabulary"
+            style="height: 300px;">
+        </p>
+        <p>
+          So the sentence "Find my files" becomes a sequence of one-dimensional
+          arrays,
+          which, after you squeeze them together,
+          starts to look like a two-dimensional array.
+        </p>
+        <p style="text-align:center;">
+          <img title="A one-hot encoded sentence"
+            src="images/transformers/one_hot_sentence.png"
+            alt="A one-hot encoded sentence"
+            style="height: 300px;">
+        </p>
+        <p>
+          Heads-up, I'll be using the terms "one-dimensional array" and
+          "<strong>vector</strong>" interchangeably. Likewise with
+          "two-dimensional array" and "<strong>matrix</strong>".
+        </p>
+
+        <h3 id="dot_product">Dot product</h3>
+        <p>
+          One really useful thing about the one-hot representation is that
+          it lets us compute
+          <a href="https://en.wikipedia.org/wiki/Dot_product">dot products</a>.
+          These are also known by other
+          intimidating names like inner product and scalar product.
+          To get the dot product of two vectors, multiply their
+          corresponding elements, then add the results.
+        </p>
+        <p style="text-align:center;">
+          <img title="Dot product illustration"
+            src="images/transformers/dot_product.png"
+            alt="Dot product illustration"
+            style="height: 300px;">
+        </p>
+        <p>
+          Dot products are especially useful when we're working with our
+          one-hot word representations. The dot product of any one-hot
+          vector with itself is one.
+        </p>
+        <p style="text-align:center;">
+          <img title="Dot product of matching vectors"
+            src="images/transformers/match.png"
+            alt="Dot product of matching vectors"
+            style="height: 300px;">
+        </p>
+        <p>
+          And the dot product of any one-hot vector with any other one-hot
+          vector is zero.
+        </p>
+        <p style="text-align:center;">
+          <img title="Dot product of non-matching vectors"
+            src="images/transformers/non_match.png"
+            alt="Dot product of non-matching vectors"
+            style="height: 300px;">
+        </p>
+        <p>
+          The previous two examples show how dot products
+          can be used to measure similarity. As another example, 
+          consider a vector of values that represents a combination of words
+          with varying weights.
+          A one-hot encoded word can be compared against it with the
+          dot product
+          to show how strongly that word is represented.
+        </p>
+        <p style="text-align:center;">
+          <img title="Dot product gives the similarity between two vectors"
+            src="images/transformers/similarity.png"
+            alt="Dot product gives the similarity between two vectors"
+            style="height: 300px;">
+        </p>
+
+        <h3 id="matrix_multiplication">Matrix multiplication</h3>
+        <p>
+          The dot product is the building block of matrix multiplication,
+          a very particular way to combine a pair of two-dimensional arrays.
+          We'll call the first of these matrices <em>A</em> and the second
+          one <em>B</em>.
+          In the simplest case, when <em>A</em> has only one row and
+          <em>B</em> has only one column, the result of matrix multiplication
+          is the dot product of the two.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a single row matrix and a single column matrix"
+            src="images/transformers/matrix_mult_one_row_one_col.png"
+            alt="multiplication of a single row matrix and a single column matrix"
+            style="height: 300px;">
+        </p>
+        <p>
+          Notice how the number of columns in <em>A</em> and the number of
+          rows in <em>B</em> needs to be the same for the two arrays
+          to match up and for the dot product to work out.
+        </p>
+        <p>
+          When <em>A</em> and <em>B</em> start to grow, matrix multiplication
+          starts to get trippy. To handle more than one row in <em>A</em>,
+          take the dot product of <em>B</em> with each row separately.
+          The answer will have as many rows as <em>A</em> does.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a two row matrix and a single column matrix"
+            src="images/transformers/matrix_mult_two_row_one_col.png"
+            alt="multiplication of a two row matrix and a single column matrix"
+            style="height: 250px;">
+        </p>
+        <p>
+          When <em>B</em> takes on more columns, take the dot product of
+          each column with <em>A</em> and stack the results in successive
+          columns.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a one row matrix and a two column matrix"
+            src="images/transformers/matrix_mult_one_row_two_col.png"
+            alt="multiplication of a one row matrix and a two column matrix"
+            style="height: 250px;">
+        </p>
+        <p>
+         Now we can extend this to mutliplying any two matrices, as long as
+         the number of columns in <em>A</em> is the same as the number of
+         rows in <em>B</em>. The result will have the same 
+         number of rows as <em>A</em> and the same number of columns as
+         <em>B</em>.
+        </p>
+        <p style="text-align:center;">
+          <img title="multiplication of a three row matrix and a two column matrix"
+            src="images/transformers/matrix_mult_three_row_two_col.png"
+            alt="multiplication of a one three matrix and a two column matrix"
+            style="height: 450px;">
+        </p>
+        <p>
+          If this is the first time you're seeing this, it might
+          feel needlessly complex, but I promise it pays off later.
+        </p>
+
+        <h4 id="table_lookup">Matrix multiplication as a table lookup</h4>
+        <p>
+          Notice how matrix multiplication acts as a lookup table here.
+          Our <em>A</em> matrix is made up of a stack of one-hot vectors.
+          They have ones in the first column, the fourth column,
+          and the third column, respectively. When we work through the
+          matrix multiplication, this serves to pull out the first row,
+          the fourth row, and the third row of the <em>B</em> matrix,
+          in that order. This trick of using a one-hot vector to pull
+          out a particular row of a matrix is at the core of how
+          transformers work.
+        </p>
+
+        <h3 id="markov_chain">First order sequence model</h3>
+        <p>
+          We can set aside matrices for a minute and get back to what
+          we really care about, sequences of words. Imagine that as we
+          start to develop our natural language computer interface
+          we want to handle just three possible commands:
+          <ul>
+            <li>
+              <em>Show me my directories please</em>.
+            </li>
+            <li>
+              <em>Show me my files please</em>.
+            </li>
+            <li>
+              <em>Show me my photos please</em>.
+            </li>
+          </ul>
+          Our vocabulary size is now seven:<br>
+          {<em>directories, files, me, my, photos, please, show</em>}.
+        </p>
+        <p>
+          One useful way to represent sequences is with a transition model.
+          For every word in the vocabulary, it shows what the next word
+          is likely to be. If users ask about photos half
+          the time, files 30% of the time, and directories the rest
+          of the time, the transition model will look like this.
+          The sum of the transitions away from any word will always add up
+          to one.
+        </p>
+        <p style="text-align:center;">
+          <img title="Markov chain transition model"
+            src="images/transformers/markov_chain.png"
+            alt="Markov chain transition model"
+            style="height: 250px;">
+        </p>
+        <p>
+          This particular transition model is called a
+          <strong>Markov chain</strong>,
+          because it satisfies the
+          <a href="https://en.wikipedia.org/wiki/Markov_property">
+            Markov property</a>
+          that the probabilities for the next word depend only on
+          recent words. More specifically, it is a first order
+          Markov model because it only looks at the single most recent word.
+          If it considered the two most recent words it would be
+          a second order Markov model.
+        </p>
+        <p>
+          Our break from matrices is over. It turns out that
+          Markov chains can be expressed conveniently in matrix form.
+          Using the same indexing scheme that we used when creating one-hot
+          vectors, each row represents one of the words in our vocabulary.
+          So does each column. The matrix transition model
+          treats a matrix as a lookup table. Find the row
+          that corresponds to the word you’re interested in. The value in
+          each column shows the probability of that word coming next.
+          Because the value of each element in the matrix represents
+          a probability, they will all fall between zero and one.
+          Because probabilities always sum to one, the values in each
+          row will always add up to one.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transition matrix"
+            src="images/transformers/transition_matrix.png"
+            alt="Transition matrix"
+            style="height: 300px;">
+        </p>
+        <p>
+          In the transition matrix here we can see the structure
+          of our three sentences clearly. Almost all of the transition
+          probabilities are zero or one. There is only one place in
+          the Markov chain where branching happens. After <em>my</em>,
+          the words <em>directories</em>, <em>files</em>, or <em>photos</em>
+          might appear, each with a different probability. Other than that,
+          there’s no uncertainty about which word will come next.
+          That certainty is reflected by having mostly ones and zeros in the
+          transition matrix.
+        </p>
+        <p>
+          We can revisit our trick of using matrix multiplication
+          with a one-hot vector to pull out the transition probabilities
+          associated with any given word. For instance, if we just wanted
+          to isolate the probabilities of which word comes after <em>my</em>,
+          we can create a one-hot vector representing the word <em>my</em>
+          and multiply it by our transition matrix. This pulls out
+          the relevant row and shows us the probability distribution
+          of what the next word will be.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transition probability lookup"
+            src="images/transformers/transition_lookups.png"
+            alt="Transition probability lookup"
+            style="height: 300px;">
+        </p>
+
+        <h3 id="second_order">Second order sequence model</h3>
+        <p>
+          Predicting the next word based on only the current word is
+          hard. That's like predicting the rest of a tune after being
+          given just the first note. Our chances are a lot better if
+          we can at least get two notes to go on.
+        </p>
+        <p>
+          We can see how this works in another toy language model
+          for our computer commands. We expect that this one
+          will only ever see two sentences, in a 40/60 proportion.
+          <ul>
+            <li>
+              <em>Check whether the battery ran down please.</em>
+            </li>
+            <li>
+              <em>Check whether the program ran please.</em>
+            </li>
+          </ul>
+          A Markov chain illustrates a first order model for this.
+        </p>
+        <p style="text-align:center;">
+          <img title="Another first order Markov chain transition model"
+            src="images/transformers/markov_chain_2.png"
+            alt="Another first order Markov chain transition model"
+            style="height: 250px;">
+        </p>
+        <p>
+          Here we can see that if our model looked at the two most recent
+          words, instead of just one, that it could do a better job. When it
+          encounters <em>battery ran</em>, it knows that the next word
+          will be <em>down</em>, and when it sees <em>program ran</em>
+          the next word will be <em>please</em>. This eliminates one of
+          the branches in the model, reducing uncertainty and increasing
+          confidence.
+          Looking back two words turns this into a second order Markov model.
+          It gives more context on which to base next word predictions.
+          Second order Markov chains are more challenging to
+          draw, but here are the connections that demonstrate their value.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order Markov chain"
+            src="images/transformers/markov_chain_second_order.png"
+            alt="Second order Markov chain"
+            style="height:250px;">
+        </p>
+        <p>
+          To highlight the difference between the two,
+          here is the first order transition matrix,
+        </p>
+        <p style="text-align:center;">
+          <img title="Another first order transition matrix"
+            src="images/transformers/transition_matrix_first_order_2.png"
+            alt="Another first order transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          and here is the second order transition matrix.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order transition matrix"
+            src="images/transformers/transition_matrix_second_order.png"
+            alt="Second order transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          Notice how the second order matrix has a separate row for every
+          combination of words (most of which are not shown here). That
+          means that if we start with a vocabulary size of <em>N</em>
+          then the transition matrix has <em>N</em>^2 rows.
+        </p>
+        <p>
+          What this
+          buys us is more confidence. There are more ones and fewer
+          fractions in the second order model. There's only one row
+          with fractions in it, one branch in our model. Intuitively,
+          looking at two words instead of just one gives more context,
+          more information on which to base a next word guess.
+        </p>
+
+        <h3 id="second_order_skips">Second order sequence model with skips</h3>
+        <p>
+          A second order model works well when we only have to look back
+          two words to decide what word comes next. What about when we
+          have to look back further? Imagine we are building yet another
+          language model. This one only has to represent two sentences,
+          each equally likely to occur.
+          <ul>
+            <li>
+              <em>Check the program log and find out whether it ran please.
+              </em>
+            </li>
+            <li>
+              <em>Check the battery log and find out whether it ran down
+              please.</em>
+            </li>
+          </ul>
+        </p>
+        <p>
+          In this example, in order to determine which word should come after
+          <em>ran</em>, we would have to look back 8 words into the past.
+          If we want to improve on our second order language model,
+          we can of course consider third- and higher order models.
+          However, with a significant vocabulary size this takes
+          a combination of creativity and brute force
+          to execute. A naive implementation of an eighth order model
+          would have <em>N</em>^8 rows, a ridiculous number for any
+          reasonable vocubulary.
+        </p>
+        <p>
+          Instead, we can do something sly and make a second order model,
+          but consider the combinations of the most recent word with
+          each of the words that came before. It's still second order,
+          because we're only considering two words at a time, but it allows
+          us to reach back further and capture <strong>long range
+          dependencies</strong>. The difference between this
+          second-order-with-skips and a full umpteenth-order model is that
+          we discard most of the word order information and
+          combinations of preceeeding words. What remains is still pretty
+          powerful.
+        </p>
+        <p>
+          Markov chains fail us entirely now, but we can still represent
+          the link between each pair of preceding words and the words
+          that follow. Here we've dispensed with numerical weights, and
+          instead are showing only the arrows associated with non-zero weights.
+          Larger weights are shown with heavier lines.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order with skips feature voting"
+            src="images/transformers/feature_voting.png"
+            alt="Second order with skips feature voting"
+            style="height: 350px;">
+        </p>
+        <p>
+          Here's what it might look like in a transition matrix.
+        </p>
+        <p style="text-align:center;">
+          <img title="Second order with skips transition matrix"
+            src="images/transformers/transition_matrix_second_order_skips.png"
+            alt="Second order with skips transition matrix"
+            style="height: 350px;">
+        </p>
+        <p>
+          This view only shows the rows relevant to predicting the word
+          that comes after <em>ran</em>. It shows instances where the most
+          recent word (<em>ran</em>) is preceded by each of the other
+          words in the vocabulary. Only the relevant values are shown.
+          All the empty cells are zeros. 
+        </p>
+        <p>
+          The first thing that becomes apparent is that, when trying to
+          predict the word that comes after <em>ran</em>, we no longer
+          look at just one line, but rather a whole set of them.
+          We've moved out of the Markov realm now. Each row no longer
+          represents the state of the sequence at a particular point.
+          Instead, each row represents one of many <strong>features</strong>
+          that may describe the sequence at a particular point. The
+          combination of the most recent word with each of the words
+          that came before makes for a collection of applicable rows,
+          maybe a large collection. Because of this change in meaning,
+          each value in the matrix no longer represents a probability,
+          but rather a vote. Votes will be summed and compared to determine
+          next word predictions.
+        </p>
+        <p>
+          The next thing that becomes apparent is that most of the features
+          don't matter. Most of the words appear in both sentences, and
+          so the fact that they have been seen is of no help in predicting
+          what comes next. They all have a value of .5. 
+          The only two exceptions are <em>battery</em> and <em>program</em>.
+          They have some 1 and 0 weights associated with
+          the two cases we're trying to distinguish.
+          The feature <em>battery, ran</em> indicates that <em>ran</em> was
+          the most recent word and that <em>battery</em> occurred somewhere
+          earlier in the sentence. This feature has a weight of 1 associated
+          with <em>down</em> and a weight of 0 associated with <em>please</em>.
+          Similarly, the feature <em>program, ran</em> has the opposite set
+          of weights. This structure shows that it is the presence of these
+          two words earlier in the sentence that is decisive in predicting
+          which word comes next.
+        </p>
+        <p>
+          To convert this set of word-pair features into a next word estimate,
+          the values of all the relevant rows need to be summed.
+          Adding down the column, the sequence
+          <em>Check the program log and find out whether it ran</em>
+          generates sums of 0 for all the words, except a 4 for
+          <em>down</em> and a 5 for <em>please</em>. The sequence
+          <em>Check the battery log and find out whether it ran</em>
+          does the same, except with a 5 for
+          <em>down</em> and a 4 for <em>please</em>. By choosing the word
+          with the highest vote total as the next word prediction,
+          this model gets us the right answer, despite having an
+          eight word deep dependency.
+        </p>
+
+        <h3 id="masking">Masking</h3>
+        <p>
+          On more careful consideration, this is unsatisfying. The difference
+          between a vote total of 4 and 5 is relatively small. It suggests
+          that the model isn't as confident as it could be. And in
+          a larger, more organic language model it's easy to imagine that
+          such a slight difference could be lost in the statistical noise.
+        </p>
+        <p>
+          We can sharpen the prediction by weeding out all the uninformative
+          feature votes. With the exception of <em>battery, ran</em>
+          and <em>program, ran</em>. It's helpful to remember at this point
+          that we pull the <a href="#table_lookup">relevant rows</a>
+          out of the transition matrix by
+          multiplying it with a vector showing which features are currently
+          active. For this example so far, we've been using the implied
+          feature vector shown here.
+        </p>
+        <p style="text-align:center;">
+          <img title="Feature selection vector"
+            src="images/transformers/feature_selection.png"
+            alt="Feature selection vector"
+            style="height: 150px;">
+        </p>
+        <p>
+          It includes a one for each feature that is a combination of
+          <em>ran</em> with each of the words that come before it. Any words
+          that come after it don't get included in the feature set.
+          (In the next word prediction problem these haven't been seen yet,
+          and so it's not fair to use them predict what comes next.)
+          And this doesn't include all the other possible word
+          combinations.
+          We can safely ignore these for this example because they will
+          all be zero.
+        </p>
+        <p>
+          To improve our results, we can additionally force the unhelpful
+          features to zero by creating a <strong>mask</strong>. It's
+          a vector full of ones except for the positions you'd like to
+          hide or mask, and those are set to zero. In our case we'd like
+          to mask everything except for 
+          <em>battery, ran</em>
+          and <em>program, ran</em>, the only two features that have
+          been of any help. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Masked feature activities"
+            src="images/transformers/masked_feature_activities.png"
+            alt="Masked feature activities"
+            style="height:300px;">
+        </p>
+        <p>
+          To apply the mask, we multiply the two vectors element by element.
+          Any feature activity value in an unmasked position will be
+          multiplied by one and left unchanged. Any feature activity value
+          in a masked position will be multiplied by zero, and thus forced
+          to zero.
+        </p>
+        <p>
+          The mask has the effect of hiding a lot of the transition matrix.
+          It hides the combination of <em>ran</em> with everything except
+          <em>battery</em> and <em>program</em>, leaving just the features
+          that matter. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Masked transition matrix"
+            src="images/transformers/masked_transition_matrix.png"
+            alt="Masked transition matrix"
+            style="height:350px;">
+        </p>
+        <p>
+          After masking the unhelpful features, the next word predictions
+          become much stronger. When the word <em>battery</em> occurs
+          earlier in the sentence, the word after <em>ran</em> is
+          predicted to be <em>down</em> with a weight of 1 and
+          <em>please</em> with a weight of 0. What was a weight difference
+          of 25 percent has become a difference of infinity percent.
+          There is no doubt what word comes next. The same strong
+          prediction occurs for <em>please</em> when
+          <em>program</em> occurs early on.
+        </p>
+        <p>
+          This process of selective masking is the <strong>attention</strong>
+          called out in the title of the original
+          <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
+            paper</a> on transformers.
+          So far, what we've descibed is a just an approximation of
+          how attention is implemented in the paper. It captures
+          the important concepts, but the details are different. We'll
+          close that gap later.
+        </p>
+
+        <h3 id="rest_stop">Rest Stop and an Off Ramp</h3>
+        <p>
+          Congratulations on making it this far. You can stop if you want.
+          The selective-second-order-with-skips model is a useful way to think
+          about what transformers do, at least in the decoder side.
+          It captures, to a first approximation, what generative
+          language models like
+          OpenAI's <a href="https://en.wikipedia.org/wiki/GPT-3">GPT-3</a>
+          are doing. It doesn't tell the complete story, but it represents
+          the central thrust of it.
+        </p>
+        <p>
+          The next sections cover more of the gap between this
+          intuitive explanation and how transformers are implemented.
+          These are largely driven by three practical considerations.
+          <ol>
+            <li>
+              <strong>Computers are especially good at matrix
+              multiplications.</strong>
+              There is an entire industry around
+              building computer hardware specifically for fast
+              matrix multiplications. Any computation that can
+              be expressed as a matrix multiplication can be made
+              shockingly efficient. It's a bullet train. If you can get
+              your baggage into it, it will get you where you want to go
+              real fast.
+            </li>
+            <li>
+              <strong>Each step needs to be differentiable.</strong>
+              So far we've just been working with toy examples, and have
+              had the luxury of hand-picking all the transition probabilities
+              and mask values&mdash;the model <strong>parameters</strong>.
+              In practice, these have to be learned via
+              <strong>backpropagation</strong>,
+              which depends on each computation step
+              being differentiable. This means that for any small change
+              in a parameter, we can calculate the corresponding
+              change in the model error
+              or <strong>loss</strong>.
+            </li>
+            <li>
+              <strong>The gradient needs to be smooth and well
+              conditioned.</strong>
+              The combination of all the
+              derivatives for all the parameters is the loss
+              <strong>gradient</strong>.
+              In practice, getting backpropagation to behave well requires
+              gradients that are smooth, that is, the slope doesn’t change
+              very quickly as you make small steps in any direction.
+              They also behave much better when the gradient is well conditioned,
+              that is, it’s not radically larger in one direction than another.
+              If you picture a loss function as a landscape, The Grand Canyon
+              would be a poorly conditioned one. Depending on whether you are
+              traveling along the bottom, or up the side, you will have very
+              different slopes to travel. By contrast, the rolling hills of
+              the classic Windows screensaver would have a well conditioned
+              gradient.
+              <br>
+              If the science of architecting neural networks is creating
+              differentiable building blocks, the art of them is stacking
+              the pieces in such a way that
+              the gradient doesn’t change too quickly
+              and is roughly of the same magnitude in every direction.
+            </li>
+          </ol>
+        </p>
+
+        <h3 id="attention">Attention as matrix multiplication</h3>
+        <p>
+          Feature weights could be straightforward to build by counting
+          how often each word pair/next word transition occurs
+          in training, but attention masks are not.
+          Up to this point, we've pulled the mask vector out of thin air.
+          How transformers find the relevant mask matters. It would be
+          natural to use some sort of lookup table, but now we are focusing
+          hard on expressing everything as matrix multiplications. We can
+          use the same <a href="table_lookup">lookup</a> method we
+          introduced above by stacking the mask vectors for every word
+          into a matrix and using the one-hot representation of the
+          most recent word to pull out the relevant mask.
+        </p>
+        <p style="text-align:center;">
+          <img title="Mask lookup by matrix multiplication"
+            src="images/transformers/mask_matrix_lookup.png"
+            alt="Mask lookup by matrix multiplication"
+            style="height:450px;">
+        </p>
+        <p>
+          In the matrix showing the collection of mask vectors, we've only
+          shown the one we're trying to pull out, for clarity.
+        </p>
+        <p>
+          We're finally getting to the point where we can start tying into
+          the paper. This mask lookup is represented by the
+          <em>QK^T</em> term in the attention equation.
+        </p>
+        <p style="text-align:center;">
+          <img title="Attention equation highlighting QKT"
+            src="images/transformers/attention_equation_QKT.png"
+            alt="Attention equation highlighting QKT"
+            style="height:100px;">
+        </p>
+        <p>
+          The query <em>Q</em> represents the feature of interest and the
+          matrix <em>K</em> represents the collection of masks. Because
+          it's stored with masks in columns, rather than rows, it needs to
+          be transposed (with the <em>T</em> operator) before multiplying.
+          By the time we're all done, we'll make some important modifications
+          to this, but at this level it captures the concept of a
+          differentiable lookup table that transformers make use of.
+        </p>
+
+        <h3 id="second_order_matrix_mult">
+          Second order sequence model as matrix multiplications</h3>
+        <p>
+          Another step that we have been hand wavy about so far is the
+          construction of transition matrices. We have been clear about
+          the logic, but not about how to do it with matrix multiplications.
+        </p>
+        <p>
+          Once we have the result of our attention step, a vector
+          that includes the most recent word and a small
+          collection of the words that have preceded it, we need to
+          translate that into features, each of which is a word pair.
+          Attention masking gets us the raw material that we need,
+          but it doesn’t build those word pair features. To do that,
+          we can use a single layer fully connected neural network.
+        </p>
+        <p>
+          To see how a neural network layer can create these pairs,
+          we'll hand craft one. It will be artificially clean and stylized,
+          and its weights will bear no resemblance to the weights in practice,
+          but it will demonstrate how the neural network has the
+          expressivity necessary to build these two word pair features.
+          To keep it small and clean, will focus on just the three
+          attended words from this example,
+          <em>battery</em>, <em>program</em>, <em>ran</em>.
+        </p>
+        <p style="text-align:center;">
+          <img title="Neural network layer for creating multi word features"
+            src="images/transformers/feature_creation_layer.png"
+            alt="Neural network layer for creating multi word features"
+            style="height:350px;">
+        </p>
+        <p>
+          In the layer diagram above, we can see how the weights act to combine
+          the presence and absence of each word into a collection of features.
+          This can also be expressed in matrix form.
+        </p>
+        <p style="text-align:center;">
+          <img title="Weight matrix for creating multi word features"
+            src="images/transformers/feature_creation_matrix.png"
+            alt="Weight matrix for creating multi word features"
+            style="height:250px;">
+        </p>
+        <p>
+          And it can be calculated by a matrix multiplication with a
+          vector representing the collection of words seen so far.
+        </p>
+        <p style="text-align:center;">
+          <img title="Calculation of the 'battery, ran' feature"
+            src="images/transformers/second_order_feature_battery.png"
+            alt="Calculation of the 'battery, ran' feature"
+            style="height:200px;">
+        </p>
+        <p>
+          The <em>battery</em> and <em>ran</em> elements are 1 and the
+          <em>program</em> element is 0. The <em>bias</em> element is
+          always 1, a feature of neural networks. Working through the
+          matrix multiplication gives a 1 for the element
+          representing <em>battery, ran</em> and a -1 for the element
+          representing <em>program, ran</em>. The results for the
+          other case are similar.
+        </p>
+        <p style="text-align:center;">
+          <img title="Calculation of the 'program, ran' feature"
+            src="images/transformers/second_order_feature_program.png"
+            alt="Calculation of the 'program, ran' feature"
+            style="height:200px;">
+        </p>
+        <p>
+          The final step in calculating these word combo features is
+          to apply a rectified linear unit (ReLU) nonlinearity. The effect
+          of this is to substitute any negative value with a zero. This
+          cleans up both of these results so they represent the presence
+          (with a 1) or absence (with a 0) of each word combination feature.
+        </p>
+        <p>
+          With those gymnastics behind us, we finally have a matrix
+          multiplication based method for creating multiword features.
+          Although I originally claimed that these consist of the
+          most recent word and one earlier word, a closer look at this
+          method shows that it can build other features too. 
+          When the feature creation matrix is learned, rather than hard
+          coded, other structures can be learned. Even in this toy example,
+          there's nothing to stop the creation of a three-word combination
+          like <em>battery, program, ran</em>. If this combination occurred
+          commonly enough it would probably end up being represented.
+          There wouldn't be any way to indicated what order the words
+          occurred in (at least not <a href="#positional_encoding">yet</a>),
+          but we could absolutely use their co-occurrence to make predictions.
+          It would even be possible to make use of word combos that ignored
+          the most recent word, like <em>battery, program</em>. These and
+          other types of features are probably created in practice,
+          exposing the oversimiplification I made when I claimed that
+          transformers are a selective-second-order-with-skips sequence model.
+          There's more nuance to it than that, and now you can see exactly
+          what that nuance is. This won't be the last time we'll change
+          the story to incorporate more subtlety.
+        </p>
+        <p>
+          In this form, the multiword feature matrix is ready for
+          one more matrix multiplication, the 
+          second order sequence model with skips we developed
+          <a href="second_order_skips">above</a>. All together, the
+          sequence of
+          <ul>
+            <li>
+              feature creation matrix multiplication,
+            </li>
+            <li>
+              ReLU nonlinearity, and
+            </li>
+            <li>
+              transition matrix multiplication
+            </li>
+          </ul>
+          are the feedforward processing steps that get applied after
+          attention is applied.
+          Equation 2 from the paper shows these steps
+          in a concise mathematical formulation.
+        </p>
+        <p style="text-align:center;">
+          <img title="Equations behind the Feed Forward block"
+            src="images/transformers/feedforward_equations.png"
+            alt="Equations behind the Feed Forward block"
+            style="height:300px;">
+        </p>
+        <p>
+          The Figure 1 architecture diagram of the of the paper
+          shows these lumped together as the Feed Forward block.
+        </p>  
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing the Feed Forward block"
+            src="images/transformers/architecture_feedforward.png"
+            alt="Transformer architecture showing the Feed Forward block"
+            style="height:450px;">
+        </p>
+
+        <h3 id="sequence_completion">Sequence completion</h3>
+        <p>
+          So far we've only talked about next word prediction. There are
+          a couple of pieces we need to add to get our decoder to generate
+          a long sequence. The first is a <strong>prompt</strong>,
+          some example text to give the transformer running start and
+          context on which to build the rest of the sequence.
+          It gets fed in to decoder, the column on the right in
+          the image above, where it's labeled "Outputs (shifted right)".
+          Choosing
+          a prompt that gives interesting sequences is an art in itself,
+          called prompt engineering. It's also a great example of humans
+          modifying their behavior to support algorithms, rather than
+          the other way around.
+        </p>
+        <p>
+          Once the decoder has a partial sequence to get started with,
+          it takes a forward pass. The end result is a set of
+          predicted probability distributions of words,
+          one probability distribution for each position in the sequence.
+          At each position, the distribution shows the predicted
+          probabilities for each next word in the vocabulary. We don't
+          care about predicted probabilities for each established word
+          in the sequence. They're already established. What we really care
+          about are the predicted probabilities for the next word after the
+          end of the prompt. There are several ways to go about choosing
+          what that word should be, but the most straightforward is
+          called <strong>greedy</strong>,
+          picking the word with the highest probability.
+        </p>
+        <p>
+          The new next word then gets added to the sequence, substituted
+          in at the with the "Outputs" at the bottom of the decoder, and
+          the process is repeated until you get tired of it.
+        </p>
+        <p>
+          The one piece we're not quite ready to describe in detail is
+          yet another form of masking, ensuring that when the transformer
+          makes predictions it only looks behind, not ahead. It's
+          applied in the block labeled "Masked Multi-Head Attention". We'll
+          revisit this later when we can be clearer about how it's done.
+        </p>
+
+        <h3 id="embeddings">Embeddings</h3>
+        <p>
+          As we’ve described them so far, transformers are too big.
+          For a vocabulary size <em>N</em> of say 50,000, the transition
+          matrix between all pairs of words and all potential next words
+          would have 50,000 columns and 50,000 squared (2.5 billion) rows,
+          totaling over 100 trillion elements. That is still a stretch,
+          even for modern hardware.
+        </p>
+        <p>
+          It’s not just the size of the matrices that’s the problem.
+          In order to build a stable transition language model, we would
+          have to provide training data illustrating every potential
+          sequence several times at least. That would far exceed
+          the capacity of even the most ambitious training data sets.
+        </p>
+        <p>
+          Fortunately, there is a workaround for both of these problems,
+          embeddings.
+        </p>
+        <p>
+          In a one-hot representation of a language, there is one
+          vector element for each word. For a vocabulary of size <em>N</em>
+          that vector is an <em>N</em>-dimensional space. Each word represents
+          a point in that space, one unit away from the origin along
+          one of the many axes. I haven't figured out a great way to
+          draw a high dimensional space, but there's a crude representation
+          of it below.
+        </p>
+        <p style="text-align:center;">
+          <img title=""
+            src="images/transformers/one_hot_vs_embedding.png"
+            alt=""
+            style="height:300px;">
+        </p>
+        <p>
+          In an embedding, those word points are all taken and rearranged
+          (<strong>projected</strong>, in linear algebra terminology)
+          into a lower-dimensional space. The picture above shows what
+          they might look like in a 2-dimensional space for example.
+          Now, instead of needing <em>N</em> numbers to specify a word,
+          we only need 2. These are the (<em>x</em>, <em>y</em>)
+          coordinates of each point in the new space. Here's what a
+          2-dimensional embedding might look like for our toy example,
+          together with the coordinates of a few of the words.
+        </p>
+        <p style="text-align:center;">
+          <img title=""
+            src="images/transformers/embedded_words.png"
+            alt=""
+            style="height:300px;">
+        </p>
+        <p>
+          A good embedding groups words with similar meanings together.
+          A model that works with an embedding learns patterns in the
+          embedded space. That means that whatever it learns to do with
+          one word automatically gets applied to all the words right next
+          to it. This has the added benefit of reducing the amount of
+          training data needed. Each example gives a little bit of
+          learning that gets applied across a whole neighborhood of words.
+        </p>
+        <p>
+          In this illustration I tried to show that by putting important
+          components in one area (<em>battery</em>,
+          <em>log</em>, <em>program</em>), prepositions in another
+          (<em>down</em>, <em>out</em>), and verbs near the center
+          (<em>check</em>, <em>find</em>, <em>ran</em>). In an actual embedding
+          the groupings may not be so clear or intuitive, but the
+          underlying concept is the same. Distance is small between words
+          that behave similarly.
+        </p>
+        <p>
+          An embedding reduces the number of parameters needed by
+          a tremendous amount. However, the fewer the dimensions in the
+          embedded space, the more information about the original
+          words gets discarded. The richness of a language still
+          requires quite a bit of space to lay out all the important
+          concepts so that they don't step on each other's toes.
+          By choosing the size of the embedded space,
+          we get to trade off computational load for model accuracy.
+        </p>
+        <p>
+          It will probably not surprise you to learn that projecting
+          words from their one-hot representation to an embedded space
+          involves a matrix multiplication. Projection is what matrices
+          do best. Starting with a one-hot matrix that has one row and
+          <em>N</em> columns, and moving to an embedded space of two
+          dimensions, the projection matrix will have <em>N</em> rows
+          and two columns, as shown here.
+        </p>
+        <p style="text-align:center;">
+          <img title="A projection matrix describing an embedding"
+            src="images/transformers/embedding_projection.png"
+            alt="A projection matrix describing an embedding"
+            style="height:350px;">
+        </p>
+        <p>
+          This example shows how a one-hot vector, representing for example
+          <em>battery</em>, pulls out the row associated with it,
+          which contains the coordinates of the word in the embedded space.
+          In order to make the relationship clearer,
+          the zeros in the one-hot vector are hidden, as are all the other rows
+          that don't get pulled out of the projection matrix.
+          The full projection matrix is dense, each row containing the
+          coordinates of the word it's associated with.
+        </p>
+        <p>
+          Projection matrices can convert the original collection of one-hot
+          vocabulary vectors into any configuration in a space of whatever
+          dimensionality you want.
+          The biggest trick is finding a useful
+          projection, one that has similar words grouped together, and
+          one that has enough dimensions to spread them out.
+          There are some decent pre-computed embeddings for common langauges,
+          like English. Also, like everything else in the transformer,
+          it can be learned during training.
+        </p>
+        <p>
+          In the Figure 1 architecture diagram of the original paper,
+          here's where the embedding happens.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing the embedding block"
+            src="images/transformers/architecture_embedding.png"
+            alt="Transformer architecture showing the embedding block"
+            style="height:450px;">
+        </p>
+
+        <h3 id="positional_encoding">Positional encoding</h3>
+        <p>
+          Up to this point, we've assumed that the positions of words
+          are ignored, at least for any words coming before the
+          very most recent word. Now we get to fix that using
+          positional embeddings. 
+        </p>
+        <p>
+          There are several ways that position information could be introduced
+          into our embedded represetation of words, but the way it was
+          done in the original transformer was to add a circular wiggle.
+        </p>
+        <p style="text-align:center;">
+          <img title="Positional encoding introduces a circular wiggle"
+            src="images/transformers/positional_encoding.png"
+            alt="Positional encoding introduces a circular wiggle"
+            style="height:300px;">
+        </p>
+        <p>
+          The position of the word in the embedding space acts as the
+          center of a circle. A perturbation is added to it, depending
+          on where it falls in the order of the sequence of words.
+          For each position, the word is moved the same distance but
+          at a different angle, resulting in a circular pattern as you
+          move through the sequence.
+          Words that are close to each other in the sequence have similar
+          perturbations, but words that are far apart are perturbed
+          in different directions.
+        </p>
+        <p>
+          Since a circle is a two dimensional figure, representing
+          a circular wiggle requires modifying two dimensions of the
+          embedding space.
+          If the embedding space consists of more than two dimensions
+          (which it almost always does), the circular wiggle is
+          repeated in all the other pairs of dimensions, but with different
+          angular frequency, that is, it sweeps out a different number of
+          rotations in each case. In some dimension pairs, the wiggle
+          will sweep out many rotations of the circle. In other pairs,
+          it will only sweep out a small fraction of a rotation.
+          The combination of all these circular wiggles of different
+          frequencies gives a good representation of the absolute position
+          of a word within the sequence.
+        </p>
+        <p>
+          I'm still developing my intuition for why this works.
+          It seems to add position information
+          into the mix in a way that doesn't disrupt the learned
+          relationships between words and attention.
+          For a deeper dive into the math and implications,
+          I recommend
+          Amirhossein Kazemnejad's positional encoding
+          <a href="https://kazemnejad.com/blog/transformer_architecture_positional_encoding/">
+          tutorial</a>.
+        </p>
+        <p>
+          In the canonical architecture diagram these blocks show the
+          generation of the position code and its addition to the
+          embedded words.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing positional encoding"
+            src="images/transformers/architecture_positional.png"
+            alt="Transformer architecture showing positional encoding"
+            style="height:450px;">
+        </p>
+
+        <h3 id="deembeddings">De-embeddings</h3>
+        <p>
+          Embedding words makes them vastly more efficient to work with,
+          but once the party is over, they need to be converted back to
+          words from the original vocabulary. De-embedding is done the same
+          way embeddings are done, with a projection from one space to
+          another, that is, a matrix multiplication. 
+        </p>
+        <p>
+          The de-embedding matrix is the same shape as the embedding matrix,
+          but with the number of rows and columns flipped. The number of
+          rows is the dimensionality of the space we're converting from.
+          In the example we've been using, it's the size of our embedding
+          space, two. The number of
+          columns is the dimensionality of the space we're
+          converting to &mdash; the size of the one-hot representation of
+          the full vocabulary, 13 in our example.
+        </p>
+        <p style="text-align:center;">
+          <img title="The de-embedding transform"
+            src="images/transformers/de_embedding.png"
+            alt="The de-embedding transform"
+            style="height:350px;">
+        </p>
+        <p>
+          The values in a good de-embedding matrix aren't as straightforward
+          to illustrate as those from the embeding matrix, but the effect
+          is similar. When an embedded vector representing, say, the word
+          <em>program</em> is multiplied by the de-embedding matrix,
+          the value in the corresponding position is high. However, because
+          of how projection to higher dimensional spaces works, the values
+          associated with the other words won't be zero. The words closest
+          to <em>program</em> in the embedded space will also have
+          medium-high values. Other words will have near zero value. And
+          there will likely be a lot of words with negative values.
+          The output vector in vocabulary space will no longer be one-hot
+          or sparse. It will be dense, with nearly all values non-zero.
+        </p>
+        <p style="text-align:center;">
+          <img title="Representative dense result vector from de-embedding"
+            src="images/transformers/de_embedded_results.png"
+            alt="Representative dense result vector from de-embedding"
+            style="height:250px;">
+        </p>
+        <p>
+          That's OK. We can recreate the one-hot vector by choosing
+          the word associated with the highest value. This operation
+          is also called <strong>argmax</strong>, the argument (element)
+          that gives the maximum value. This is how to do greedy
+          sequence completion, as mentioned
+          <a href="#sequence_completion">above</a>. It's a great
+          first pass, but we can do better.
+        </p>
+        <p>
+          If an embedding maps very well to several words, we might not
+          want to choose the best one every time. It might be only a tiny
+          bit better choice than the others, and adding a touch of
+          variety can make the result more interesting. Also, sometimes
+          it's useful to look several words ahead and consider all the
+          directions the sentence might go before settling on
+          a final choice. In order to do these, we have to first convert
+          our de-embedding results to a probability distribution.
+        </p>
+
+        <h4 id="softmax">Softmax</h4>
+        <p>
+          The argmax function is "hard" in the sense that the highest
+          value wins, even if it is only infinitessimally larger than
+          the others. If we want to entertain several possibilities at once,
+          it's better to have a "soft" maximum function, which we get
+          from <strong>softmax</strong>. To get the softmax of the
+          value <em>x</em> in a vector, divide the exponential
+          of <em>x</em>, <em>e^x</em>, by the sum of the exponentials of all the
+          values in the vector.
+        </p>
+        <p>
+          The softmax is helpful here for three reasons. First, it
+          converts our de-embedding results vector from an arbitrary set of
+          values to a probability distribution. As probabilities, it becomes
+          easier to compare the likelihood of different words being selected
+          and even to compare the likelihood of multi-word sequences
+          if we want to look further into the future.
+        </p>
+        <p>
+          Second, it thins the field near the top. If one word scores
+          clearly higher than the others, softmax will exaggerate that
+          difference, making it look almost like an argmax, with the
+          winning value close to one and all the others close to zero.
+          However, if there are several words that all come out close
+          to the top, it will preserve them all as highly probable, rather
+          than artifically crushing close second place results.
+        </p>
+        <p>
+          Third, softmax is differentiable,
+          meaning we can calculate
+          how much each element of the results
+          will change, given a small change in any of the input elements.
+          This allows us to use it
+          with backpropagation to train our transformer.
+        </p>
+        <p>
+          If you feel like going deep on your softmax understanding,
+          (or if you have trouble getting to sleep at night)
+          here's a more complete
+          <a href="https://e2eml.school/softmax.html">post</a>
+          on it.
+        </p>
+        <p>
+          Together the de-embedding transform (shown as the Linear block
+          below)
+          and a softmax function complete the de-embedding process.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing de-embedding"
+            src="images/transformers/architecture_de_embedding.png"
+            alt="Transformer architecture showing de-embedding"
+            style="height:450px;">
+        </p>
+
+        <h3 id="multihead">Multi-head attention</h3>
+        <p>
+          Now that we've made peace with the concepts of
+          projections (matrix multiplications) and
+          spaces (vector sizes), we can revisit the core attention
+          mechanism with renewed vigor.
+          It will help clarify the algorithm if we can be more
+          specific about the shape of our matrices at each stage. There
+          is a short list of important numbers for this.
+          <ul>
+            <li>
+              <em>N</em>: vocabulary size. 13 in our example. Typically in
+              the tens of thousands.
+            </li>
+            <li>
+              <em>n</em>: maximum sequence length. 12 in our example. Something
+              like a few hundred in the paper. (They don't specify.)
+              2048 in GPT-3.
+            </li>
+            <li>
+              <em>d_model</em>: number of dimensions in the embedding space
+              used throughout the model. 512 in the paper.
+            </li>
+          </ul>
+        </p>
+        <p>
+          The original input matrix is constructed by getting each of the
+          words from the sentence in their one-hot representation, and
+          stacking them such that each of the one-hot vectors is its own row.
+          The resulting input matrix has <em>n</em> rows and <em>N</em>
+          columns, which we can abbreviate as 
+          [<em>n</em> x <em>N</em>].
+        </p>
+        <p style="text-align:center;">
+          <img title="Matrix multiplication changes matrix shapes"
+            src="images/transformers/matrix_multiply_shape.png"
+            alt="Matrix multiplication changes matrix shapes"
+            style="height:350px;">
+        </p>
+        <p>
+          As we illustrated before, the embedding matrix has  
+          <em>N</em> rows and <em>d_model</em>
+          columns, which we can abbreviate as 
+          [<em>N</em> x <em>d_model</em>]. When multiplying two matrices,
+          the result takes its number of rows from the first matrix,
+          and its number of columns from the second. That gives the
+          embedded word sequence matrix a shape of 
+          [<em>n</em> x <em>d_model</em>].
+        </p>
+        <p>
+          We can follow the changes in matrix shape through the transformer
+          as a way to tracking what's going on. After the initial embedding,
+          the positional encoding is additive, rather than a multiplication,
+          so it doesn't change the shape of things. Then the embedded word
+          sequence goes into the attention layers, and comes out the
+          other end in the same shape. (We'll come back to the inner workings
+          of these in a second.) Finally, the de-embedding restores the
+          matrix to its original shape, offering a probability for
+          every word in the vocabulary at every position in the sequence.
+        </p>
+        <p style="text-align:center;">
+          <img title="Matrix shapes throughout the transformer model"
+            src="images/transformers/matrix_shapes.png"
+            alt="Matrix shapes throughout the transformer model"
+            style="height:350px;">
+        </p>
+
+        <h4>Why we need more than one attention head</h4>
+        <p>
+          It's finally time to confront some of the simplistic assumptions
+          I made during our first pass through explaining the
+          attention mechanism. Words are represented as dense embedded
+          vectors, rather than one-hot vectors. Attention isn't just 
+          1 or 0, on
+          or off, but can also be anywhere in between. To get the results
+          to fall between 0 and 1, we use the softmax trick again.
+          It has the dual benefit of forcing all the values to lie
+          in our [0, 1] attention range, and it helps to emphasize the
+          highest value, while agressively squashing the smallest.
+          It's the differential almost-argmax behavior we took advantage
+          of before when interpreting the final output of the model.
+        </p>
+        <p>
+          An complicating consequence of putting a softmax function in
+          attention is that it will tend to focus on a single element.
+          This is a limitation we didn't have before. Sometimes it's 
+          useful to keep several of the preceding words in mind when
+          predicting the next, and the softmax just robbed us of that.
+          This is a problem for the model.
+        </p>
+        <p>
+          The solution is to have several different instances of
+          attention, or <strong>heads</strong> running at once. 
+          This lets the the transformer consider several previous words
+          simultaneously when predicting the next.
+          It brings back the power we had before
+          we pulled the softmax into the picture.
+        </p>
+        <p>
+          Unfortunately, doing this really increases the computational load.
+          Computing attention was already the bulk of the work, and we just
+          multiplied it by however many heads we want to use. To get around
+          this, we can re-use the trick of projecting everything into a
+          lower-dimensional embedding space. This shrinks
+          the matrices involved which dramatically reduces the computation
+          time. The day is saved.
+        </p>
+        <p>
+          To see how this plays out, we can continue looking at matrix shapes.
+          Tracing the matrix shape through the branches and weaves of the
+          multihead attention blocks requires three more numbers.
+          <ul>
+            <li>
+              <em>d_k</em>: dimensions in the embedding space used
+              for keys and queries. 64 in the paper.
+            </li>
+            <li>
+              <em>d_v</em>: dimensions in the embedding space used
+              for values. 64 in the paper.
+            </li>
+            <li>
+              <em>h</em>: the number of heads. 8 in the paper.
+            </li>
+          </ul>
+        </p>
+
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing multihead attention"
+            src="images/transformers/architecture_multihead.png"
+            alt="Transformer architecture showing multihead attention"
+            style="height:350px;">
+        </p>
+        <p>
+          The [<em>n</em> x <em>d_model</em>] sequence of embedded words
+          serves as the basis for everything that follows.
+          In each case there is a matrix,
+          <em>Wv</em>, <em>Wq</em>, and <em>Wk</em>,
+          (all shown unhelpfully as "Linear" blocks in the
+          architecture diagram)
+          that transforms the original sequence of embedded words into
+          the values matrix, <em>V</em>, 
+          the queries matrix, <em>Q</em>, and the keys matrix,
+          <em>K</em>.
+          <em>K</em> and 
+          <em>Q</em> have the same shape, [<em>n</em> x <em>d_k</em>], but
+          <em>V</em> can be different,
+          [<em>n</em> x <em>d_v</em>]. It confuses things a little that
+          <em>d_k</em> and
+          <em>d_v</em> are the same in the paper, but they don't have to be.
+          An important aspect of this setup is that each attention head has
+          its own 
+          <em>Wv</em>, <em>Wq</em>, and <em>Wk</em> transforms. That means
+          that each head can zoom in and expand the parts of the
+          embedded space that it wants to focus on, and it can be different
+          than what each of the other heads is focusing on.
+        </p>
+        <p>
+          The result of each attention head has the same shape as
+          <em>V</em>. Now we have the problem of 
+          <em>h</em> different result vectors, each attending to different
+          elements of the sequence.
+          To combine these into one,
+          we exploit the powers of linear algebra, and just
+          concatenate all these results into one giant 
+          [<em>n</em> x <em>h * d_v</em>] matrix. Then, to make sure
+          it ends up in the same shape it started, we use one more transform
+          with the shape [<em>h * d_v</em> x <em>d_model</em>].
+        </p>
+        <p>
+          Here's all of the that, stated tersely.
+        </p>  
+        <p style="text-align:center;">
+          <img title="Multihead attention equation from the paper"
+            src="images/transformers/multihead_attention_equation.png"
+            alt="Multihead attention equation from the paper"
+            style="height:130px;">
+        </p>
+
+        <h3 id="attention_revisited">Single head attention revisited</h3>
+        <p>
+          We already walked through a conceptual illustration
+          of attention
+          <a href="#attention">above</a>. The actual implementation is
+          a little messier, but our earlier intuition is still helpful.
+          The queries and the keys are no longer easy to inspect and
+          interpret because they are all projected down onto their own
+          idiosyncratic subspaces. In our conceptual illustration,
+          one row in the queries matrix represents one point in the
+          vocabulary space, which, thanks the one-hot representation,
+          represents one and only one word. In their embedded form,
+          one row in the queries matrix represents one point in the
+          embedded space, which will be near a group of words with similar
+          meanings and usage. The conceptual illustration mapped one query
+          word to a set of keys, which in turn filtered out all the
+          values that are not being attended to.
+          Each attention head in the actual implempentation maps a query
+          word to a point in yet another lower-dimensional embedded space.
+          The result of this that that attention becomes a relationship
+          between word groups, rather than between individual words.
+          It takes advantage of semantic similarities
+          (closeness in the embedded space) to generalize what
+          it has learned about similar words.
+        </p>
+        <p>
+          Following the shape of the matrices through the attention
+          calculation helps to track what it's doing.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing single head attention"
+            src="images/transformers/architecture_single_head.png"
+            alt="Transformer architecture showing single head attention"
+            style="height:350px;">
+        </p>
+        <p>
+          The queries and keys matrices, <em>Q</em> and <em>K</em>,
+          both come in with shape
+          [<em>n</em> x <em>d_k</em>].
+          Thanks to <em>K</em> being transposed before multiplication,
+          the result of 
+          <em>Q K^T</em>, gives a matrix of 
+          [<em>n</em> x <em>d_k</em>] * 
+          [<em>d_k</em> x <em>n</em> ] = 
+          [<em>n</em> x <em>n</em>].
+          Dividing every element of this matrix
+          by the square root of <em>d_k</em> has been shown to keep the
+          magnitude of the values from growing wildly, and helps
+          backpropagation to perform well. The softmax, as we mentioned,
+          shoehorns the result into an approximation of an argmax, tending
+          to focus attention one element of the sequence more than the rest.
+          In this form, the
+          [<em>n</em> x <em>n</em>] attention matrix roughly maps each
+          element of the sequence to one other element of the sequence,
+          indicating what it should be watching in order to get the most
+          relevant context for predicting the next element. It is a filter
+          that finally gets applied to the values matrix <em>V</em>,
+          leaving only a collection of the attended values. This has the
+          effect of ignoring the vast majority of what came before in the
+          sequence, and shines a spotlight on the one prior element that
+          is most useful to be aware of.
+        </p>
+        <p style="text-align:center;">
+          <img title="The attention equation"
+            src="images/transformers/attention_equation.png"
+            alt="The attention equation"
+            style="height:100px;">
+        </p>
+        <p>
+          One tricky part about understanding this set of calculations is
+          keeping in mind that it is calculating attention for every element
+          of our input sequence, for every word in our sentence, not just
+          the most recent word. It's also calculating attention for earlier
+          words. We don't really care about these because their next words
+          have already been predicted and established. It's also calculating
+          attention for future words. These don't have much use yet, because
+          they are too far out and their immediate predecessors haven't
+          yet been chosen. But there are indirect paths through which these
+          calculations can effect the attention for the most recent word,
+          so we include them all. It's just that when we get to the end
+          and calculate word probabilities for every position in the
+          sequence, we throw away most of them and only pay attention to
+          the next word.
+        </p>
+        <p>
+          The Mask block enforces the constraint that, at least for this
+          sequence completion task, we can't look into the future.
+          It avoids introducing any weird artifacts from imaginary future
+          words. It is crude and effective - manually set the attention
+          paid to all words past the current position to negative infinity.
+          In
+          <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+          The Annotated Transformer</a>, an immeasurably helpful
+          companion to the paper showing line by line Python implementation,
+          the mask matrix is visualized. Purple cells show where attention
+          is disallowed. Each row corresponds to an element in the sequence.
+          The first row is allowed to attend to itself (the first element),
+          but to nothing after. The last row is allowed to attend to itself
+          (the final element) and everything that comes before.
+          The Mask is an
+          [<em>n</em> x <em>n</em>] matrix. It is applied not with a
+          matrix multiplication, but with a more straightforward
+          element-by-element multiplication. This has the effect of manually
+          going in to the attention matrix and setting all of the purple
+          elements from the mask to negative infinity.
+        </p>
+        <p style="text-align:center;">
+          <img title="An attention mask for sequence completion"
+            src="images/transformers/mask.png"
+            alt="An attention mask for sequence completion"
+            style="height:300px;">
+        </p>
+        <p>
+          Another important difference in how attention is implemented
+          is that it makes use of the order in which words are presented
+          to it in the sequence, and represents attention not as a
+          word-to-word relationship, but as a position-to-position
+          relationship.
+          This is evident in its 
+          [<em>n</em> x <em>n</em>] shape. It maps each element from the
+          sequence, indicated by the row index,
+          to some other element(s) of the sequence, indicated
+          by the column index.
+          This helps us to visualize and interpret
+          what it is doing more easily, since it is operating in the
+          embedding space. We are spared the extra step of finding nearby
+          word in the embedding space to represent the relationships
+          between queries and keys.
+        </p>
+
+        <h3 id="skip_connections">Skip connection</h3>
+        <p>
+          Attention is the most fundamental part of
+          what transformers do. It’s the core mechanism, and we have now
+          traversed it had a pretty concrete level. Everything from here
+          on out is the plumbing necessary to make it work well.
+          It’s the rest of the harness that lets attention
+          pull our heavy workloads.
+        </p>
+        <p>
+          One piece we haven’t explained yet are skip connections.
+          These occur around the Multi-Head Attention blocks,
+          and around the element wise Feed Forward blocks
+          in the blocks labeled "Add and Norm".
+          In skip connections, a copy of the input is added to the output
+          of a set of calculations. The inputs to the attention block
+          are added back in to its output. The inputs to the
+          element-wise feed forward block are added to its outputs.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing add and norm blocks"
+            src="images/transformers/architecture_add_norm.png"
+            alt="Transformer architecture showing add and norm blocks"
+            style="height:350px;">
+        </p>
+        <p>
+          Skip connections serve two purposes.
+        </p>
+        <p>
+          The first is that they help keep the gradient smooth,
+          which is a big help for backpropagation. Attention is a filter,
+          which means that when it’s working correctly it will block most
+          of what tries to pass through it. The result of this is that
+          small changes in a lot of the inputs may not produce much
+          change in the outputs if they happen to fall into channels
+          that are blocked. This produces dead spots in the gradient
+          where it is flat, but still nowhere near the bottom of a valley.
+          These saddle points and ridges are a big tripping point for
+          backpropagation.
+          Skip connections help to smooth these out. In the case of
+          attention, even if all of the weights were zero and all the
+          inputs were blocked, a skip connection
+          would add a copy of the inputs to the results and ensure that
+          small changes in any of the inputs will still have
+          noticeable changes in the result. This keeps gradient descent
+          from getting stuck far away from a good solution.
+        </p>
+        <p>
+          Skip connections have become popular because of how they
+          improve performance since the days of the ResNet image classifier.
+          They are now a standard feature in neural network architectures.
+          Visually, we can see the effect that skip connections have
+          by comparing networks with and without them.
+          The figure below from this
+          <a href="https://arxiv.org/abs/1712.09913">paper</a>
+          shows a ResNet with and without skip connections.
+          The slopes of the loss function hills are are much more moderate
+          and uniform when skip connections are used.
+          If you feel like taking a deeper dive into how the work and why,
+          there's a more in-depth treatment in this
+          <a href="https://theaisummer.com/skip-connections/">post</a>.
+        </p>
+        <p style="text-align:center;">
+          <img title="Comparison of loss surfaces with and without skip connections"
+            src="images/transformers/skip_connection_gradients.png"
+            alt="Comparison of loss surfaces with and without skip connections"
+            style="height:250px;">
+        </p>
+        <p>
+          The second purpose of skip connections is specific to transformers
+          &mdash;
+          preserving the original input sequence.
+          Even with a lot of attention heads,
+          there’s no guarantee that a word will attend to its own position.
+          It’s possible for the attention filter to forget entirely about
+          the most recent word in favor of watching all of the earlier words
+          that might be relevant. A skip connection takes the
+          original word and manually adds it back into the signal,
+          so that there’s no way it can be dropped or forgotten.
+          This source of robustness may be one of the reasons for
+          transformers' good behavior in so many varied sequence completion
+          tasks.
+        </p>
+
+        <h3 id="layer_normalization">Layer normalization</h3>
+        <p>
+          Normalization is a step that pairs well with skip connections.
+          There's no reason they necessarily have to go together, but
+          they both do their best work when placed after a group of
+          calculations, like attention or a feed forward neural network.
+        </p>
+        <p>
+          The short version of layer normalization
+          is that the values of the matrix are shifted
+          to have a mean of zero and scaled to have a standard deviation of
+          one. 
+        </p>
+        <p style="text-align:center;">
+          <img title="Several distributions being normalized"
+            src="images/transformers/normalization.png"
+            alt="Several distributions being normalized"
+            style="height:250px;">
+        </p>
+        <p>
+          The longer version is that in systems like transformers, where
+          there are a lot of moving pieces and some of them are something
+          other than matrix multiplications (such as softmax operators or
+          rectified linear units), it matters how big values are and
+          how they're balanced between positive and negative. If everything
+          is linear, you can double all your inputs, and your
+          outputs will be twice as big, and everything will
+          work just fine. Not so with neural networks. They
+          are inherently nonlinear, which makes them very expressive
+          but also sensitive to signals' magnitudes and distributions.
+          Normalization is a technique that has proven useful in
+          maintaining a consistent distribution of signal values each
+          step of the way throughout many-layered 
+          neural networks. It encourages convergence of parameter values
+          and usually results in much better performance.
+        </p>
+        <p>
+          My favorite thing about normalization is that, aside
+          from high level explanations like the one I just gave, no one
+          is completely certain why it works so well. If you'd like
+          to descend a little deeper than this rabbit hole, I wrote
+          up a more detailed
+          <a href="https://e2eml.school/batch_normalization.html">post</a>
+          on batch normalization, a close cousin of the layer normalization
+          used in transformers.
+        </p>
+
+        <h3 id="layer_stack">Multiple layers</h3>
+        <p>
+          While we were laying the foundations above, we showed that an
+          attention block and a feed forward block with carefully chosen
+          weights were enough to make a decent language model. Most of the
+          weights were zeros in our examples, a few of them were ones, and
+          they were all hand picked. When training from raw data, we won't
+          have this luxury. At the beginning the weights are all chosen
+          randomly, most of them are close to zero, and the few that aren't
+          probably aren't the ones we need. It's a long way from where it
+          needs to be for our model to perform well. 
+        </p>
+        <p>
+          Stochastic gradient descent through backpropagation can do some
+          pretty amazing things, but it relies a lot on luck. If there
+          is just one way to get to the right answer, just one combination
+          of weights necessary for the network to work well, then it's
+          unlikely that it will find its way. But if there are lots of paths
+          to a good solution, chances are much better that the model will
+          get there. 
+        </p>
+        <p>
+          Having a single attention layer (just one multi-head attention block
+          and one feed forward block) only allows for one path to a good
+          set of transformer parameters. Every element of every matrix
+          needs to find its way to the right value to make things work well.
+          It is fragile and brittle, likely to get stuck in a far-from-ideal
+          solution unless the initial guesses for the parameters are very
+          very lucky.
+        </p>
+        <p>
+          The way transformers sidestep this problem is by having multiple
+          attention layers, each using the output of the previous one as
+          its input. The use of skip connections make the overal pipeline
+          robust to individual attention blocks failing or giving wonky
+          results. Having multiples means that there are others waiting
+          to take up the slack. If one should go off the rails, or in any
+          way fail to live up to its potential, there will be another
+          downstream that has another chance to close the gap or fix the
+          error. The paper showed that more layers resulted in better
+          performance, although the improvement became marginal after 6.
+        </p>
+        <p>
+          Another way to think about multiple layers is as a
+          conveyor belt assembly line. Each attention block and feedforward
+          block has the chance to pull inputs off the line, calculate
+          useful attention matrices and make next word predictions.
+          Whatever results they produce, useful or not, get added back onto
+          the conveyer, and passed to the next layer.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer redrawn as a conveyer belt"
+            src="images/transformers/layer_conveyer.png"
+            alt="Transformer redrawn as a conveyer belt"
+            style="height:200px;">
+        </p>
+        <p>
+          This is in contrast to the traditional description of many-layered
+          neural networks as "deep". Thanks to skip connections, successive
+          layers don't provide increasingly sophisticated abstraction as
+          much as they provide redundancy. Whatever opportunities for focusing
+          attention and creating useful features and making accurate
+          predictions were missed in one layer can always be caught by the
+          next. Layers become workers on the assembly line, where each
+          does what it can, but doesn't worry about catching every piece,
+          because the next worker will catch the ones they miss.
+        </p>
+
+        <h3 id="decoder">Decoder stack</h3>
+        <p>
+          So far we have carefully ignored the encoder stack (the left hand
+          side of the transformer architecture) in favor of the decoder stack
+          (the right hand side). We'll fix that in a few paragraphs. But
+          it's worth noticing that the decoder alone is pretty useful.
+        </p>
+        <p>
+          As we laid out in the sequence completion task
+          <a href="#sequence_completion">description</a>, the decoder
+          can complete partial sequences and extend them as far as you want.
+          OpenAI created the generative pre-training (GPT) family of
+          models to do just this. The architecture they describe in this 
+          <a href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">report</a>
+          should look familiar. It is a transformer with the
+          encoder stack and all its connections surgically removed.
+          What remains is a 12 layer decoder stack.
+        </p>
+        <p style="text-align:center;">
+          <img title="Architecture of the GPT family of models"
+            src="images/transformers/gpt_architecture.png"
+            alt="Architecture of the GPT family of models"
+            style="height:300px;">
+        </p>
+        <p>
+          Any time you come across a generative model, like
+          <a href="https://arxiv.org/pdf/1810.04805v2.pdf">BERT</a>,
+          <a href="https://arxiv.org/abs/1802.05365">ELMo</a>, or
+          <a href="https://copilot.github.com/">Copilot</a>,
+          you're probably seeing the decoder half of a transformer in
+          action.
+        </p>
+
+        <h3 id="encoder">Encoder stack</h3>
+        <p>
+          Almost everything we've learned about the decoder applies to
+          the encoder too. The biggest difference is that there's no
+          explicit predictions being made at the end that we can use
+          to judge the rightness or wrongness of its performance.
+          Instead, the end product of an encoder stack is
+          disappointingly abstract&mdash;a sequence
+          of vectors in an embedded space. It has been described as
+          a pure semantic representation of the sequence, divorced from
+          any particular language or vocabulary, but this feels overly
+          romantic to me. What we know for sure is that it is a useful
+          signal for communicating intent and meaning to the decoder stack.
+        </p>
+        <p>
+          Having an encoder stack opens up the full potential of transformers
+          instead of just generating sequences, they can now translate
+          (or transform) the sequence from one language to another.
+          Training on a translation task is different than training on a
+          sequence completion task. The training data requires both
+          a sequence in the language of origin, and a matching sequence
+          in the target language. The full language of origin is run through
+          the encoder (no masking this time, since we assume that we
+          get to see the whole sentence before creating a translation)
+          and the result, the output of the final encoder layer is provided
+          as an input to each of the decoder layers. Then sequence generation
+          in the decoder proceeds as before, but this time with no prompt
+          to kick it off.
+        </p>
+
+        <h3 id="cross_attention">Cross-attention</h3>
+        <p>
+          The final step in getting the full transformer up and running
+          is the connection between the encoder and decoder stacks,
+          the cross attention block. We've saved it for last and, thanks
+          to the groundwork we've laid, there's not a lot left to explain.
+        </p>
+        <p>
+          Cross-attention works just like self-attention with the exception
+          that the key matrix <em>K</em> and value matrix <em>V</em>
+          are based on the output of the final encoder layer, rather than
+          the output of the previous decoder layer. The query matrix
+          <em>Q</em> is still calculated from the results of the previous
+          decoder layer. This is the channel by which information from
+          the source sequence makes its way into the target sequence and
+          steers its creation in the right direction. It's interesting to
+          note that the same embedded source sequence is provided
+          to every layer of the decoder, supporting the notion that
+          successive layers provide redundancy and are all cooperating to
+          perform the same task.
+        </p>
+        <p style="text-align:center;">
+          <img title="Transformer architecture showing cross-attention block"
+            src="images/transformers/architecture_cross_attention.png"
+            alt="Transformer architecture showing cross-attention block"
+            style="height:350px;">
+        </p>
+        <!--
+        <p>
+          To build an intuition for what self-attention and cross-attention
+          are doing, it's helpful to pluck out the attention matrix,
+          softmax(<em>Q K^T</em>), before it's used to filter the values.
+          It shows which elements in the sequence are attending to which
+          other elements and shines light on the core mechanism
+          of transformers. In
+          <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+          The Annotated Transformer</a>
+          the attention matrices for a translation example on a trained
+          transformer are pulled out and visualized.
+        </p>
+        <p>
+          This particular transformer was trained on a sentence translation
+          task, using pairs of English and German sentences to make an
+          English-to-German sentence translator. The example they illustrate
+          shows the translation of the English sentence 
+          "The log file
+          can be sent secretly with email or FTP to a
+          specified receiver." to the German sentence
+          "Die Protokolldatei kann heimlich per E-Mail oder
+          FTP an einen bestimmten Empfänger gesendet werden."
+          In a step called <strong>tokenization</strong>, both the English
+          and German sentences are broken up into words and pieces of words
+          in such a way that the transformer can handle them efficiently.
+          (More on this in a moment.) The tokenized sentences substitute
+          underscores for spaces and look like
+          [<em>▁The,▁log,▁file,
+          ▁can,▁be,▁sent,▁secret,ly,▁with,▁email,▁or,▁FTP,▁to,▁a,
+          ▁specified,▁receiver,.</em>] and
+          [<em>▁Die,▁Protokoll,datei,▁kann,▁,heimlich,▁per,▁E,-,Mail,▁oder,
+          ▁FTP,▁an,▁einen,▁bestimmte,n,▁Empfänger,▁gesendet,▁werden,.</em>].
+        </p>
+        -->
+
+        <h3 id="tokenizing">Tokenizing</h3>
+        <p>
+          We made it all the way through the transformer!
+          We covered it in enough detail that there should be no
+          mysterious black boxes left. There are a few implementation
+          details that we didn’t dig into. You would need to know about 
+          them in order to build a working version for yourself. These
+          last few tidbits aren’t so much about how transformers work
+          as they are about getting neural networks to behave well.
+          <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+          The Annotated Transformer</a> will help you fill in these gaps.
+        </p>
+        <p>
+          We are not completely done yet though. There are still some
+          important things to say about how we represent the data
+          to start with. This is a topic that’s close to my heart,
+          but easy to neglect. It’s not so much about the power of the
+          algorithm as it is about thoughtfully interpreting the data and
+          understanding what it means.
+        </p>
+        <p>
+          We mentioned in passing that a vocabulary could be represented
+          by a high dimensional one-hot vector, with one element
+          associated with each word. In order to do this, we need to know
+          exactly how many words we are going to be representing
+          and what they are.
+        </p>
+        <p>
+          A naïve approach is to make a list of all possible words,
+          like we might find in Webster’s Dictionary. For the
+          English language this will give us several tens of thousands,
+          the exact number depending on what we choose to include or exclude.
+          But this is an oversimplification. Most words have several forms,
+          including plurals, possessives, and conjugations. Words can have
+          alternative spellings. And unless your data has been very
+          carefully cleaned, it will contain typographical errors of all
+          sorts. This doesn’t even touch on the possibilities opened
+          up by freeform text, neologisms, slang, jargon, and the vast
+          universe of Unicode. An exhaustive list of all possible
+          words would be infeasibly long.
+        </p>
+        <p>
+          A reasonable fallback position would be to have individual
+          characters serve as the building blocks, rather than words.
+          An exhaustive list of characters is well within the capacity
+          we have to compute. However there are a couple of problems
+          with this. After we transform data into an embedding space,
+          we assume the distance in that space has a semantic
+          interpretation, that is, we assume that points that fall close
+          together have similar meanings, and points that are far
+          away mean something very different. That allows us to implicitly
+          extend what we learn about one word to its immediate
+          neighbors, an assumption we rely on for computational
+          efficiency and from which the transformer draws some
+          ability to generalize.
+        </p>
+        <p>
+          At the individual character level, there is very little
+          semantic content. There are a few one character words in the
+          English language for example, but not many. Emoji are the
+          exception to this, but they are not the primary content of most
+          of the data sets we are looking at. That leaves us in the
+          unfortunate position of having an unhelpful embedding space.
+        </p>
+        <p>
+          It might still be possible to work around this theoretically,
+          if we could look at rich enough combinations of characters
+          to build up semantically useful sequences like words,
+          words stems, or word pairs. Unfortunately, the features
+          that transformers create internally behave more like a
+          collection of input pairs than an ordered set of inputs.
+          That means that the representation of a word would be a
+          collection of character pairs, without their order
+          strongly represented. The transformer would be forced to
+          continually work with anagrams, making its job much harder.
+          And in fact experiments with character level representations
+          have shown the transformers don’t perform very well with them.
+        </p>
+      
+        <h4 id="bpe">Byte pair encoding</h4>
+        <p>
+          Fortunately, there is an elegant solution to this. Called
+          <a href="https://en.m.wikipedia.org/wiki/Byte_pair_encoding">
+          byte pair encoding</a>. Starting with the character level
+          representation, each character is assigned a code, its own
+          unique byte.
+          Then after scanning some representative data, the most common
+          pair of bytes is grouped together and assigned a new byte,
+          a new code.
+          Ths new code is substituted back into the data, and
+          the process is repeated.
+        </p>
+        <p>
+          Codes representing pairs of characters can be combined with
+          codes representing other characters or pairs of characters
+          to get new codes representing longer sequences of characters.
+          There's no limit to the length of character sequence a code
+          can represent. They will grow as long as they need to
+          in order to represent commonly repeated sequences.
+          The cool part of byte pair encoding is that in infers which
+          long sequences of characters to learn from the data,
+          as opposed to dumbly representing all possible sequences.
+          it learns to represent long words like <em>transformer</em>
+          with a single byte code, but would not waste a code on an
+          arbitrary string of similar length, such as <em>ksowjmckder</em>.
+          And because it retains all the byte codes for its single
+          character building blocks, it can still represent weird misspellings,
+          new words, and even foreign languages.
+        </p>
+        <p>
+          When you use byte pair encoding, you get to assign it a vocabulary
+          size, ad it will keep building new codes until reaches that size.
+          The vocabulary size needs to be big enough, that the character
+          strings get long enough to capture the semantic content of the
+          the text. They have to mean something. Then they will be
+          sufficiently rich to power transformers.
+        </p>
+        <p>
+          After a byte pair encoder is trained or borrowed, we can use it
+          to pre-process out data before feeding it into the transformer.
+          This breaks it the unbroken stream of text into a sequence
+          of distinct chunks,
+          (most of which are hopefully recognizebable words)
+          and provides a concise code for each one. This is the process
+          called tokenization.
+        </p>
+
+        <h3 id="audio_input">Audio input</h3>
+        <p>
+          Now recall that our original goal when we started this whole
+          adveture was to translate from the audio signal or a spoken
+          command to a text representation. So far all of our examples
+          have been worked out with the assumption that we are working with
+          characters and words of written language. We can extend this
+          to audio too, but that will take an even bolder foray into
+          signal preprocessing.
+        </p>
+        <p>
+          The information in audio signals benefits from some heavy-duty
+          preprocessing to pull out the parts that our ears and brains
+          use to understand speech. The method is called Mel-frequecy
+          cepstrum filtering, and it's every bit as baroque as the name
+          suggests. Here's a well-illustrated
+          <a href="http://www.speech.cs.cmu.edu/15-492/slides/03_mfcc.pdf">
+          tutorial</a> if you'd like to dig into the fascinating details.
+        </p>
+        <p>
+          When the pre-processing is done, raw audio is turned into a
+          a sequence of vectors, where each element represents the change
+          of audio activity in a particular frequency range. It's dense
+          (no elements are zero) and every element is real-valued.
+        </p>
+        <p>
+          On the positive side, each vector makes a good "word" or token
+          for the transformer because it means something. It can be
+          directly translated into a set of sounds that is recognizeable
+          as part of a word.
+        </p>
+        <p>
+          On the other hand, treating each vector as a word is weird because
+          each one is unique. It's extremely unlikely that the same
+          set of vector values will ever occur twice, because there are so
+          many subtly different combination of sounds. Our previous
+          strategies of one-hot representation and byte pair encoding
+          are of no help.
+        </p>
+        <p>
+          The trick here is to notice that dense real-valued vectors
+          like this is what we end up with <em>after</em> embedding words.
+          Transformers love this format. To make use of it, we can use
+          the results of the ceptrum pre-processing as we would the
+          embedded words from a text example. This saves us the steps
+          of tokenization an embedding.
+        </p>
+        <p>
+          It's worth noting that we can do this with any other type of
+          data we want too. Lots of recorded data comes in the form of
+          a sequence of dense vectors. We can plug them right in to
+          a transformer's encoder as if they were embedded words.
+        </p>
+
+        <h3>Wrap up</h3>
+        <p>
+          If you're still with me, thank you. I hope it was worth it.
+          This is the end of our journey. We started with a goal of making
+          a speech-to-text converter for our imaginary voice-controlled
+          computer. In the process, we started from the most basic building
+          blocks, counting and arithmetic, and reconstructed a transformer
+          from scratch. My hope is that the next time you read an article
+          about the latest natural language processing conquest, you'll be
+          able to nod contentedly, having pretty darn good mental model
+          of what's going on under the hood.
+        </p>
+
+        <h3 id="resources">Resources and credits</h3>
+        <ul>
+          <li>
+            &#9658; The O.G.
+            <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">
+            paper</a>, Attention is All You Need.
+          </li>
+          <li>
+            &#9658; A wildly helpful Python
+            <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">
+              implementation</a>
+            of the transformer.
+          </li>
+          <li>
+            &#9658; Jay Alammar's insightful transformer
+            <a href="https://jalammar.github.io/illustrated-transformer/">
+              walkthough</a>.
+          </li>
+          <li>
+            &#9658; Lukasz Kaiser's (one of the authors)
+            <a href="https://www.youtube.com/watch?v=rBCqOTEfxvg">
+              talk</a>
+            explaining how transformers work.
+          </li>
+          <li>
+            &#9658; The <a href="https://docs.google.com/presentation/d/1Po-GY7X-mXmPKHr8Vh29S4tFPv23TjeY-jq-yShlivM/edit?usp=sharing">
+              illustrations</a> in Google Slides.
+          </li>
+          <li>
+          </li>
+          <li>
+          </li>
+        </ul>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

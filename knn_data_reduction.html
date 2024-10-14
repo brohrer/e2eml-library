@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Data reduction for efficient <em>k-</em>nearest neighbors";</script>
+  <script type="text/javascript">var publication_date = "March 23, 2021";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          The thing that makes <em>k-</em>nearest neighbors challenging to use
+          with large data sets is the time it takes to calculate the distance
+          between each new data point and all the previously observed
+          data points. One strategy for dealing with this is to be selective
+          about which previously seen data points to keep.
+          A straightforward approach is to select a random subset.
+        </p>
+        <p>
+          This performs surprisingly well, but it’s tempting to try and
+          improve upon it. Efficient data reduction for KNN is
+          an open research problem. Here’s one method that performs better
+          than random subsetting. It's shown implemented in an online
+          fashion, where each data point is processed at one at a time.
+        </p>
+
+        <h2>Early stopping</h2> 
+        <p>
+          The simplest approach is to simply stop collecting points after
+          a certain point, <code>n_examples</code>. For all points
+          with index <code>i_example < n_examples</code>, add it to the
+          collection or retained points, <code>keepers</code>. After that,
+          for <code>i_example >= n_examples</code>, discard all new data
+          points.
+        </p>
+
+        <h2>Early stopping with replacement</h2>
+        <p>
+          Early stopping is a surprisingly effective way to get
+          an efficient <em>k-</em>nearest neighbors model, as long as the first
+          <code>n_examples</code> are representative of the entire data set.
+          This is likely to happen when the data set has been shuffled
+          beforehand, but otherwise it’s not at all guaranteed.
+          To account for this, the early stopping method can be augmented
+          with a replacement step.
+        </p>
+        <p>
+          It starts out the same way that
+          early stopping does, keeping the first <code>n_examples</code>.
+          After that, each new example (with index <code>i_example</code>)
+          is added to the set of <code>keepers</code> with probability
+          <code>n_examples / i_example</code>. When a new data point
+          is added, it replaces a randomly selected data point from the
+          set of <code>keepers</code>. Using this scheme each data point
+          has roughly the same probability of being included in the set
+          of <code>keepers</code>, regardless of its position in the
+          original data set. This gets us an incremental version of
+          random subsampling.
+        </p>
+
+        <h2>Keep misclassified or wrongly predicted points</h2>
+        <p>
+          Random subsampling performs surprisingly well, but it’s tempting
+          to try to improve on it. How to best do this is still an open
+          research question, but one method that has shown some promise
+          is to add mispredicted points to the set of <code>keepers</code>.
+        </p>
+        <p>
+          In the case of classification, all misclassified
+          examples are added to the set of <code>keepers</code>.
+        </p>
+        <p>
+          In the case of regression,
+          examples whose value is outside the range of all of its nearest
+          neighbors (higher than the highest or lower than the lowest)
+          are added to the set of <code>keepers</code>.
+        </p>
+        <p>
+          Whenever a point is selected for inclusion, it replaces a randomly
+          selected point from the set of its <em>k</em> nearest neighbors.
+        </p>
+        <p>
+          This method of data reduction focuses on the difficult to predict
+          examples in a data set. It overrepresents outliers and anomalies.
+          The flipside of this is that it underrepresents easy to predict
+          examples. This is exactly what we want. It focuses the resources
+          of our <em>k-</em>nearest neighbors model in the trickiest regions of
+          the feature space.
+        </p>
+        <p>
+          The parts of the feature space with many similar examples get
+          thinned out a little bit. Having a large cluster of points with
+          similar labels adds a computational burden to the model
+          without adding much information. Because <em>k-</em>nearest neighbors
+          is local, including anomalies doesn’t hurt its performance,
+          even if they are errors.
+        </p>
+        <p>
+          My limited experimentation with this method shows that it improves
+          on random subselection a little bit, but not much. That result
+          may be different with each data set.
+        </p>
+        <p>
+          For a detailed Python implementation and case study on a data set
+          of diamond prices, check out
+          <a href="https://gitlab.com/brohrer/study-knn-diamonds">
+          this repository</a>.
+          To my knowledge this is new, but I haven’t done a serious
+          literature search. If you want to cite it you can reference
+          this post. I don’t have anything more formal published
+          on it just yet.
+        </p>
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

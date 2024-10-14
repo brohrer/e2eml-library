@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "The Four Grand Challenges of Robots in the Home";</script>
+  <script type="text/javascript">var publication_date = "Auguest 12, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>From a keynote address for the 2020
+          <a href="https://www.southerndatascience.com/">Southern Data Science Conference</a></h3>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/a1Inwz_d0e8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p> 
+          Good morning! My name is Brandon Rohrer and I’m a data scientist at
+          <a href="https://www.irobot.com">iRobot</a>.
+          I’m really happy to be here because we get to talk about two of my favorite topics: data and robots. While robots are inherently cool, they’ve shown themselves to be particularly useful for handling the 3 D’s: jobs that are dirty, dull, or dangerous. Most household chores fall into the dirty and dull categories, making them ideal candidates.
+        </p> 
+        <p> 
+          We’ve made a lot of progress toward reliable home robots in the last ten years, but often that progress shows just how far we have to go. There is still an enormous gap between what a robot and a human butler can do. We are a long way from Rosie of the Jetsons. I’m going to cover what I see as the four largest challenges, and what a path forward looks like through each of them.
+        </p> 
+        <p> 
+          I’d like to emphasize that these are my own opinions and don't necessarily reflect the position of iRobot in any respect.
+        </p> 
+        <p> 
+          The four main challenges a robot has to overcome to be effective in the home are
+          <ul>
+            <li>
+              <strong>Interacting with humans</strong>
+            </li>
+            <li>
+              <strong>Completing tasks</strong>
+            </li>
+            <li>
+              <strong>Determining affordances</strong> and
+            </li>
+            <li>
+              <strong>Ensuring privacy</strong>
+            </li>
+          </ul>
+        </p> 
+        <p> 
+          These problems can also be phrased as questions:
+          <ul>
+            <li>
+              What does my family want?
+            </li>
+            <li>
+              What should I do?
+            </li>
+            <li>
+              What can I do?
+            </li>
+            <li>
+              How do I protect my family’s data?
+            </li>
+          </ul>
+        </p> 
+
+        <h3>Ensuring privacy</h3>
+        <p> 
+          We'll step through these one at a time. Privacy is the foundation for everything else. Without trust in our home robot assistants, any other value they provide won’t be worth it.
+        </p> 
+        <p> 
+          Data security and privacy has become a popular topic, but we're still figuring out as a society how important privacy is to us and how to protect those most vulnerable to harm from the lack of it.
+        </p> 
+        <p> 
+          Ensuring user data protection is just the first step. I will take it as a given that we and the companies we work for are acting in good faith to protect and respect our customers’ information.
+        </p> 
+        <p> 
+          A more subtle, but equally important issue is the inadvertent release of sensitive information. To show what I mean,
+          <a href="https://gawker.com/the-public-nyc-taxicab-database-that-accidentally-track-1646724546">here’s a story</a> about taxis in New York City.
+        </p> 
+        <p> 
+          In 2014 a data analyst named Chris Whong requested a year’s worth of taxi data from the City of New York. The medallion numbers of the cabs and the hack license numbers of the drivers had all been encrypted. On the surface, there was no information that could tie a record in the data to a specific car, driver, or passenger.
+        </p> 
+        <p> 
+          However, a software developer named Vijay Pandurangan realized that the
+          identifying numbers had been encrypted using MD5, a weak encryption algorithm.
+          He also figured out that if you know the format of the original data, for instance that it’s a six digit number, then you can brute force reverse engineer the encryption. Another software engineer named Jason Hall uploaded the deanonymized version of the data set, now making what was an anonymized data set available for searching by medallion number and hack number.
+        </p> 
+        <p> 
+          The data now revealed the cars and drivers involved, but still had no information that could tie it to individual passengers. Yet.
+        </p> 
+        <p> 
+          Then a graduate student named Anthony Tockar was able to make a connection with photographs of celebrities taken by paparazzi. Celebrities in New York are often photographed entering or exiting taxi cabs, and these photos often capture the taxi’s medallion number. With this final link in the chain, a collection of celebrity cab rides became publicly available.
+        </p> 
+        <p> 
+          Data that was intended to be private, and data that was never even recorded, suddenly became part of the public record through just a little cleverness. This is an example of how compliance with privacy practices is not sufficient on its own for protecting data. 
+        </p> 
+        <p> 
+          It takes careful thought and deliberate action to keep the data safe, with tools like aggregation, the addition of noise, and avoiding unnecessary data collection altogether.
+        </p> 
+        <p> 
+          <a href="https://www.theguardian.com/world/2018/jan/28/fitness-tracking-app-gives-away-location-of-secret-us-army-bases">
+            There is another prominent example</a>
+          of unintentional information release more recently, in 2017. The fitness tracker company Strava released a world map showing an aggregation of all its users’ activity. It showed every recorded user location ever uploaded.
+        </p> 
+        <p> 
+          The resulting maps were beautiful visualizations, and there was nothing in any of them to tie a location to an individual user, or even a particular time. However, an analyst named Nathan Reusser noted that US military bases in the Middle East, some of which are covert, lit up clearly on Strava’s map. They showed the outline of roads and jogging tracks. Their brightness gave hints at how many people lived and exercised there.
+        </p> 
+        <p> 
+          To their credit, in a subsequent version of the heat map Strava plugged this information leak by omitting low density locations where the activities of individuals or a small group might be represented, by requiring a sign up to be able to view street level data, and by allowing individual users to create geographic privacy zones, or to opt out of the heat map data collection entirely.
+        </p> 
+        <p> 
+          I’m proud to say that respecting and protecting customers’ privacy is a high priority at iRobot, both in policy and in practice. Our data handling principles focus on minimization, doing only what directly benefits our customers. We only collect as much data as necessary. Collected data is de-identified, associating it with individuals only as necessary. The data that we do collect is only processed to the extent necessary. It’s only retained as long as necessary. And the only employees that have access to it are the ones that need it. When I say “as much as necessary,” I mean necessary for the customers’ benefit. If it doesn’t give the customer a better product or a better experience, then it’s not worthy of being collected, processed, and stored.
+        </p> 
+        <p> 
+          This mindset of minimizing our data footprint is unusual in industry, and it makes an environment that I’m proud to work in. It has been said that data is the new oil. I prefer to think of customer data as the new uranium. It's undeniably powerful, but if not treated carefully and protected, it can end up causing far more harm than good to everyone involved.
+        </p> 
+        <p> 
+          Data minimization is a principle that robots of all sorts can use to protect their homes.
+        </p> 
+        <p> 
+          As robots get woven into the fabric of our lives at home, it’s not enough for them to be compliant with privacy laws and policies, although that is an excellent start. Home robots will sit somewhere in the middle ground between appliances and pets, between tools and assistants. They will see us at our worst, at our lowest and most vulnerable. For them to be effective, we will have to trust them.  
+        </p> 
+        <p> 
+          Part of this comes back to limited data collection and limited processing. In polite society, there are observations that we refrain from making. Imagine a smart lighting system that can detect activity room-by-room so that it can turn off unused lights. If it focused on patterns in the bathroom light and, based on recent anomalies, offered to order you a fiber supplement, not everyone would appreciate that. That’s an instance of excessive observation and processing that destroys trust rather than builds it. It introduces a Creep Factor.
+        </p> 
+        <p> 
+          This is top of mind for us at iRobot. We are supported by our customers. Our survival depends on trust. In order to build that trust, even beyond what’s required by a sensible and ethical privacy policy, we give the user transparency and control. Customers can request their data. And they can correct any inaccuracies or misrepresentations. Customers are notified and have to explicitly opt-in to any data sharing or transfer outside the company. These approvals for opt-ins stand alone and are not buried in or tied to end user license agreements. Customer trust is a very high bar, and one that we have to meet every day.
+        </p> 
+        <p> 
+          To illustrate how important trust will be between us and our home robots, consider a medication dispensing robot.
+          (Note that this and the other hypothetical robots are presented here to show how much work remains in these grand challenge areas. Any relation to actual robots, real or planned, is purely coincidental.)
+          This imaginary robot has hoppers for liquid medications and pills. It can sense and re-order medications as they get low. It can even offer reminders to individuals who are in danger of missing a dose.
+        </p> 
+        <p> 
+          Imagine the convenience! I have a Shih Tzu at home who is currently on nine different medications. A device like this would be very convenient.
+        </p> 
+        <p> 
+          Now put your black hat on. If you had access to all of the information this robot collects, how could it be misused? Medication and its scheduling would allow you to make a very good guess at users’ health issues. This is extremely sensitive information and could be horribly misused by unscrupulous insurance companies or potential employers. It could also be used to target healthcare-related advertising to the most vulnerable populations. This robot could only be useful if you were able to place a great deal of trust in it.
+        </p> 
+        <p> 
+          Now let’s consider a dishwashing robot. This seems more benign. And who wouldn’t love an automated solution to the problem of dirty dishes?
+        </p> 
+
+        <p style="text-align:center;">
+          <img title="Drawing of a robot washing dishes"
+            src="images/SDSC_Keynote/dishwashing_robot.png"
+            alt="Drawing of a robot washing dishes"
+            style="width: 600px;">
+        </p>
+
+        <p> 
+          However, a clever dishwashing robot has access to plenty of sensitive information too. What did this household eat? When? How many people are there? Do they cook? Do they eat prepackaged food? Carry out? What products are they likely to buy? Where do they shop? What might their health issues be? How much do they spend on food?
+        </p> 
+        <p> 
+          It’s easy to see that with an aggressive data collection and processing environment, the dishwashing robot can be made to reveal much more about you than the fact that you don’t like washing dishes. This underlines the importance of being able to trust any intelligent device you bring into your home. For a robust home robotics ecosystem this will be an absolute requirement.
+        </p> 
+
+        <h3>Determining affordances</h3>
+        <p> 
+          “Affordances” is a fancy robotics term for “What can I do?” If you think about a text-based computer game, sometimes figuring out what all of your options are is one of the toughest pieces of the puzzle. If the game says you are in the room with a table, a chair, and a chest, what are your options? Sit on the chair? Try to open the chest? If you find it locked, smash it on the floor? Break the chair using the table and then use the splintered chair leg to pry open the chest?
+          Determining your affordances can be hard.
+        </p> 
+        <p> 
+          The same is true of home robots. Doors look a lot like walls. How do you know whether a wall is a door? Whether it pushes, pulls, folds, or slides? How do you know which walls are cabinets? Whether they slide out, or pivot to the side? It doesn’t help that built-in furniture can sometimes be made to look exactly like a wall. How do you know which objects can be moved? Which have to be navigated around?
+        </p> 
+        <p> 
+          Determining affordances is a fascinating robotics problem. It’s an example of something that tends to come naturally to humans. So naturally, in fact, that we have a hard time posing the problem for a machine to solve.
+        </p> 
+        <p> 
+            A great example of tackling a tough affordance problem is robotic towel folding. Pieter Abbeel, a University of California Berkeley professor, and his team
+          <a href="https://www.npr.org/sections/money/2015/05/19/407736307/robots-are-really-bad-at-folding-towels">taught a two armed robot called PR2 to fold towels</a>.
+          Towels are tricky affordance problems because it’s not obvious where to grab and what to pull in order to get the results you want. Towels are supple and change shape whenever you touch them. It’s hard to make an explicit set of instructions for how to fold a towel because it’s never in the same shape twice.
+        </p> 
+        <p> 
+          Professor Abbeel and his team tackled this problem using a series of images from different angles to make a 3-D model of the towel. Based on that, they were able to identify corners, and using the corner locations they were able to execute a standard routine for folding towels. It was a very impressive accomplishment.
+        </p> 
+        <p> 
+          Their achievement was limited though. It assumed a rectangular towel, but most laundry consists of things more complex than that. Also, the robot was very slow. It took 20 minutes to fold a towel in its first incarnation. It eventually got down to 90 seconds, but still much slower than a human folder.
+        </p> 
+        <p> 
+          An even higher stakes case for determining affordances is identifying pedestrians. Self-driving cars continually have to answer the question “Can I drive this way?” And the consequences of getting it wrong are very high. Any location containing a pedestrian is an automatic no-go zone. Determining pedestrians’ locations is a critical aspect of self-driving cars’ affordances. 
+        </p> 
+        <p> 
+          For the most part, this is a problem that has been solved well. Deep neural networks that specialize in finding patterns in images identify all the pedestrians in a given scene quickly and with high accuracy. Technical capabilities like this will enable home robots to navigate throughout the home without continually tripping over chairs and bumping into people.
+        </p> 
+        <p> 
+          However, it should be noted that even with the massive effort that has been devoted to this particular problem,
+          <a href="https://www.pghcitypaper.com/pittsburgh/ubers-self-driving-cars-cant-detect-pedestrians-who-walk-outside-of-crosswalks-says-report/Content?oid=16160888"> failures still occur</a>.
+          In cases where robots encounter entirely unfamiliar conditions, they may fail to identify pedestrians. In other cases, subtle assumptions can be built into the identification algorithm, for instance, that pedestrians will only be in crosswalks, not jaywalking. This may be true in some communities, but it’s certainly not true in Boston. And any algorithm that relies on assumptions like these will certainly fail.
+        </p> 
+        <p> 
+          When building robots that need to work well in homes all over the world, we can’t afford to make convenient assumptions about what they’ll see. To a large extent, they’ll have to figure it out as they go.
+        </p> 
+        <p> 
+          Working with floor cleaning robots has given us a lot of experience determining affordances. One strategy that has proven useful in physical environments is having a variety of sensors. iRobot’s Roomba and Braava have cameras for doing visual navigation, bumpers for navigating by touch, and downward facing proximity sensors for detecting sudden drops. The combination of these sensors and a great deal of experimentation and testing has helped us find strategies for the robots to determine their affordances, to get all of the places that they need to get, but not go places they should not, like down a flight of stairs.
+        </p> 
+        <p> 
+          One of the big early design decisions behind the Roomba was whether to use laser range finders or cameras for navigation. iRobot chose cameras, in part because they are better at determining affordances. Lasers are good at finding how far away the nearest thing is in any direction, but a laser can’t tell a bedskirt from a wall. It doesn’t know what can be pushed out of the way and what is a true obstacle.
+        </p> 
+        <p> 
+          Determining affordances will continue to be a challenge as home robots extend to more interactive tasks. Imagine a robot whose job it is to tidy up, to put things back in their place: shoes, toys, clothes, pillows, chairs, papers. It will need to know how it can safely lift an object. Which objects can be scooted along the floor. What might spill. The size and shape and compliance of objects will vary more than can possibly be represented in a set of explicit rules. It will fall to the robot to figure out what in its environment can be manipulated, how to move things from one place to another, and how to stack, organize, pack, and nest these items. 
+        </p> 
+
+        <p style="text-align:center;">
+          <img title="Brushing a pup"
+            src="images/SDSC_keynote/brushing_pup.jpeg"
+            alt="Brushing a pup"
+            style="width: 600px;">
+            <em>Photo by Diane Rohrer</em>
+        </p>
+
+        <p> 
+          Consider the still higher bar of a pet grooming robot. Here, the environment in question is in motion, is neither rigid nor entirely fluid, is sensitive to pressure and sudden changes in pressure, and may actively be trying to escape. Brushing through fur requires applying consistent pressure in the right direction while responding gently but firmly to snags. Interaction with the moving, compliant, and possibly adversarial environment is definitely a distant goal for determining affordances.
+        </p> 
+        <h3>Completing tasks</h3>
+        <p> 
+          Even after you determine all of your affordances challenges remain. At the next level up knowing what job needs to be done, and knowing when it’s complete, is a tough problem.
+        </p> 
+        <p> 
+          One solution to the challenge of task completion is to define your problem very carefully. Machinery for harvesting grain runs almost entirely on auto pilot. Its job is straightforward: cover every part of the field at least once. This clear task definition allows for efficient path planning and straightforward execution. The system knows that it’s done as soon as it has visited every point in its planned path
+        </p> 
+        <p> 
+          This approach works well when there are no unexpected glitches, no inaccuracies in your map. If a flood left standing water or if a fence had been relocated since the map was last updated, these would result in a discrepancy between the planned path and the real world. Probably something unpleasant would happen.
+        </p> 
+        <p> 
+          In addition to narrowly defining the task, robots can achieve high rates of task completion by working in a carefully structured environment. 
+          This is a robotic retrieval system for books in a library at the University of Utah. Book seekers log their requests, and the robot pulls the bin with their book in it and brings it to them. Books can be stored in any location, and in any order, allowing for efficient use of space, and storing frequently accessed books closer to the access point. The entire system is closed to humans when in operation, and carefully structured. Each bin is the same size and shape. The robot handles bins, which are rugged and uniform, rather than books, which are varied and can be delicate. All of this together means that unintended interruptions to each retrieval mission are rare.
+        </p> 
+        <p> 
+          This is also the approach used by warehouse robots. Floors are kept smooth, flat, clean, and free of obstacles. Bins and pallets all come in a standard size and are placed in specific locations. The warehouse is closed to the elements. Lighting and temperature are carefully maintained. When it’s feasible to do so, creating a structured environment is a great help for task completion. 
+        </p> 
+        <p> 
+          The only drawback to this approach is that it’s sensitive to the assumptions that everything is well controlled. To illustrate, a couple of years ago in one of Amazon’s giant warehouses,
+          <a href="https://www.independent.co.uk/news/business/news/amazon-robots-butter-spillage-confusion-automation-jeff-bezos-a8389271.html">
+          a package of microwave popcorn was dropped</a>.
+          It was crushed, the liquid butter leaked out, and made a greasy puddle on the floor. Because it was anomalous, a robot came to inspect the puddle. It drove through the puddle, spreading the butter, and causing the robot to lose traction. This disrupted the robot’s odometry. It counted wheel rotations to help estimate its position. Spinning wheels introduced errors into this process, and the robot became disoriented and stuck. Another robot came to investigate and also slipped and got stuck. This was repeated several times before the problem was discovered and cleaned up. Because of popcorn. The downside of relying on a carefully structured environment is that as soon as that structure is violated, the system can break.
+        </p> 
+        <p> 
+          Now contrast a book retrieval system or a warehouse with a home. Not just a single home but all the homes in every city in every country. Imagine all the things that could possibly be on the floor of a home. Whatever you are picturing, a Roomba has encountered it. This is the challenge of task completion with home robots. It is a somewhat structured environment. Floors are mostly flat. But this still admits a dizzying spectrum of deviations.
+        </p> 
+        <p> 
+          iRobot’s contributions to task completion touch both on clarifying the task definition and on being robust to disturbances. Newer Roombas come with upward facing cameras. They find features overhead, like corners of the ceiling, and use these to navigate the way a sailor might use stars in the sky. They also use odometry, which is particularly helpful when light is low or the robot goes under some furniture. And they use a front bumper to determine when they’ve hit the edge of the open floor. With the combination of this data and some very clever algorithmic work, robots can make a fairly accurate map of the space they have covered. After a few exploratory and learning runs, the robot builds confidence in its map, and can use it the same way the grain harvester plans a mission that meets its objectives. It covers the entire area efficiently. It does all this while keeping an eye on its own battery charge and dust bin, returning to the base to empty its dirt or recharge as necessary.
+        </p> 
+        <p> 
+          In order to handle obstacles or unforeseen events, a few other tricks have been used. Once the initial plan is in place and being executed, the robot continually watches for deviations between what it expects and what it observes. It may lose light and lose its ability to navigate by camera. It may encounter a closed door. It may get a shoelace wrapped around its brush. It may high center on a threshold.
+        </p> 
+        <p> 
+          In order to handle everything that a capricious world can throw at it, the Roomba continually checks its assumptions. It recalculates its position over and over again based on what it sees to make sure it’s not getting off track.  It checks that its wheel odometer is consistent with its accelerometer readings. It makes sure that the brushes are spinning as they should. If any of these things stops being true, the robot initiates a failsafe routine, a sequence of corrective actions that helps it get back on track. These are hard to build well based only on theory. One of the benefits of having 30 million robots in homes is that they encounter some things that you would never think to test for. For users that opt in and agree to let iRobot use their robots’ experiences to improve their performance, we can gather some information about what happened where and how often. The patterns in these events give us clues for common failures which we can then re-create in the lab and find effective remedies for. I don’t know of any shortcut to this. The only path I know to robust task completion is a great deal of experience.
+        </p> 
+        <p> 
+          There are other exciting task completion challenges to be addressed. Picture a home security robot, a system whose job it is to monitor your home for safety and security threats.  For such a robot, defining its mission goals is harder. What should it look for? How often should it check? How will it know if it’s done a good job?  A lot of tasks aren’t as easy to define as discrete missions, like cleaning a floor, harvesting a field, or retrieving a book. The way we think about task definition for robots like these has yet to be worked out. You probably have an intuitive sense for what a security robot should do and how often, but you may find that when you go to reduce that to a specific set of instructions, it’s hard. Worse, those rules may result in activity so structured and predictable that it would be easy for a savvy adversary to avoid.
+        </p> 
+        <p> 
+          My own best guess is that task definitions for robots like these will need to be more adaptive, more responsive to what they experience, more dependent on the quirks of the spaces they are in and how they are used. It may be difficult to create a detailed specification that works for all situations. The task definition may need to become more abstract, leaving more of the implementation details up to individual robots.
+        </p> 
+        <p> 
+          There is also a lot of work to be done in dealing with unexpected challenges during a task. Consider a robot whose job it is to go into the kitchen, any kitchen, and make a cup of coffee. This task was proposed by Apple co-founder Steve Wozniak as an alternative to the Turing Test. The Turing Test was derived from a thought experiment proposed by Alan Turing. In it, human judges are given the task of deciding whether the other side of a typed conversation is being carried by a human or a machine. Wozniak proposed the Coffee Test as a more interesting variant. In order to carry on a conversation, a robot can get by without knowing much of anything about the physical world. In fact, most of the systems that have successfully passed the Turing test have done so by incorporating superficial markers of human communication, like sarcasm and slang, rather than relying on deep understanding of the world.
+        </p> 
+        <p> 
+          To be successful in the Coffee Test, a robot would have to, for instance, be able to identify and handle spoons of every shape, size, and variety. It would have to handle open coffee containers, possibly grind its own beans, transfer liquids, and figure out how to boil water. Even being able to locate coffee in an unmarked container is a hard problem for robots. All of these uncertainties are barriers that must be overcome in order for the robot to complete its task. Vacuuming is certainly challenging, but it is definitely not the most difficult household task we can find. 
+        </p> 
+        <p> 
+          The challenges of task definition and handling unexpected variations in a task make Task Completion loom large among the grand challenges of home robotics.
+        </p> 
+
+        <h3> Interacting with humans</h3>
+        <p> 
+          Autonomous robots are fantastic, but to reach their maximum potential we want them to be more than that. Autonomy suggests carrying out a mission in isolation without additional instruction or interaction. It’s a useful concept for developing theory, like a closed thermodynamic system. But neither of these exist in practice.
+        </p> 
+        <p> 
+          A home robot will be surrounded by a constantly changing collection of sounds and movement, people and things. Some of these are obstacles to be avoided. Some of these carry important information. In order to behave intelligently, a robot will have to navigate and interpret these.
+        </p> 
+        <p> 
+          Colin Angle is the CEO of iRobot and has spent some time wrestling with this concept. In
+          <a href="https://www.linkedin.com/pulse/autonomy-intelligence-stepping-golden-age-robotics-colin-angle/">
+          a LinkedIn post</a>,
+          he laid out three important attributes beyond autonomy that an intelligent robot will need. It will have to be responsive, collaborative, and act as part of a larger system.
+        </p> 
+        <p> 
+          Much of humans’ high bandwith social coordination takes place through speech. Star Trek ship computers and HAL 9000 helped us imagine the seamless human computer interface that speech recognition makes possible. 
+        </p> 
+        <p> 
+          The most primitive form of this is The Clapper. If you happen to have seen the 80’s commercials that show people happily clapping their hands to turn their lamps on and off, you’ll know what I mean. When I was six years old, I had a toy that operated on a similar principle. A handheld clicker signaled an orange truck to switch between two behaviors: moving forward in a straight line and moving backward and to the right. This crude remote control let me drive the toy through nothing but audio. I learned quickly that the clicker could be simulated with a sharp hand clap, a trick my dad used to hijack the truck more than once.
+        </p> 
+        <p> 
+          Human speech recognition has come a very long way. For example, I dictated the entire text of this presentation into my phone. Now speech recognition is being used in automated customer service systems and to command digital assistants of all sorts. Performance isn’t perfect, but most of the time it’s surprisingly good.
+        </p> 
+        <p> 
+          However, it’s worth mentioning that when performance isn’t good, it doesn’t fail uniformly. English speech recognition for those with non-native accents varies between poor and horrendous. The Washington Post detailed this discrepancy in
+          <a href="https://www.washingtonpost.com/graphics/2018/business/alexa-does-not-understand-your-accent/">
+          a 2018 report</a>.
+          The examples of failures would be humorous in isolation, but unfortunately the pattern they present is a disturbing one, since it fails to serve populations that are already at a disadvantage.
+        </p> 
+        <p> 
+          One particularly tough aspect of human interaction is getting machines to work well with all people, not just for a subset. 
+        </p> 
+        <p> 
+          The next step, after understanding what it is a human has said, is to take action based on that, to follow the instructions. What a robot can do is of course limited by its construction. A vacuum cleaning robot will not be able to wash the windows. A voice assistant won’t be able to vacuum the floor. However, digital home assistants are perfectly capable of doing anything that can be done with the click of a mouse. They can queue up movies, turn on some music, call a friend, even make purchases on the Internet. Now, it’s possible when you are up to your elbows in bread dough to call your mom and ask her for advice on gluten texture and relationships, all through voice commands. When you notice you are out of trash bags, you can ask Alexa to have Amazon send you some more.
+        </p> 
+        <p> 
+        </p> 
+        <p> 
+          <a href="https://www.theverge.com/2017/1/7/14200210/amazon-alexa-tech-news-anchor-order-dollhouse">
+          This was taken to a bit of an extreme a couple of years ago.</a>
+          A six-year-old girl in Dallas asked her Echo, “Can you play doll house with me and get me a doll house?” Alexa complied, ordering a doll house mansion and 4 pounds of sugar cookies. It made for a heartwarming story, which was picked up by the local news in San Diego. At the end of the story the anchor said “I loved the little girl saying ‘Alexa ordered me a doll house’.” This utterance broadcast through viewers’ TVs in turn triggered a whole new batch of devices to order doll houses for their families too.
+        </p> 
+        <p> 
+          Following instructions isn’t always straightforward. Sometimes it matters who is issuing them. It’s important to have home robots do what we expect, and what we see as reasonable. When we ask Alexa to open the pod bay doors, we sure as hell want those doors to open.
+        </p> 
+        <p> 
+          Roomba and Braava, iRobot’s mopping robot, are also becoming more responsive to what their families want. One way this is happening is with Keep Out Zones. If you have some place that you don’t want the robot to go, you can pull up a map and outline that region. Maybe you have something delicate, or a place where the robot tends to get stuck a lot. You can just head off trouble before it happens and make a virtual no go zone.
+        </p> 
+        <p> 
+          Having this capability, the robot can also start to help. With Keep Out Zone recommendations the Roomba or Braava can look back over their history and notice whether there are certain locations where they’ve had trouble in the past. Maybe a tall threshold, or a pile of computer cables where it tends to get stuck. Then it can offer to create a Keep Out Zone around this area. The robot starts to anticipate what the human might want.
+        </p> 
+        <p> 
+          Another way iRobot is trying to facilitate human robot interaction is by integrating with home assistants like Alexa and Google Home. Now you can say “Alexa, ask Roomba to clean my kitchen.” And Roomba will start up cleaning the kitchen floor.
+        </p> 
+        <p> 
+          For a while now, families have been able to schedule Roomba missions in advance. This is an example of autonomy, of telling the robot what it needs to do up front, and then letting it continue to do that thing indefinitely. The ability to casually initiate a cleaning job by voice is a step forward, past autonomy toward responsiveness and collaboration. It helps the Roomba take a step from being an appliance toward being a partner. It’s a small, but clear step along the path toward seamless coordination with humans.
+        </p> 
+        <p> 
+          You can imagine the possibilities when robots in our home get really good at understanding what we want based not only on verbal commands, but also body language and situational observations. Picture a robot waiter. To do its job well, this waiter would not only have to be able to place and remove dishes and utensils and drinks, but it would also have to watch for physical cues. It would have to handle dishes so as not to touch or alarm diners. It might have to interpret subtle or ambiguous verbal commands. One guest might say, “Mmm, that soup was good,” to hint that she’s ready for the next course. Another might say, “I’m good,” when offered a second helping. The robot would also have to infer based on drink levels and food amounts, as well as how actively diners were taking bites and sips, whether it might be time to clear some plates and glasses.
+        </p> 
+        <p> 
+          These capabilities are well beyond the current state of the art, but there are no obvious roadblocks to creating them. I expect that working in close physical quarters with humans and communicating with them both through speech and physical cues, will be a productive line of development, and will make home robots that much more helpful.
+        </p> 
+        <p> 
+          Now imagine taking this interaction to the next level: a robot that anticipates human needs before they’re expressed. This step takes us from moment to moment interaction into long-term planning and considerably more complex predictions. In order to be good at preparing meals, the robot will have to do more than be good at the Coffee Test. Yes, it will have to navigate a kitchen and combine ingredients to make a palatable result. But it will also have to make guesses as to what the humans might want to eat, when, and how much. Initially, this is something that can be commanded explicitly. But eventually, you can imagine a robot that takes into account past requests as well as what it knows about the schedules for the household, and perhaps other variables like the weather, and prepares appropriate dishes based on those guesses. It will never have enough information to know for sure that its guesses will be correct. And it will always be seeking additional feedback so that it can make better guesses in the future. But on any given day it will simply do its best, make and execute a meal plan, order the groceries it needs, and prepare and serve them at the right time.
+        </p> 
+        <p> 
+          The ability to adapt to the latest information, incorporate new feedback, and still be able to make reasonable guesses along the way will be an important capability as robots gain more responsibility in our homes. Adjusting a home’s temperature and humidity, for example, is a constant dance with the changing needs and schedules of its inhabitants and is further constrained by the desire not to waste energy and money. Like meal preparation, good environmental control will both be responsive to human feedback and will also anticipate human needs.
+        </p> 
+        <h3>Miles to go before we sleep</h3>
+        <p> 
+          These four areas, ensuring privacy, determining affordances, completing tasks, and human interaction have all shown amazing progress in the last ten years. Technologies that are commonplace now were science fiction at the start of the century. But there is a lot of work left to do. These challenges are grand both in scope and in the reward we can expect if we solve them well. These are the problems I feel energized by. I’m excited to tackle them together.
+        </p> 
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

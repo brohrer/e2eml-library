@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Threading in Python";</script>
+  <script type="text/javascript">var publication_date = "December 28, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+        Growing up, my family had a Christmas Eve tradition of making
+        <a href="https://en.wikipedia.org/wiki/Wonton">wontons</a>. It took about 10,000 of them to feed our household of eight, and each one had to be folded by hand. My mom calculated that this would have taken her three days to do alone, so she invented threading.
+        </p>
+
+        <pre><code>import threading</code></pre> 
+
+        <p>
+        She recruited six workers (children) and gave us a stack of wrappers and a big bowl of filling and told us to get to work.  She also set up a pan where we could put our freshly wrapped wontons.
+        </p>
+
+<pre><code>worker_1 = threading.Thread(
+    target=fold_wontons, args=(pan, wrappers, filling))
+worker_2 = threading.Thread(
+    target=fold_wontons, args=(pan, wrappers, filling))
+…
+worker_1.start()
+worker_2.start()
+…</code></pre>
+
+        <p>
+        Using this arrangement, she was able to put us all to work and focus on the deep frying. 
+        </p>
+        <p>
+        As each of us finished wrapping a wonton, we added it to the pan, putting it at the end of the row. Because we were at different stages of fine motor skill development, our folding rates varied dramatically, but that was OK. We each just added our freshly folded wonton to the end of the row as we finished them.
+        </p>
+
+<pre><code>def fold_wontons(pan, wrappers, filling):
+    while wrappers > 0 and filling > 0:
+        # It takes about 10 seconds for a 13 year old to fold a wonton. 
+        time.sleep(10)
+        pan.put("wonton")</pre></code>
+
+<p>
+        Then, as my mom cooked the wontons she would pull from the beginning of the row, the ones that had been on the pan the longest, and throw them in the oil.
+        </p>
+
+<pre><code>wonton = pan.get()
+fry(wonton)</pre></code>
+
+        <p>
+        In this way, my mom also invented the first in, first out (FIFO) queue.
+        <p>
+
+<pre><code>import queue
+pan = queue.Queue()</code></pre>
+
+        <p>
+        To reach even greater levels of efficiency, she moved to a batch processing approach. The wok she used was large and could cook many wontons at once, so she emptied the pan
+        for each batch.
+        </p>
+
+<pre><code>batch = []
+while True:
+    try:
+        next_wonton = pan.get_nowait() 
+        batch.append(next_wonton)
+    except queue.Empty:
+        break
+fry(batch)</code></pre>
+
+        <p>
+        The <code>try-except</code> block in the <code>while True</code>
+        loop let her repeatedly pull wontons from the pan until there
+        weren't any left to take. Then she fried the whole batch together.
+        </p>
+        <p>
+        The snippets above aren't entirely complete. Here's a self-contained minimal example (also available in <a href="https://gitlab.com/brohrer/study-sound-tools/-/blob/main/v300_threading_minimal_example.py">a GitLab repository</a>.
+        </p>
+
+<pre><code>import queue
+import threading
+import time
+
+
+def fold_wontons(pan):
+    counter = 0
+    while True:
+        time.sleep(.1)
+        pan.put(f"wonton_{counter}")
+        counter += 1
+
+
+pan = queue.Queue()
+worker = threading.Thread(target=fold_wontons, args=(pan,), daemon=True)
+worker.start()
+
+for i in range(10):
+    time.sleep(.4)
+    print(f"cooking batch {i}")
+    while True:
+        try:
+            next_wonton = pan.get_nowait()
+            print(next_wonton)
+        except queue.Empty:
+            break</code></pre>
+
+        <p>
+        In this code, wontons are created at a rate of 10 per second,
+        but a batch takes 400 milliseconds to cook, so they end up
+        getting cooked in batches of 4.
+        </p>
+
+        <p>
+        There are a whole lot of other useful and sneaky things you can
+        do with threading. The official documentation for
+        <a href="https://docs.python.org/3/library/threading.html">
+        the threading package</a> walks through this bag of tricks.
+        My hope is that this example gives you a starting point from
+        which to launch any new attack on threading concepts you need to
+        build your latest project. An internet search for
+        "python threading" will turn up a handful of other examples
+        that will enrich your understanding too.
+        </p>
+        <p>
+        There are a couple more important tidbits that you'll need to take
+        with you if you're planning to write some threading code of your
+        own from scratch.
+        </p>
+
+        <h4>Tying up loose threads</h4>
+        <p>
+        When we create multiple threads, we incur little bit of responsibility for cleaning them up. There are a few ways to do this. The first is to just let them finish their job and terminate naturally. By default, the parent Python process won’t stop until all of the threads it created wrap up.
+        </p>
+        <p>
+        We can be explicit about this by calling <code>join()</code> on a thread. This tells the Python program to wait at this specific point until the thread is done doing its task. This is extra helpful if the rest of the program depends on the results of the thread task.
+        </p>
+        <p>
+        A third way of doing this is to declare the thread to be a daemon. That means it’ll go off and keep doing its thing, but as soon as the program that created it stops running it will automatically die. This is helpful for setting up a thread that continually grabs the latest packet or video frame and places it on a queue where it waits to be used by the main program. The convenience of a daemon is that you don't have to worry about closing it down.
+        You can declare a threat to be a daemon when you create it with a <code>daemon=True</code> argument, as in the example above.
+        </p>
+
+        <h4>Thread safety</h4>
+        <p>
+        One gotcha with threads is that there can be confusion if two of them are both trying to change the same variable at the same time. This would be like two children placing their freshly rolled wontons into the same location on the pan at the same time. Making Christmas Eve dinner, physics helps out and makes this impossible. But in multithreaded programs this can happen easily if you’re not careful. In that case, whoever placed their wonton last would overwrite any previous wontons in that location. This is obviously not OK, and we would like to prevent it.
+        </p>
+        <p>
+        The way competing threads ensure that they don’t overwrite each other’s hard work is by using locks. I’ll save the details of these for another post, but if you picture one thread warning all the others not to put a wonton on the pan until they’re done placing theirs, that's a reasonable mental model. In the code above we didn’t have to worry about that because
+        <a href="https://docs.python.org/3/library/queue.html#module-queue">the Queue class</a> has all of that built-in. It is a thread safe data type. That makes it especially useful for communication between threads.
+        </p>
+        <h4>Threads are most useful for code that waits</h4>
+        <p>
+        Threads are particularly useful when your code spends a lot of its time waiting on something else. It may have to wait to get some network packets, video frames, audio snippets, or it may have to coordinate with other processes like expensive calculations or rendering routines. Whatever the cause, if your code spends a significant portion of its time waiting on external events, then it might be a good candidate for threading. With multiple threads, one part of your code can be waiting for that next video frame while the other part can be busy doing something else useful.
+        </p>
+        <p>
+        Threading will only speed up your run times if your code is spending a lot time waiting around. Even after breaking your program up into several threads, they still are part of one process, that is, they take the form of a single set of instructions that run on a single processor in your computer. If your code is already using all the cycles on one processor, then breaking it up into threads won’t change that. (For that you want Python's
+        <a href="https://docs.python.org/3/library/multiprocessing.html">multiprocessing package</a>. Here’s <a href="https://e2eml.school/multiprocessing.html">a streamlined introduction</a> to it.)
+        </p>
+        <p>
+        Another good reason to use threading is that it can simplify your code. You can accomplish almost everything that threading does with some clever flow control, but it will make your code a whole lot less readable. Setting up multiple threads can make it easier to explain to a colleague or a rubber duck. You'll be grateful when you come back to it a month from now and try to figure out what the hell you were thinking when you wrote it.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

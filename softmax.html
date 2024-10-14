@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Softmax for neural networks";</script>
+  <script type="text/javascript">var publication_date = "June 30, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 322
+          <a href="https://e2eml.school/322">
+          Two Dimensional Convolutional Neural Networks</a></h4>
+        <br>
+
+        <h4>tl;dr</h4>
+        <p style="text-align:center;">
+          <img title="softmax definition"
+            src="images/softmax/def_01_eq.png"
+            alt="softmax definition"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          In Python: <br>
+          <code>softmax = exp(x) / sum(exp(x))</code>
+        </p>
+        <p>
+          Softmax is an activation function that turns an array of values
+          into probability mass function where the weight of the maximum value
+          is exaggerated.
+        </p>
+
+
+        <h4>Why softmax?</h4>
+        <p>
+          Softmax is tailor made for multi-class categorization problems
+          like the
+          <a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST</a> or
+          <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR</a>
+          datasets.
+          It's ideal for converting the result of a linear layer
+          into vote for a category.
+          It works best across a wide range
+          of input values, so
+          it takes the place of other activation
+          functions, like sigmoid (logistic) or rectified linear units (ReLU).
+          The softmax emphasizes the strongest vote and so focuses
+          the learning on the parameters that will strengthen that vote.
+          It's also relatively cheap to compute.
+        </p>
+
+        <h4>Probability mass function (PMF)</h4>
+        <p>
+          One reason softmax is so appealing is that it fits in well
+          with statistics and information theory. It is a probability
+          mass function, a collection of values, each associated with
+          a separate and exclusive outcome, that are all between
+          zero and one and add up to one.
+          This lets us interpret the output of the softmax
+          as degrees of belief. If a softmax
+          layer gives us the values .2, .7, and .1 for the categories
+          "cat", "dog", and "elephant", we can explain that as the
+          model believing with 20% strength that the image contains a
+          cat, 70% that it contains a dog, and 10% that it contains
+          an elephant. Alternatively, if we were using the model to
+          place bets, we would estimate the odds of there being an elephant
+          at 1:9, a cat at 1:4 and a dog at 7:3. All the tricks
+          we can do with probabilities, we can now apply to the
+          result of the softmax, a PMF of our expectations about
+          the category membership of the example.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf example"
+            src="images/softmax/ex_pmf_00.png"
+            alt="pmf example"
+            style="width: 600px;">
+        </p>
+
+
+        <h4>PMF normalization</h4>
+        <p>
+          You can make a PMF out of any set of values, provided they
+          aren't negative. Counted values are a classic case.
+          Imagine I was sitting on the street corner watching people drive by.
+          I could count vehicles by type: car, truck, bicycle. Suppose that
+          after an hour
+          I had counted 100 bicycles, 300 trucks, and 600 cars. Now
+          I want to figure out how likely it is that the next vehicle
+          will be a bicycle. I can turn my histogram of counts into
+          a probability mass function by dividing each count by the
+          sum of all the observations I've made (100 + 300 + 600 = 1000).
+          This gives a PMF of bicycles = .1, trucks = .3 and cars = .6.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="pmf from counts illustration"
+            src="images/softmax/ex_pmf_01.png"
+            alt="pmf from counts illustration"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          This method of converting counts (frequencies) to probabilities
+          is a hallmark of a <em>frequentist</em> approach to statistics,
+          as opposed to a <em>Bayesian</em> approach.
+        </p>
+
+        <p>
+          Expressed in equations, we start with an array of values
+          [<em>x<sub>1</sub>, x<sub>2</sub>,
+          ... x<sub>N-1</sub>, x<sub>N</sub></em>], which we can call
+          <em><strong>x</strong></em> for short. To convert
+          <em><strong>x</strong></em>
+          into the PMF <em>p(<strong>x</strong></em>) we can perform
+          PMF normalization.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf normalization"
+            src="images/softmax/def_02_eq.png"
+            alt="pmf normalization"
+            style="width: 600px;">
+        </p>
+
+        <h4>Softmax as a PMF normalization of exponentials</h4>
+        <p>
+          Softmax is very like a PMF normalization, with the exception
+          that all of the elements of 
+          <em><strong>x</strong></em>
+          are first passed through an
+          <a href="https://en.wikipedia.org/wiki/Exponential_function">
+            exponential function</a>
+          (<em>e</em> is raised to power of each <em>x<sub>i</sub></em>). 
+        </p>
+        <p>
+          This does two good things. First, it makes sure that all the
+          elements of 
+          <em><strong>x</strong></em>
+          are positive. <em>e</em> raised to any power is a positive
+          number. This lets us apply a PMF normalization to any
+          array of numbers without worrying about whether they are
+          positive or negative.
+        </p>
+        <p>
+          Second, it stretches out the difference between the largest
+          value and the second largest value, compared to the differences
+          between the smaller values. This elongation of the upper part
+          of the value range is what makes the function maximum-like.
+          It takes the largest value and further isolates it from the rest
+          of its cohort. It extends the lead of the front-runner over
+          the rest of the pack. Because it leaves the other elements
+          with some non-zero value, it earns the name "soft" max.
+        </p>
+        <p>
+          After taking the exponential function of 
+          <em><strong>x</strong></em>, the PMF normalization can proceed
+          normally.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax full definition"
+            src="images/softmax/def_03_eq.png"
+            alt="softmax full definition"
+            style="width: 600px;">
+        </p>
+
+        <h4>Gotchas</h4>
+        <p>
+          Softmax is an activation function in its own right.
+          If you use it together with another activation function that
+          limits the range, like logistic or hyperbolic tangent, then
+          its effectiveness will be greatly diminshed. Softmax is sensitive
+          to the differences between values, so you don't want to compress
+          them into a small range before applying it. 
+        </p>
+        <p>
+          Because it's a PMF, softmax is appropriate for categorization
+          tasks where each example only belongs to one category. The
+          whole premise behind the softmax is that it emphasizes the element
+          with the highest value, the category with the greatest affinity,
+          at the expense of all others. Multi-label classification
+          problems (say, where a photo could be tagged as both "person" and
+          "dog" if it has both a person and a dog in it) break this
+          assumption.
+        </p>
+        <p>
+          For multilabel problems the logisitic activation
+          function is your best bet in theory. It represents the affinity of every
+          label separately on a zero to one scale. For some medical
+          examples, check out this
+          <a href="https://glassboxmedicine.com/2019/05/26/classification-sigmoid-vs-softmax/">
+            article by Rachel Draelos</a>.
+          However, <a href="https://arxiv.org/abs/1805.00932">
+            some recent work</a> suggests that softmax works well
+          in this situation too. It may be worth trying both and
+          comparing the results. (Thanks to
+          <a href="https://twitter.com/ducha_aiki">Dmytro Mishkin</a> for
+          <a href="https://twitter.com/ducha_aiki/status/1277936866944221184?s=20">
+            pointing this out</a>.)
+        </p>
+
+        <h4>Derivative of a PMF normalization</h4>
+        <p>
+          To use softmax in a neural network we need to be able to
+          differentiate it. Even though it doesn't have any internal
+          parameters that need adjusting during training, it is responsible
+          for properly backpropagating the loss gradient so that upstream
+          layers can learn from it. We'll start by working through
+          the derivative of PMF normalization before extending it to
+          the full softmax function.
+        </p>
+        <p>
+          Because <em><strong>x</strong></em> is an array, the partial
+          derivative of the <em>p(<strong>x</strong>)</em> with respect to
+          <em><strong>x</strong></em> is a collection of derivatives
+          with respect to each element of
+          <em><strong>x</strong></em>.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 1"
+            src="images/softmax/d_pmf_01.png"
+            alt="pmf derivative, part 1"
+            style="width: 600px;">
+        </p>
+        <p>
+          Because <em>p(<strong>x</strong>)</em> is also an array, the partial
+          derivative of the <em>p(<strong>x</strong>)</em> with respect to
+          <em><strong>x</strong></em> is a two dimensional array
+          of derivatives of each element of 
+          <em>p(<strong>x</strong>)</em>
+          with respect to each element of
+          <em><strong>x</strong></em>.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 2"
+            src="images/softmax/d_pmf_02.png"
+            alt="pmf derivative, part 2"
+            style="width: 600px;">
+        </p>
+        <p>
+          We can express this collection of partial derivatives
+          with some indexing shorthand.
+        </p>
+
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 3"
+            src="images/softmax/d_pmf_03.png"
+            alt="pmf derivative, part 3"
+            style="width: 600px;">
+        </p>
+
+        <p>
+          for all values of <em>i</em> and <em>k</em> between 1 and
+          <em>N</em>. Then using the Quotient Rule
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 4"
+            src="images/softmax/d_pmf_04.png"
+            alt="pmf derivative, part 4"
+            style="width: 600px;">
+        </p>
+        <p>
+          we can break up the PMF normalization equation
+          up into its numerator and denominator and work through
+          the derivative.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 5"
+            src="images/softmax/d_pmf_05.png"
+            alt="pmf derivative, part 5"
+            style="width: 600px;">
+        </p>
+        <p>
+          There are two possibilities. First we can solve it for
+          when <em>i</em> and <em>k</em> are different.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 6"
+            src="images/softmax/d_pmf_06.png"
+            alt="pmf derivative, part 6"
+            style="width: 600px;">
+        </p>
+        <p>
+          Then we can solve it for
+          when <em>i</em> and <em>k</em> are the same.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 7"
+            src="images/softmax/d_pmf_07.png"
+            alt="pmf derivative, part 7"
+            style="width: 600px;">
+        </p>
+        <p>
+          A really slick way to represent this is to use a
+          <a href="https://en.wikipedia.org/wiki/Kronecker_delta">
+            Kronecker delta function</a>
+        </p>
+        <p style="text-align:center;">
+          <img title="Kronecker delta"
+            src="images/softmax/def_kronecker.png"
+            alt="Kronecker delta"
+            style="width: 600px;">
+        </p>
+        <p>
+          This lets us write the one-liner
+        </p>
+
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 8"
+            src="images/softmax/d_pmf_08.png"
+            alt="pmf derivative, part 8"
+            style="width: 600px;">
+        </p>
+        <p>
+          Note that the value of the PMF is also in the derivative.
+          This will be a recurring theme. Keep in mind that this
+          is shorthand for the full matrix of partial derivatives.
+        </p>
+        <p style="text-align:center;">
+          <img title="pmf derivative, step 9"
+            src="images/softmax/d_pmf_09.png"
+            alt="pmf derivative, part 9"
+            style="width: 600px;">
+        </p>
+
+
+        <h4>Derivative of softmax</h4>
+        <p>
+          Having the partial derivative of the PMF with respect to
+          all of its input elements (also called the
+          <a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">
+            Jacobian</a>) gives us a strong start for calculating the
+          Jacobian of the softmax. We'll retrace our steps, making the
+          modifications we need to for softmax's exponential functions.
+          Starting from the expression for the Jacobian of the
+          softmax
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 1"
+            src="images/softmax/d_softmax_01.png"
+            alt="softmax derivative, part 1"
+            style="width: 600px;">
+        </p>
+        <p>
+          we can again break the numerator and denominator of the softmax
+          out for differentiation using the Quotient Rule.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 2"
+            src="images/softmax/d_softmax_02.png"
+            alt="softmax derivative, part 2"
+            style="width: 600px;">
+        </p>
+        <p>
+          This expression can be simplified further.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 3"
+            src="images/softmax/d_softmax_03.png"
+            alt="softmax derivative, part 3"
+            style="width: 600px;">
+        </p>
+        <p>
+          And with a slight shortcut in the notation we can get to
+          this terse statement for the partial derivative of the
+          softmax with respect to its inputs.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax derivative, step 4"
+            src="images/softmax/d_softmax_04.png"
+            alt="softmax derivative, part 4"
+            style="width: 600px;">
+        </p>
+
+        <h4>Backpropagation</h4>
+        <p>
+          Having the derivative of the softmax means that we can use it
+          in a model that learns its parameter values by means of
+          backpropagation. During the backward pass, a softmax layer
+          receives a gradient, the partial derivative of the loss
+          with respect to its output values. It is expected to provide
+          to upstream layers a partial derivative with respect to
+          its input values. These are related through the softmax
+          derivative by the product rule: the input gradient is the
+          output gradient multiplied by the softmax derivative.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax backprop"
+            src="images/softmax/softmax_backprop.png"
+            alt="softmax backprop"
+            style="width: 600px;">
+        </p>
+
+        <h4>Python implementation</h4>
+        <p>
+          The Python code for softmax, given a one dimensional array
+          of input values <code>x</code> is short.
+          <br>
+<pre><code>import numpy as np
+softmax = np.exp(x) / np.sum(np.exp(x))</code></pre>
+          <br>
+          The backward pass takes a bit more doing. The derivative of the
+          softmax is natural to express in a two dimensional array. This
+          will really help in calculating it too. We can make use of
+          NumPy's matrix multiplication to make our code concise, but
+          this will require us to keep careful track of the shapes of
+          our arrays. The first step is to make sure that both the output
+          of the softmax, <code>softmax</code>, and the loss gradient,
+          <code>grad</code>, are both two dimensional arrays with one row
+          and many columns.
+          <br>
+<pre><code>softmax = np.reshape(softmax, (1, -1))
+grad = np.reshape(grad, (1, -1))</code></pre>
+          <br>
+          Then we can create the Jacobian matrix, <code>d_softmax</code>.
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax Jacobian, expanded"
+            src="images/softmax/softmax_jacobian_expanded.png"
+            alt="softmax Jacobian, expanded"
+            style="width: 600px;">
+        </p>
+        <p>
+          The first part of this expression propagates the
+          softmax values down the diagonal (the Kronecker term of the
+          equation), and the second part of this expression creates
+          the other term (the product of softmax values associated with
+          each row and column index).
+          <br>
+<pre><code>d_softmax = (                                                           
+    softmax * np.identity(softmax.size)                                 
+    - softmax.transpose() @ softmax)</code></pre>
+          <br>
+          The @ symbol calls NumPy's matrix multiplication function.
+          The matrix product of the N x 1 softmax transpose and the 1 x N
+          softmax is an N x N two dimensional array.
+        </p>
+        <p>
+          Thanks to all this careful setup, we can now calcuate the
+          input gradient with just one more matrix multiplication.
+          <br>
+<pre><code>input_grad = grad @ d_softmax</code></pre>
+        </p>
+        <p>
+          When working with exponents, there's a danger of overflow errors
+          if the base gets too large. This can easily happen when working
+          with the output of a linear layer. To protect ourselves from
+          this, we can use
+          <a href="https://stackoverflow.com/a/42606665/5830204">
+            a trick</a> described by
+          <a href="https://stackoverflow.com/users/7207392/paul-panzer">
+            Paul Panzer</a> on StackOverflow.
+          Because <em>softmax(x) = softmax(x - c)</em>
+          for any constant <em>c</em>, we can calculate
+        </p>
+        <p style="text-align:center;">
+          <img title="softmax Jacobian, expanded"
+            src="images/softmax/def_04_eq.png"
+            alt="softmax Jacobian, expanded"
+            style="width: 600px;">
+        </p>
+        <p>
+          instead. This ensures that the
+          largest input element is 0, keeping us safe from overflows.
+          Even better, it doesn't affect the gradient calculation at all.
+          (Thanks to <a href="https://twitter.com/araffin2">Antonin Raffin</a>
+          for <a href="https://twitter.com/araffin2/status/1277940752056643584?s=20">
+            pointing this out</a>.)
+        </p>
+        <p>
+          This implementation was lifted from the collection
+          of activation functions in the
+          <a href="https://e2eml.school/cottonwood">
+          Cottonwood machine learning framework</a>. You can see the
+          full implementation in the SoftMax class
+          <a href="https://gitlab.com/brohrer/cottonwood/-/blob/main/cottonwood/core/blocks/activation.py">
+            here</a>.
+        </p>
+
+
+        <h4>References and resources</h4>
+        <p>
+          This story was synthesized from the rich collection of
+          online content on the topic.
+          <ul>
+            <li>
+              <a href="https://en.wikipedia.org/wiki/Softmax_function">
+                The Wikipedia article</a>
+            </li>
+            <li>
+              <a href="https://victorzhou.com/blog/softmax/">
+                Victor Zhou's post</a>
+            </li>
+            <li>
+              <a href="https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/"</a>
+                Eli Bendersky's post</a>
+            </li>
+            <li>
+              <a href="https://medium.com/@aerinykim/how-to-implement-the-softmax-derivative-independently-from-any-loss-function-ae6d44363a9d"</a>
+                Aerin Kim's post</a>
+            </li>
+            <li>
+              <a href="https://stats.stackexchange.com/questions/265905/derivative-of-softmax-with-respect-to-weights"</a>
+                Antoni Parellada's Cross Validated post</a>
+            </li>
+          </ul>
+
+        </p>
+
+
+        <hr>
+        <p>
+          To walk through the process of implementing this in a Python
+          machine learning framework, come join us in
+          <a href="https://e2eml.school/322">e2eML Course 322</a>.
+          It's a work in progress, to be complete October 1.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

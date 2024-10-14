@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Lines in Matplotlib";</script>
+  <script type="text/javascript">var publication_date = "March 29, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+        
+        <table>
+          <tr>
+            <td>
+              <a target="_self" href="#width">
+                <img title="wide line"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/wide_line.png"
+                  alt="thumbnail of a wide line plot of a sinc function"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#width">
+                <pre><code>ax.plot(x, y, linewidth=5)</code></pre>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a target="_self" href="#color">
+                <img title="pink line"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/pink_line.png"
+                  alt="thumbnail of a pink line plot of a sinc function"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#color">
+                <pre><code>ax.plot(x, y, color="pink")</code></pre>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a target="_self" href="#style">
+                <img title="dashed line"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/dashed_line.png"
+                  alt="thumbnail of a dashed line plot of a sinc function"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#style">
+                <pre><code>ax.plot(x, y, linestyle="--")</code></pre>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a target="_self" href="#multiple">
+                <img title="multiple lines"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/multiple_lines.png"
+                  alt="thumbnail of multiple line plots of a sinc function"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#multiple">
+<pre><code>ax.plot(x1, y1)
+ax.plot(x2, y2)</code></pre>
+              </a>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <a target="_self" href="#capstyle">
+                <img title="capstyles"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/cap_join_styles.png"
+                  alt="thumbnail of various cap styles and join styles"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#capstyle">
+<pre><code>ax.plot(
+    x, y,
+    solid_capstyle="round",
+    solid_joinstyle="bevel")</code></pre>
+              </a>
+            </td>
+          </tr>
+          
+        </table>
+
+
+        <h3>Make your lines your own</h3>
+
+        <p>
+          Occasionally you'll want a plot to show something other than a single
+          solid thin
+          blue line. Here are some ways you can tweak it. 
+        </p>
+
+        <p>
+          First we need to set up.
+        </p>
+
+<pre><code>import matplotlib
+matplotlib.use("agg")
+import matplotlib.pyplot as plt
+import numpy as np</code></pre>
+
+        <p>
+          Select the "agg" backend and make our imports,
+          <a href="matplotlib_going_deeper.html#agg_section">
+            as described here</a>.
+        </p>
+
+<pre><code>x = np.linspace(-6, 6, 500)
+y = np.sinc(x)</code></pre>
+
+        <p>
+          Create a curve to work with.
+        </p>
+
+<pre><code>fig = plt.figure()
+ax = fig.gca()</code></pre>
+
+        <p>
+          Create a new <var>Figure</var> and get the <var>Axes</var>,
+          like we did in
+          <a href="matplotlib_going_deeper.html#fig_section">this example</a>.
+          Now we're ready to go to work.
+        </p>
+
+        <h3 id="width">Change the width</h3>
+<pre><code>ax.plot(x, y, linewidth=15)</code></pre>
+
+        <p>
+          Using the <code>linewidth</code> argument, you can set the width of
+          your line, in points. For comparison, the default is 1.
+        </p>
+
+        <img
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/wide_line.png"
+          alt="wide curve plot of a sinc function" style="width: 440px;">
+
+        <h3 id="color">Change the color</h3>
+
+<pre><code>ax.plot(x, y, color="pink", linewidth=5)</code></pre>
+
+        <p>
+          You can also specify the color using the <code>color</code> argument.
+        </p>
+
+        <img
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/pink_line.png"
+          alt="pink curve plot of a sinc function" style="width: 440px;">
+
+        <p>
+          There are
+          <a href="https://matplotlib.org/api/colors_api.html">
+            several ways to specify colors</a>,
+          and covering all of them deserves its own tutorial, but the simplest
+          way is to call out the (English) name of a color. Matplotlib
+          can recognize a shocking variety of them. Here are some samples.
+        </p>
+
+        <a href="https://matplotlib.org/gallery/color/named_colors.html">
+          <img
+            src="https://github.com/brohrer/taming_matplotlib/raw/master/images/css_colors.png"
+            alt="named CSS colors" style="width: 440px;">
+        </a>
+
+        <a href="https://xkcd.com/color/rgb/">
+          <img
+            src="https://github.com/brohrer/taming_matplotlib/raw/master/images/xkcd_colors.png"
+            alt="named colors from xkcd survey" style="width: 440px;">
+        </a>
+
+        <h3 id="style">Change the style</h3>
+        <p>
+          Another common manipulation is to change the style of a line from
+          solid to dashed or dotted.
+        </p>
+
+<pre><code>ax.plot(x, y, linewidth=2, linestyle="--")</code></pre>
+
+        <p>
+          The <code>linestyle</code> argument controls this.
+        </p>
+
+        <img
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/dashed_line.png"
+          alt="dashed curve plot of a sinc function" style="width: 440px;">
+
+        <p>
+          You can choose from 
+          <ul>
+            <li>"--", dashed</li>
+            <li>":", dotted</li>
+            <li>"-.", dash-dotted</li>
+          </ul>
+          or you can <a
+          href="https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html?highlight=line2d#matplotlib.lines.Line2D.set_linestyle">
+            create your own</a> if you have strong opinions about what it
+            should look like.
+        </p>
+
+        <h3 id="multiple">Add more lines</h3>
+
+        <p>
+          Another common trick is to put more than one line on a plot.
+        </p>
+
+<pre><code>ax.plot(x, y, linewidth=4)
+ax.plot(x, y + .1, linewidth=2)
+ax.plot(x, y + .2, linewidth=1)
+ax.plot(x, y + .3, linewidth=.5)
+ax.plot(x, y + .4, linewidth=.2)</code></pre>
+
+        <p>
+          Luckily, this is as easy as repeatedly calling
+          <code>plot()</code>. You can do this as many times as you want.
+          I've had thousands of lines on a single plot before.
+          You have to wait a little while for everything to draw, but
+          it gets there eventually.
+        </p>
+        <img
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/multiple_lines.png"
+          alt="multiple curve plots of a sinc function" style="width: 440px;">
+        
+        <h3 id="capstyle">Style line ends and joins</h3>
+
+        <p>
+          Occasionally you want to really get in and control exactly how your
+          lines look. The styling of the tips of the lines (capstyle) and
+          the bends in the lines (joinstyle) let you do this.
+        </p>
+
+<pre><code>ax.plot(x, y, solid_capstyle="butt", solid_joinstyle="miter")
+ax.plot(x, y, solid_capstyle="round", solid_joinstyle="round")
+ax.plot(x, y, solid_capstyle="projecting", solid_joinstyle="bevel")</code></pre>
+
+        <p>
+          The <code>solid_capstyle</code> and <code>solid_joinstyle</code>
+          options in the snippet above give the varying effects seen
+          in this figure.
+        </p>
+
+        <img title="capstyles"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/cap_join_styles.png"
+          alt="thumbnail of various cap styles and join styles"
+          style="height: 440px;">
+
+        <p>
+          You can also make use of the 
+          <code>dash_capstyle</code> and <code>dash_joinstyle</code>
+          with broken lines. They take the same sets of arguments.
+        </p>
+
+        <h3>and more!</h3>
+        <p>
+          There are lots of other fine details of lines you can control.
+          If you're curious,
+          <a
+          href="https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">
+          check out the API</a>.
+        </p>
+
+        <p>
+          Want even more control of your plot?
+          <a href="https://end-to-end-machine-learning.teachable.com/p/navigating-matplotlib-tutorial-how-to/">
+          Come take a look at the full set of tutorials</a>.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

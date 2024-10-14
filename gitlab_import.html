@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Move Your Code to GitLab";</script>
+  <script type="text/javascript">var publication_date = "December 7, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          <a href="https://gitlab.com/">GitLab</a> is a place to host your
+          public and private code repositories. For everything I need
+          in managing small side projects, it's nearly identical to
+          <a href="https://github.com/">GitHub</a> but with a fox instead
+          of a cat-octopus hybrid for a mascot. If you want a one-stop
+          shop for enterprise-scale project management, GitLab
+          <a href="https://about.gitlab.com/devops-tools/github-vs-gitlab.html">
+            has a pretty comprehensive set of features for that too</a>
+          with a new set of features rolling out each month on the 22nd.
+          One area where GitLab soundly beats GitHub is in the flexibility
+          of importing and exporting projects.
+        </p>
+        <h3>Migrate a project to GitLab</h3>
+        <p>
+          The process for signing up and creating a project (what GitHub calls
+          a repository) is pretty self explanatory. If you decide to
+          migrate a repository from your GitHub account to GitLab, there
+          are just a few steps to take.
+        </p>
+        <ol>
+          <li>
+            <p>
+              Start creating a new project and select the "Import Project"
+              tab. Choose the GitHub option.
+            </p>
+            <p style="text-align:center;">
+              <img title="Import options for GitLab projects"
+                src="images/gitlab/import_options.png"
+                alt="Import options for GitLab projects"
+                style="height: 160px;">
+            </p>
+          </li>
+          <li>
+            <p>
+              You'll be asked authenticate and authorize the request.
+            </p>
+            <p style="text-align:center;">
+              <img title="Authenticate with GitHub"
+                src="images/gitlab/authenticate.png"
+                alt="Authenticate with GitHub"
+                style="height: 280px;">
+            </p>
+            <p style="text-align:center;">
+              <img title="Authorize GitLab from GitHub"
+                src="images/gitlab/authorize.png"
+                alt="Authorize GitLab from GitHub"
+                style="height: 320px;">
+            </p>
+          </li>
+          <li>
+            <p>
+              The import dialog lets you conveniently choose one, several,
+              or all of your GitHub repositories to import.
+            </p>
+            <p style="text-align:center;">
+              <img title="List of repositories to import"
+                src="images/gitlab/import_repositories.png"
+                alt="List of repositories to import"
+                style="height: 240px;">
+            </p>
+          </li>
+          <li>
+            <p>
+              And just like that the project is migrated to GitLab,
+              ready to clone, fork, merge, star, and build into something
+              amazing. (Make sure to add an ssh key if you want password-less
+              interaction from your local machine.)
+            </p>
+            <p style="text-align:center;">
+              <img title="The imported project"
+                src="images/gitlab/imported_project.png"
+                alt="The imported project view"
+                style="height: 320px;">
+            </p>
+          </li>
+          <li>
+            <p>
+              The last step is to set the new remote location any place you
+              have cloned the repository.
+              For example, if "brohrer" is your username and "ponderosa" is the name
+              of the project, at the command line run
+            </p>
+<pre><code>git remote set-url origin git@gitlab.com:brohrer/ponderosa.git</code></pre>
+            <p>
+              or
+            </p>
+<pre><code>git remote set-url origin https://gitlab.com/brohrer/ponderosa.git</code></pre>
+            <p>
+              depending on whether you are using <code>ssh</code> or
+              <code>http</code> to talk with it.
+            </p>
+          </li>
+        </ol>
+
+        <p>
+          That's all there is to it.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Layer-wise Learning Rate";</script>
+  <script type="text/javascript">var publication_date = "January 3, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          By default neural networks use the same learning rate for every
+          layer. There's no reason this has to be the case.
+        </p>
+        <p>
+         One control systems trick for getting stable behavior from complex
+         interacting subsystems (like a team of robots or
+         two people trying to pass each other in the hall)
+         is to ensure that they work on different timescales.
+         You can apply this to neural networks too by assigning each layer a
+         different learning rate.
+        </p>
+        <p>
+          To my knowledge
+          there's not an easy way to do this in TensorFlow of PyTorch.
+          It's feasible to do (if not easy) in the
+          <a href="">Cottonwood machine learning framework</a>.
+          When creating each new layer, simply assign a different value.
+        </p>
+        <p>
+          <a href="">This code</a> shows how this is done. For comparison,
+          these two figures show the hyperparameter optimization curves
+          for the same 6-layer neural network. In the first example,
+          the same learning rate is used for every layer. In the second
+          example, the learning rate is allowed to vary by layer. There
+          are fewer samples in the first, because there is only one parameter
+          to vary instead of six.
+        </p>
+        image 1 uniform learning rate
+        image 2 layerwise learning rate
+        <p>
+          Higher-performing solutions tend to have quite different (~10X)
+          learning rates between adjacent layers.
+        </p>
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

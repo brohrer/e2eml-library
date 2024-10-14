@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How linear regression works";</script>
+  <script type="text/javascript">var publication_date = "December 20, 2016";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/fE0bnkNX77A" frameborder="0" allowfullscreen></iframe>
+        <br>
+        <a href="https://brohrer.mcknote.com/zh-Hans/how_machine_learning_works/how_linear_regression_works.html">in Simplified Mandarin</a>
+        by <a href="https://brohrer.mcknote.com/">Jimmy Lin</a>
+        <br>
+        <a href="https://brohrer.mcknote.com/zh-Hant/how_machine_learning_works/how_linear_regression_works.html">in Traditional Mandarin</a>
+        by <a href="https://brohrer.mcknote.com/">Jimmy Lin</a>
+        <br>
+        <a href="http://cienciadedados.co/regressao-linear/">in Portuguese</a>
+        by <a href="https://www.linkedin.com/in/lbruder/">Luis Bruder</a>
+        <br>
+        <a href="https://datascience.com.co/c%C3%B3mo-funciona-la-regresi%C3%B3n-lineal-284f51233e22">in Spanish</a>
+        by <a href="https://www.linkedin.com/in/jmarrietar/">Jose Miguel Arrieta Ramos</a>
+        <br>
+        <p>
+          Linear regression is the technical term for drawing a straight line through data points. I'll show you how it works while diamond shopping. 
+        </p>
+        <p>
+          I have a ring that belonged to my grandmother. It has a setting for a 1.35 carat diamond, but sadly, there is no diamond in it. I would like to restore it, so I go to the jewelry store to figure out how much a 1.35 carat diamond will cost. I will need to save up before I can buy it.
+        </p>
+        <p>
+          At the jewelry store, I find that there are no 1.35 carat diamonds to price. Undeterred, I pull out a pen and paper and write down the prices and weights of every diamond in the case.
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A">
+          <img src="images/linear_regression/linear_regression_1.png" style="width: 300px;" />
+        </a>
+        <p>
+          I note that the weights don't go much higher than 2 carats and draw a horizontal number line that will accommodate them.
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=1m10s">
+          <img src="images/linear_regression/linear_regression_2.png" style="width: 440px;" />
+        </a>
+        <p>
+          I also draw a vertical number line that goes from zero to more than the highest price in the case. 
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=1m24s">
+          <img src="images/linear_regression/linear_regression_3.png" style="width: 440px;" />
+        </a>
+        <p>
+          These are my coordinate axes. In a city with gridded streets like Manhattan, you can identify any intersection just by giving its East-West street and North-South avenue. In the same way, coordinate axes let you name any point by where it hits the horizontal and the vertical axis. This lets me plot my first data point by finding its weight, drawing a vertical line up, finding its price, drawing a horizontal line over, and putting a dot where they cross. 
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=1m39s">
+          <img src="images/linear_regression/linear_regression_4.png" style="width: 440px;" />
+        </a>
+        <p>
+          I can repeat this with the weights and prices of all the other diamonds. 
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=2m08s">
+          <img src="images/linear_regression/linear_regression_5.png" style="width: 440px;" />
+        </a>
+        <p>
+          This turns my list of prices and weights into a picture. So far I haven't added any new information or thrown any information away. I've just changed it to another form. The data is now a picture. 
+          
+          The picture has an obvious shape to it. It looks like a wide fuzzy line going up and to the right. My next step is to draw a straight line through the middle of it. There are roughly equal numbers of data points on each side of the line, and it hugs the middle of the swath of data.
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=3m25s">
+          <img src="images/linear_regression/linear_regression_6.png" style="width: 440px;" />
+        </a>
+        <p>
+          Drawing a line through the data is a very significant step. Although the line may seem obvious to us, that is only because we have supercomputer-quantities of neural computing power dedicated to seeing patterns. By drawing a line, I've distilled a collection of points down to a simplified version of itself, the same way a cartoon is a simplified version of a realistic image. In this step, I actually do throw away some of the information in the data, but in return I get a simplified story that I can use to answer questions. Finding the curve that best fits your data is called regression, and when that curve is a straight line, it's called linear regression.
+        </p>
+        <p>          
+          With a linear model in place, I can finally answer my question, "How much will a 1.35 carat diamond cost me?" To do this, I eyeball a vertical line up from the 1.35 carat point on the weight axis. From where it crosses my linear model, I eyeball a horizontal line over to the price axis. It hits at about the $8000 mark. Question answered! 
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=5m24s">
+          <img src="images/linear_regression/linear_regression_7.png" style="width: 440px;" />
+        </a>
+        <p>
+          To make the answer even more helpful, I note that most of the diamonds don't fall right on the line. That means my 1.35 carat diamond will probably not cost exactly $8000. My obvious next question is "How close to $8000 will it be?" To estimate this, I draw a wide envelope around my line that encompasses most (about 95%) of my data points. 
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=6m00s">
+          <img src="images/linear_regression/linear_regression_8.png" style="width: 440px;" />
+        </a>
+        <p>
+          I'm pretty confident (about 95%) that any future diamonds I come across will fall somewhere in this envelope. To find out what this means for my diamond, I eyeball two more horizontal lines where the 1.35 carat line crosses my confidence envelope on the high and low side.
+        </p>
+        <a href="https://youtu.be/fE0bnkNX77A?t=6m44s">
+          <img src="images/linear_regression/linear_regression_9.png" style="width: 440px;" />
+        </a>
+        <p>
+          Now I see that I can be fairly confident that my diamond will cost more than $5800, but less than $10,200. Armed with this information, I can make a plan about how much to save from each paycheck for how long before I can restore my grandmother's ring.
+        </p>
+        <p>          
+          My goal with this example is to show that linear regression is simple, at least conceptually. It can be done with a pen, a napkin and a careful eye, no computers or math necessary. However, in practice math does come in handy.
+        </p>
+        <p>          
+          Say I recorded more information about the diamonds, such as color, clarity, cut and the number of inclusions. Then there would be 6 columns instead of 2, which is far more challenging to visualize. Math comes in handy when fitting a line (or the 6-dimensional equivalent of a line) to this richer data set.
+        </p>
+        <p>          
+          And say that instead of 17 diamonds, there were 17 hundred or 17 million. The problem quickly becomes impractical for even the most dedicated artist, but computers can make short work of it.
+        </p>
+       
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

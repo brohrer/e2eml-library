@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How to Normalize a Signal by Mean and Variance";</script>
+  <script type="text/javascript">var publication_date = "April 13, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          It's often useful to take a signal and shift and scale it so that
+          it has a particlar mean and variance. For a mean of 0 and
+          a variance of 1, this is known as
+          <a href="
+            https://en.wikipedia.org/wiki/Feature_scaling#Standardization_(Z-score_Normalization)
+          ">
+            standardization or Z-score normalization</a>.
+        </p>
+        <p>
+          During the process, we end up working with
+          the square root of the variance,
+          the standard deviation.
+          For a signal, <em>s</em> having a mean of
+          <em>&mu;_s</em> and a standard deviation of <em>&sigma;_s</em>,
+          you can transform it to a
+          signal <em>z</em> having
+          a mean of 0 and a standard deviation of 1 with <br>
+          <code>z = (s - &mu;_s) / (&sigma;_s + &epsilon;)</code>,<br>
+          where &epsilon; is a small number, say 10^-6 or 10^-10, that
+          prevents divide-by-zero errors in the rare cases where
+          &sigma_s; is zero.
+        </p>
+        <p>
+          That in turn can be transformed to a signal <em>t</em>
+          having any <em>&mu;_t</em> and <em>&sigma;_t</em> with <br>
+          <code>t = z * &sigma;_t + &mu;_t</code>
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

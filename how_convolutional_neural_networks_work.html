@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "How do Convolutional Neural Networks work?";</script>
+  <script type="text/javascript">var publication_date = "August 18, 2016";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">  
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 193
+          <a href="https://e2eml.school/193">
+          How Neural Networks Work</a></h4>
+        <br>
+        
+        <p>
+        Find the rest of the How Neural Networks Work video series
+        <a href="https://end-to-end-machine-learning.teachable.com/p/how-deep-neural-networks-work">
+          in this free online course</a>.
+        </p>
+        <iframe width="600" height="315" src="https://www.youtube.com/embed/FmpDIaiMIeA" 
+        frameborder="0" style="margin: 0 auto" allowfullscreen></iframe>
+        <br>
+
+        slides
+        &nbsp; &nbsp; &nbsp; &nbsp; 
+        <a href="https://github.com/brohrer/public-hosting/raw/master/How_CNNs_work.pdf">pdf [2MB]</a>
+        &nbsp; &nbsp; &nbsp; &nbsp; 
+        <a href="https://github.com/brohrer/public-hosting/blob/master/how_CNNs_work.pptx?raw=true">ppt [6MB]</a>
+        <br>
+        <a href="https://medium.com/@CharlesCrouspeyre/comment-les-r%C3%A9seaux-de-neurones-%C3%A0-convolution-fonctionnent-b288519dbcf8">
+          in French</a> by
+        <a href="https://www.linkedin.com/in/ccrouspeyre/">Charles Crouspeyre</a>
+        <br>
+        <a href="http://postd.cc/how-do-convolutional-neural-networks-work/">in Japanese</a>
+        <br>
+        <a href="https://brohrer.mcknote.com/zh-Hans/how_machine_learning_works/how_convolutional_neural_networks_work.html">
+          in Simplified Mandarin</a> by
+        <a href="https://brohrer.mcknote.com/">Jimmy Lin</a>
+        <br>
+        <a href="https://brohrer.mcknote.com/zh-Hant/how_machine_learning_works/how_convolutional_neural_networks_work.html">
+          in Traditional Mandarin</a> by
+        <a href="https://brohrer.mcknote.com/">Jimmy Lin</a>
+        <br>
+        <a href="https://elham-khanche.github.io/blog/HowCNNsWork/">in Persian</a> by
+        <a href="https://www.linkedin.com/in/elham-khanchebemehr-b679547b/">Elham Khanchebemehr</a>
+        <br>
+        &nbsp; &nbsp; &nbsp; &nbsp; 
+        <a href="http://www.slideshare.net/khalooei/ss-70486910">related presentation</a> by
+        <a href="https://www.linkedin.com/in/khalooei/">Mohammad Khalooei</a>
+        <br>
+        <a href="http://www.optophysiology.uni-freiburg.de/Research/research_DL/CNNsWithMatlabAndCaffe">
+          MATLAB and Caffe implementations for NVIDIA GPUs</a> by
+        <a href="http://www.optophysiology.uni-freiburg.de/labmembers/hanuschkin">Alexander Hanuschkin</a>
+        
+        <p>
+        Nine times out of ten, when you hear about deep learning breaking a new technological barrier, 
+        Convolutional Neural Networks are involved. Also called CNNs or ConvNets, these are the workhorse 
+        of the deep neural network field. They have learned to sort images into categories even better 
+        than humans in some cases. If there’s one method out there that justifies the hype, it is CNNs.
+        </p>
+        
+        <p>
+        What’s especially cool about them is that they are easy to understand, at least when you 
+        break them down into their basic parts. I’ll walk you through it. There's a video that talks through these images in greater detail. If at any point you get a bit lost, just click on an image and you'll jump to that part of the video.
+        </p>
+        
+        <h3>X's and O's</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=1m43s">
+          <img src="images/cnn1.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          To help guide our walk through a Convolutional Neural Network, we’ll stick with a very simplified example: determining whether an image is of an X or an O. This example is just rich enough to illustrate the principles behind CNNs, but still simple enough to avoid getting bogged down in non-essential details. Our CNN has one job. Each time we hand it a picture, it has to decide whether it has an X or an O. It assumes there is always one or the other.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=3m05s">
+          <img src="images/cnn2.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          A naïve approach to solving this problem is to save an image of an X and an O and compare every new image to our exemplars to see which is the better match.  What makes this task tricky is that computers are extremely literal. To a computer, an image looks like a two-dimensional array of pixels (think giant checkerboard) with a number in each position. In our example a pixel value of 1 is white, and -1 is black.  When comparing two images, if any pixel values don’t match, then the images don’t match, at least to the computer. Ideally, we would like to be able to see X’s and O’s even if they’re shifted, shrunken, rotated or deformed. This is where CNNs come in.
+        </p>
+
+        <h3>Features</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=3m59s">
+          <img src="images/cnn3.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          CNNs compare images piece by piece. The pieces that it looks for are called features. By finding rough feature matches in roughly the same positions in two images, CNNs get a lot better at seeing similarity than whole-image matching schemes.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=4m20s">
+          <img src="images/cnn4.png" style="width: 440px;"" />
+        </a>
+        
+        <p>
+          Each feature is like a mini-image—a small two-dimensional array of values. Features match common aspects of the images. In the case of X images, features consisting of diagonal lines and a crossing capture all the important characteristics of most X’s. These features will probably match up to the arms and center of any image of an X. 
+        </p>
+
+        <h3>Convolution</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=4m55s">
+          <img src="images/cnn5.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          When presented with a new image, the CNN doesn’t know exactly where these features will match so it tries them everywhere, in every possible position. In calculating the match to a feature across the whole image, we make it a filter. The math we use to do this is called convolution, from which Convolutional Neural Networks take their name.
+        </p>
+        <p>
+          The math behind convolution is nothing that would make a sixth-grader uncomfortable. To calculate the match of a feature to a patch of the image, simply multiply each pixel in the feature by the value of the corresponding pixel in the image. Then add up the answers and divide by the total number of pixels in the feature. If both pixels are white (a value of   1) then 1 * 1 = 1. If both are black, then (-1) * (-1) = 1. Either way, every matching pixel results in a 1. Similarly, any mismatch is a -1. If all the pixels in a feature match, then adding them up and dividing by the total number of pixels gives a 1. Similarly, if none of the pixels in a feature match the image patch, then the answer is a -1.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=7m20s">
+          <img src="images/cnn6.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          To complete our convolution, we repeat this process, lining up the feature with every possible image patch. We can take the answer from each convolution and make a new two-dimensional array from it, based on where in the image each patch is located. This map of matches is also a filtered version of our original image. It’s a map of where in the image the feature is found. Values close to 1 show strong matches, values close to -1 show strong matches for the photographic negative of our feature, and values near zero show no match of any sort.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=8m20s">
+          <img src="images/cnn7.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          The next step is to repeat the convolution process in its entirety for each of the other features. The result is a set of filtered images, one for each of our filters. It’s convenient to think of this whole collection of convolution operations as a single processing step. In CNNs this is referred to as a convolution layer, hinting at the fact that it will soon have other layers added to it.
+        </p>
+        <p>
+          It’s easy to see how CNNs get their reputation as computation hogs. Although we can sketch our CNN on the back of a napkin, the number of additions, multiplications and divisions can add up fast. In math speak, they scale linearly with the number of pixels in the image, with the number of pixels in each feature and with the number of features. With so many factors, it’s easy to make this problem many millions of times larger without breaking a sweat. Small wonder that microchip manufacturers are now making specialized chips in an effort to keep up with the demands of CNNs.
+        </p>
+
+        <h3>Pooling</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=9m20s">
+          <img src="images/cnn8.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          Another power tool that CNNs use is called pooling. Pooling is a way to take large images and shrink them down while preserving the most important information in them. The math behind pooling is second-grade level at most. It consists of stepping a small window across an image and taking the maximum value from the window at each step. In practice, a window 2 or 3 pixels on a side and steps of 2 pixels work well.
+        </p>
+        <p>
+          After pooling, an image has about a quarter as many pixels as it started with. Because it keeps the maximum value from each window, it preserves the best fits of each feature within the window. This means that it doesn’t care so much exactly where the feature fit as long as it fit somewhere within the window. The result of this is that CNNs can find whether a feature is in an image without worrying about where it is. This helps solve the problem of computers being hyper-literal.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=11m31s">
+          <img src="images/cnn9.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          A pooling layer is just the operation of performing pooling on an image or a collection of images. The output will have the same number of images, but they will each have fewer pixels. This is also helpful in managing the computational load. Taking an 8 megapixel image down to a 2 megapixel image makes life a lot easier for everything downstream.
+        </p>
+
+        <h3>Rectified Linear Units</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=11m46s">
+          <img src="images/cnn10.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          A small but important player in this process is the Rectified Linear Unit or ReLU. It’s math is also very simple—wherever a negative number occurs, swap it out for a 0. This helps the CNN stay mathematically healthy by keeping learned values from getting stuck near 0 or blowing up toward infinity. It’s the axle grease of CNNs—not particularly glamorous, but without it they don’t get very far.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=12m37s">
+          <img src="images/cnn11.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          The output of a ReLU layer is the same size as whatever is put into it, just with all the negative values removed.
+        </p>
+
+        <h3>Deep learning</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=12m51s">
+          <img src="images/cnn12.png" style="width: 640px;" />
+        </a>
+        
+        <p>
+          You’ve probably noticed that the input to each layer (two-dimensional arrays) looks a lot like the output (two-dimensional arrays). Because of this, we can stack them like Lego bricks. Raw images get filtered, rectified and pooled to create a set of shrunken, feature-filtered images. These can be filtered and shrunken again and again. Each time, the features become larger and more complex, and the images become more compact. This lets lower layers represent simple aspects of the image, such as edges and bright spots. Higher layers can represent increasingly sophisticated aspects of the image, such as shapes and patterns. These tend to be readily recognizable. For instance, in a CNN trained on human faces, the highest layers represent patterns that are clearly face-like.</a>  
+        </p>
+        <a href="http://web.eecs.umich.edu/~honglak/icml09-ConvolutionalDeepBeliefNetworks.pdf" title="Convolutional Deep Belief Networks for Scalable Unsupervised Learning of Hierarchical Representations, Honglak Lee, Roger Grosse, Rajesh Ranganath, Andrew Y. Ng">
+          <img src="images/cnn18.png" style="width: 440px;" />
+        </a>
+
+        <h3>Fully connected layers</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=14m03s">
+          <img src="images/cnn13.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          CNNs have one more arrow in their quiver. Fully connected layers take the high-level filtered images and translate them into votes. In our case, we only have to decide between two categories, X and O. Fully connected layers are the primary building block of traditional neural networks. Instead of treating inputs as a two-dimensional array, they are treated as a single list and all treated identically. Every value gets its own vote on whether the current image is an X or and O. However, the process isn’t entirely democratic. Some values are much better than others at knowing when the image is an X, and some are particularly good at knowing when the image is an O. These get larger votes than the others. These votes are expressed as weights, or connection strengths, between each value and each category.
+        </p>
+        <p>
+          When a new image is presented to the CNN, it percolates through the lower layers until it reaches the fully connected layer at the end. Then an election is held. The answer with the most votes wins and is declared the category of the input.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=16m32s">
+          <img src="images/cnn14.png" style="width: 640px;" />
+        </a>
+        
+        <p>
+          Fully connected layers, like the rest, can be stacked because their outputs (a list of votes) look a whole lot like their inputs (a list of values). In practice, several fully connected layers are often stacked together, with each intermediate layer voting on phantom “hidden” categories. In effect, each additional layer lets the network learn ever more sophisticated combinations of features that help it make better decisions. 
+        </p>
+
+        <h3>Backpropagation</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=18m13s">
+          <img src="images/cnn15.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          Our story is filling in nicely, but it still has a huge hole—Where do features come from? and How do we find the weights in our fully connected layers? If these all had to be chosen by hand, CNNs would be a good deal less popular than they are. Luckily, a bit of machine learning magic called backpropagation does this work for us.
+        </p>
+        <p>
+          To make use of backpropagation, we need a collection of images that we already know the answer for. This means that some patient soul flipped through thousands of images and assigned them a label of X or O. We use these with an untrained CNN, which means that every pixel of every feature and every weight in every fully connected layer is set to a random value. Then we start feeding images through it, one after other.
+        </p>
+        <p>
+          Each image the CNN processes results in a vote. The amount of wrongness in the vote, the error, tells us how good our features and weights are. The features and weights can then be adjusted to make the error less. Each value is adjusted a little higher and a little lower, and the new error computed each time. Whichever adjustment makes the error less is kept. After doing this for every feature pixel in every convolutional layer and every weight in every fully connected layer, the new weights give an answer that works slightly better for that image. This is then repeated with each subsequent image in the set of labeled images. Quirks that occur in a single image are quickly forgotten, but patterns that occur in lots of images get baked into the features and connection weights. If you have enough labeled images, these values stabilize to a set that works pretty well across a wide variety of cases.
+        </p>
+        <p>
+          As is probably apparent, backpropagation is another expensive computing step, and another motivator for specialized computing hardware.
+        </p>
+        
+        <h3>Hyperparameters</h3>
+        <p>
+          Unfortunately, not every aspect of CNNs can be learned in so straightforward a manner. There is still a long list of decisions that a CNN designer must make.
+        </p>
+        <ul>
+          <li> For each convolution layer, How many features? How many pixels in each feature? </li>
+          <li> For each pooling layer, What window size? What stride? </li>
+          <li> For each extra fully connected layer, How many hidden neurons? </li> 
+        </ul>
+        <p>
+          In addition to these there are also higher level architectural decisions to make: How many of each layer to include? In what order? Some deep neural networks can have over a thousand layers, which opens up a lot of possibilities.
+        </p>
+        <p>
+          With so many combinations and permutations, only a small fraction of the possible CNN configurations have been tested. CNN designs tend to be driven by accumulated community knowledge, with occasional deviations showing surprising jumps in performance. And while we’ve covered the building blocks of vanilla CNNs, there are lots of other tweaks that have been tried and found effective, such as new layer types and more complex ways to connect layers with each other.  
+        </p>
+        
+        <h3>Beyond images</h3>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=21m26s">
+          <img src="images/cnn16.png" style="width: 440px;" />
+        </a>
+        
+        <p>
+          While our X and O example involves images, CNNs can be used to categorize other types of data too. The trick is, whatever data type you start with, to transform it to make it look like an image. For instance, audio signals can be chopped into short time chunks, and then each chunk broken up into bass, midrange, treble, or finer frequency bands. This can be represented as a two-dimensional array where each column is a time chunk and each row is a frequency band. “Pixels” in this fake picture that are close together are closely related. CNNs work well on this. Researchers have gotten quite creative. They have adapted text data for natural language processing and even chemical data for drug discovery.
+        </p>
+        <a href="https://youtu.be/FmpDIaiMIeA?t=23m36s">
+          <img src="images/cnn17.png" style="width: 440px;" />
+        </a>
+
+        <p>
+          An example of data that doesn’t fit this format is customer data, where each row in a table represents a customer, and each column represents information about them, such as name, address, email, purchases and browsing history. In this case, the location of rows and columns doesn’t really matter. Rows can be rearranged and columns can be re-ordered without losing any of the usefulness of the data. In contrast, rearranging the rows and columns of an image makes it largely useless.
+        </p>
+        <p>
+          A rule of thumb: If your data is just as useful after swapping any of your columns with each other, then you can’t use Convolutional Neural Networks.
+        </p>
+        <p>
+          However if you can make your problem look like finding patterns in an image, then CNNs may be exactly what you need.
+        </p>
+
+        <h3>Learn more</h3>
+        <a href="deep_learning_demystified.html">
+          <img src="images/deep_learning.png" style="width: 440px;" />
+        </a>
+
+        <p>
+          For more details on how to build this X-and-O example, check out 
+          <a href="http://www.optophysiology.uni-freiburg.de/labmembers/hanuschkin"> Dr. Alexander Hanuschkin's</a> excellent
+          <a href="http://www.optophysiology.uni-freiburg.de/Research/research_DL/CNNsWithMatlabAndCaffe">MATLAB and Caffe implementations for NVIDIA GPUs</a>.
+          If you'd like to dig deeper into deep learning, check out my 
+          <a href="deep_learning_demystified.html">Demystifying Deep Learning post</a>.
+          I also recommend the 
+          <a href="http://cs231n.github.io/convolutional-networks/">notes from the Stanford CS 231 course</a> 
+          by Justin Johnson and Andrej Karpathy that provided inspiration for this post,
+          as well as the writings of
+          <a href="http://colah.github.io/archive.html">Christopher Olah</a>, an exceptionally clear writer on the subject of neural networks.
+        </p>
+        <p>
+          If you are one who loves to learn by doing, there are a number of popular deep learning tools available. Try them all! And then tell us what you think.
+          <ul>
+            <li><a href="http://caffe.berkeleyvision.org/">Caffe</a></li>
+            <li><a href="https://github.com/Microsoft/CNTK">CNTK</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Deeplearning4j">Deeplearning4j</a></li>
+            <li><a href="http://www.tensorflow.org/">TensorFlow</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Theano_(software)">Theano</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Torch_(machine_learning)">Torch</a></li>
+            <li><a href="http://deeplearning.net/software_links/">Many others</a></li>
+          </ul>
+        </p>
+
+        <p>
+          I hope you've enjoyed our walk through the neighborhood of Convolutional Neural Networks. Feel free to start up a conversation.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>
+

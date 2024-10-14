@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Matplotlib quick start";</script>
+  <script type="text/javascript">var publication_date = "March 29, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+        
+        <table>
+          <tr>
+            <td>
+              <a target="_self" href="#curve">
+                <img title="line plot"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/line_plot.png"
+                  alt="thumbnail of line plot of a sinc function"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#curve">
+                <pre><code>plt.plot(x, y)</code></pre>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a target="_self" href="#scatter">
+                <img title="scatter plot"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/scatter_plot.png"
+                  alt="thumbnail of scatter plot showing a trend"
+                  style="height: 220px;">
+              </a>
+            </td>
+            <td>
+              <a target="_self" href="#scatter">
+                <pre><code>plt.scatter(x, y)</code></pre>
+              </a>
+            </td>
+          </tr>
+          
+        </table>
+
+        <h3>Shortcut to plotting in Matplotlib</h3>
+        <p>
+          Matplotlib has a well deserved reputation for being a labyrinth.
+          It has dark twisted passageways. Some lead to dead ends.
+          It also has shortcuts to glory and freedom. 
+          In this series I’ll help
+          you get where you want to go as directly as I know how,
+          while steering clear of horned monsters. 
+        </p>
+
+        <p>
+          Part of Matplotlib is a simplified interface called <var>pyplot</var>
+          that doesn't require you to know about the innards of the system.
+          For the most common tasks, it gives a convenient set of commands.
+          We'll take advantage of it.
+        </p>
+        <pre><code>import numpy as np
+import matplotlib.pyplot as plt</code></pre>
+        <p>
+          To use <var>pyplot</var> in a script, first we import it.
+          We also import <var>numpy</var>, a numerical processing library
+          that is great for working with data of any sort.
+        </p>
+
+
+        <h3 id="curve">Plotting curves</h3>
+
+        <p>
+          The most common thing to do in Matplotlib is plot a line.
+          First we have to create one.
+        </p>
+
+<pre><code>x_curve = np.linspace(-2 * np.pi, 2 * np.pi, 500)
+y_curve = np.sinc(x_curve)</code></pre>
+
+        <p>
+          We create the x values for our curve using <var>numpy</var>'s
+          <var>linspace()</var> function. The way we called it, it returns
+          an array of 500 evenly spaced values between -2 pi and 2 pi.
+        </p>
+
+        <p>
+          Then we create the y values using <var>numpy</var>'s
+          <var><a href="https://en.wikipedia.org/wiki/Sinc_function">
+            sinc()</a></var>
+          function. It's a curve with some personality,
+          so it illustrates the plotting quite well.
+        </p>
+
+<pre><code>plt.figure()
+plt.plot(x_curve, y_curve)
+plt.show()</code></pre>
+
+        <p>
+          This bit
+          <ol>
+            <li>initializes the figure,</li>
+            <li>draws the curve described by our x and y, and</li>
+            <li>displays it on the screen.</li>
+          </ol>
+        </p>
+
+        <img title="line plot"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/line_plot.png"
+          alt="curve plot of a sinc function" style="width: 440px;">
+
+        <p>
+          And that's it! You just plotted a curve in python.
+          One of the very best things about Matplotlib is how it streamlines
+          common tasks. Once we had our data, it only took three lines
+          of code to make a plot.
+        </p>
+
+        <h3 id="scatter">Plotting points</h3>
+
+        <p>
+          The second most common plotting task is show points in a scatter
+          plot. This is streamlined too.
+        </p>
+
+<pre><code>x_scatter = np.linspace(-1, 1)
+y_scatter = x_scatter + np.random.normal(size=x_scatter.size)</code></pre>
+
+        <p>
+          The first step again is create some fake data.
+          Here we generate some evenly-spaced x values between -1 and 1
+          and make some y values that are similar, but have some
+          normally-distributed random noise added to them (zero mean
+          and unit variance).
+        </p>
+
+<pre><code>plt.figure()
+plt.scatter(x_scatter, y_scatter)
+plt.show()</code></pre>
+
+        <p>
+          Like before, this bit
+          <ol>
+            <li>initializes the figure,</li>
+            <li>plots each of the points described by our x's and y's, and</li>
+            <li>displays the resulting plot on the screen.</li>
+          </ol>
+        </p>
+    
+        <img title="scatter plot"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/scatter_plot.png"
+          alt="scatter plot of points showing an upward trend" style="width: 440px;">
+
+        <p>
+          And there you have your scatterplot!
+          With just this little bit of Matplotlib, you already know enough
+          to be dangerous.
+        </p>
+        
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

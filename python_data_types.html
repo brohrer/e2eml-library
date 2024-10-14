@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Data types in Python";</script>
+  <script type="text/javascript">var publication_date = "May 23, 2021";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>
+          Like religion, kids, and how to hang the toilet paper, data types
+          are a conversation you can only put off for so long.
+          If you are relatively new to Python, this will give you
+          a good enough understanding to get started with.
+          It won’t be exhaustive, but it will keep you from shooting
+          yourself in the foot.
+        </p>
+
+        <h2>The big four</h2>
+        <p>
+          Most of our variables in Python are either
+          <ul>
+          <li>
+            <strong>integers</strong> (<code>int</code>),<br>
+            whole numbers like 2, 300, 6 million, 0, or -7
+          </li>
+          <li>
+            <strong>floating point numbers</strong> (<code>float</code>),<br>
+            numbers with a decimal place, like
+            6.4, -.9, .0001, or 500.005
+          </li>
+          <li>
+            <strong>strings of characters</strong> (<code>str</code>),<br>
+            like "Bob", "abracadabra",
+            "xvCd5Kp6q", "%#*$", "z", and can even include emojis
+          </li>
+          <li>
+            <strong>Booleans</strong> (<code>bool</code>),<br>
+            either True or False
+          </li>
+          </ul>
+          or some amalgam of these.
+        </p>
+
+        <h2>Find out a variable's type</h2>
+        <p>
+          There's a convenient built-in function <code>type()</code>
+          that can tell you the type of a variable.
+        </p>
+
+<pre><code>>>> a = 8
+>>> print(type(a))
+&lt;class 'int'&gt;</code></pre>
+
+        <p>
+          This is also great for checking whether a variable is of a
+          particular type.
+        </p>
+
+<pre><code>>>> print(type(a) == int)
+True</code></pre>
+
+        <h2>Cast a variable from one type to another</h2>
+        <p>
+          Python also has the power to transform variables from one type
+          to another, whenever there's a reasonable way to do it. The
+          casting functions are named after the types:
+          <code>int()</code>,
+          <code>float()</code>,
+          <code>str()</code>, and
+          <code>bool()</code>.
+        </p>
+
+<pre><code># Start with a str
+>>> b = "5.0"
+>>> print(b)
+5.0
+>>> print(type(b))
+&lt;class 'str'&gt;
+
+# Cast a str to a float
+>>> c = float(b)
+>>> print(c)
+5.0
+>>> print(type(c))
+&lt;class 'float'&gt;
+
+# Cast a float to an int
+>>> d = int(c)
+>>> print(d)
+5
+>>> print(type(d))
+&lt;class 'int'&gt;</code></pre>
+
+        <h2>Four secrets to keeping track of your variables' types</h2>
+        <h3>1. Different types can mean the same thing</h3>
+        <p>
+          Mathematically, we know that the integer 1
+          and the floating point number 1.0 mean the same thing.
+          Inside a computer this is no longer true. Different types are
+          as different as foreign languages. The words "one" and
+          "один" represent the same underlying concept but are otherwise
+          entirely different. Likewise, an integer <code>1</code>
+          and a floating point <code>1.0</code> have entirely different
+          representations on the computer,
+          different patterns and even different numbers of bits.
+          A bit by bit comparison would show they are not even close.
+        </p>
+
+        <h3>2. Different types can look the same</h3>
+        <p>
+          Sometimes different types can look identical when you put them
+          in a print statement. The number three is an abstract thing,
+          but it can be represented by a character, the numeral "3".
+          To show a number, a
+          computer first has to translate it into a sequence of
+          characters. Minus seventeen becomes "-17".
+          One and a half becomes "1.5". After this translation happens,
+          you can't tell whether the "1.5" you see on the screen was
+          originally the floating point representation of one
+          and a half or the character string "1", ".", and "5". They
+          end up looking identical on the screen. This makes it
+          easy to forget that they might actually have originated as different
+          types and might mean something different.
+        </p>
+
+<pre><code>>>> a = "1.5"
+>>> print(type(a))
+&lt;class 'str'&gt;
+
+>>> b = 1.5
+>>> print(type(b))
+&lt;class 'float'&gt;
+
+>>> print(a, b)
+1.5 1.5</code></pre>
+
+        <h3>3. Python doesn't check types</h3>
+        <p>
+          Consider this <code>add()</code> function.
+        </p>
+<pre><code>def add(a, b):
+    return a + b</code></pre>
+        <p>
+          Nowhere does it specify whether <code>a</code> and <code>b</code> 
+          should be integers, floats, or strings. A lot of other languages
+          require this, but Python doesn't. All it cares is that whatever
+          you pass in has a plus operator defined for it. The nerd word
+          for this is <em>duck typing</em>, as in "if it walks like a
+          duck and talks lke a duck (and in our case, adds like a duck),
+          then we'll call it a duck". As long as the variables can do whatever
+          is asked of them, Python doesn't care what they are. Never mind
+          that the plus operator adds integers and concatenates strings.
+          As long is the code can be carried out on the arguments, then
+          that's good enough for Python.
+        </p>
+<pre><code>>>> add(4, 7)
+11
+
+>>> add ("some", "strings")
+'somestrings'</code></pre>
+
+        <p>
+          This flexibility can take some of the pressure off to have
+          your functions know exactly what types they need to handle, and
+          it can allow your functions to handle several types seamlessly,
+          but it can also cause trouble. If you are thinking that
+          <code>a</code> and <code>b</code> are integers when they are actually
+          strings, the <code>add()</code> function will be happy to let you
+          go on believing that, rather than throw a helpful error.
+        </p>
+
+
+        <h3>4. Python can automatically change variables' types</h3>
+        <p>
+          In an effort to be helpful, Python also does some automatic type
+          conversion without you even asking, called <em>implicit casting</em>.
+          It's really helpful if you're trying to add 7, an integer, to 3.3,
+          a float. Integers and floating point numbers are apples and oranges.
+          They can't be meaningfully added. Fortunately, Python has some
+          built-in logic that interprets this as a request to add the
+          floating point number 7 to 3.3, and gives that intuitive result 10.3.
+        </p>
+
+<pre><code>>>> m = 7
+>>> print(type(m))
+&lt;class 'int'&gt;
+
+>>> n = 3.3
+>>> print(type(n))
+&lt;class 'float'&gt;
+
+>>> p = m + n
+>>> print(p)
+10.3
+>>> print(type(p))
+&lt;class 'float'&gt;</code></pre>
+
+        <p>
+          This all happens without any pedantic error messages and is
+          part of Python's appeal as a first programming language.
+          It also makes it easy to forget that ints and floats are very
+          different things, and that not all operations are so convenient
+          to interpret. After performing a few lines of computation with
+          our variables, it's tough to keep track of which have been
+          up-cast from integer to float. It's not a fatal flaw, but it
+          can bite you in the butt occassionally.
+        </p>
+        <hr>
+        <br>
+        <p>
+          Python does everything in its power to let you ignore types.
+          But once you have
+          a clear mental picture of your variables types and how
+          Python is interpreting them, you'll be able to avoid some
+          extremely painful debugging and walk more confidently through your
+          coding projects.
+        </p>
+
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

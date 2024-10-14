@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <script type="text/javascript">var blog_title = "Rate of Change";</script>
+  <script type="text/javascript">var publication_date = "May 18, 2020";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 137
+          <a href="https://e2eml.school/137">
+          Signal Processing Techniques</a></h4>
+        <br>
+        <p>
+          Sometimes we're not so interested in the thing our data measures,
+          as we are in how it changes over time. Sea level is interesting,
+          but how fast it is changing over hours and years is even more so.
+          Population of a town is important, but how fast it is going
+          up or down is a critical economic indicator. Customer purchases
+          are informative in their own right, but whether customers are
+          making those purchases less often is a strong signal for
+          predicting whether they'll leave you.
+        </p>        
+        <p>
+          You can also do this with data measured across different positions.
+          Elevation data is useful, but how elevation changes as you walk
+          tells you how steep the terrain is and is a very important
+          factor to keep in mind as you plan your hike.
+        </p>
+        <p>
+          To calculate rate of change, you'll need a series of measurements
+          made at regularly spaced intervals of time or distance.
+          (There are methods for dealing with irregular intervals, but
+          that will be the topic of another post.) For our example,
+          we'll measure the temperature, <em>x</em>, at different
+          times, <em>t</em>, to find the temperature change per hour,
+          <em>v</em>. We'll make those measurements at intervals
+          of 1 hour.
+        </p>
+        <p>
+          Temperature data has lots of uses, but we are trying to choose
+          what to wear outside today, so we're interested
+          in answering the question of whether it's getting warmer or
+          cooler right now. What's the rate of change of temperature
+          at this moment?
+        </p>
+        <p style="text-align:center;">
+        <img title="Temperature measurements over 5 hours"
+          src="images/rate_of_change/measurements.png"
+          alt="Temperature measurements over 5 hours"
+          style="width: 600px;">
+        </p>
+        <p>
+          The current time is <em>t_0</em>. We would like to know
+          if the temperature is going up or down and how fast.
+        </p>
+        <p>
+          There are a few different ways to get at this. We can't measure
+          it directly. The notion of rate of change comes from calculus
+          and derivatives,
+          and the only way you calculate it directly is to have measurements
+          infinitessimally close together. Our measurements are an hour apart,
+          so we're just going to have to do the best we can with that.
+          We'll look at three methods: forward difference, backward difference,
+          and center difference.
+        </p>
+
+        <h3>Forward difference</h3>
+
+        <p style="text-align:center;">
+        <img title="Forward difference method illustrated"
+          src="images/rate_of_change/forward_difference.png"
+          alt="Forward difference method illustrated"
+          style="width: 600px;">
+        </p>
+        <p>
+          All three of these methods can be understood as drawing a line
+          through two points and finding the slope of that line. How they
+          differ is in which two points they use. Forward difference uses
+          the current point, at <em>t_0</em>, and the next, at <em>t_1</em>.
+        </p>
+        <p>
+          The slope of our line is the change in <em>x</em>
+          over the change in <em>t</em> for
+          any pair of points. For the two points we've chosen, this gives
+          us the equation for <em>v(t_0)</em> in the figure above. 
+        </p>
+        <p>
+          Note that for the very last temperature measurement we make, we
+          won't be able to estimate a rate of change with the forward
+          difference. There is no next point to use. The number of rate of
+          change estimates we get will be one less than the number of
+          measurements we have.
+        </p>
+        <p>
+          The Python implementation of this takes advantage of Numpy's
+          <code>diff()</code>. It subtracts every element in an array from
+          the one that follows. For a sampling interval <code>dt</code>,
+          the forward difference of the array <code>measurements</code> is
+          <code>np.diff(measurements) / dt</code>.
+        </p>
+
+        <h3>Backward difference</h3>
+        <p style="text-align:center;">
+        <img title="Backward difference method illustrated"
+          src="images/rate_of_change/backward_difference.png"
+          alt="Backward difference method illustrated"
+          style="width: 600px;">
+        </p>
+        <p>
+          In backward difference, the line that we are finding the slope of
+          is between the current measurement and the previous measurement.
+          It estimates rate of change by looking back.
+          The change in value and the change in time between the current
+          and the previous measurement give the slope of the line
+          that connects them as shown in the figure.
+        </p>
+        <p>
+          If you look carefully, you'll notice that the backward difference
+          is calculated the same way as the forward difference,
+          but the interpretation is different. The resulting time series
+          in both cases is the same, but shifted by one time step.
+          Where the forward difference can’t calculate a rate
+          for the last element In the sequence, the backward difference
+          can’t calculate a rate for the first element. There is nothing
+          to look back to.
+        </p>
+
+        <h3>Center difference</h3>
+        <p style="text-align:center;">
+        <img title="Center difference method illustrated"
+          src="images/rate_of_change/center_difference.png"
+          alt="Center difference method illustrated"
+          style="width: 600px;">
+        </p>
+
+        <p>
+          In the center difference, the two points that are connected
+          are the point preceding and the point following the time point
+          of interest. To get the slope, we take the difference between
+          these two values and we double the time step to account for
+          the fact that we skipped a measurement. It is a quirk of the
+          center difference that the current measurement isn’t part of
+          the rate of change calculation at all. Also, note that because
+          the center difference looks both forward and back by one time step,
+          it will not be able to create an estimate for either the first or
+          last elements of a series.
+        </p>
+        <p>
+          To calculate the center difference in Python on an array of values,
+          we will have to do some slicing to pull out an array of
+          the pre-measurements and post-measurements for each point
+          of interest.
+          <code>measurements[: -2]</code> gathers all but the last
+          two elements measurements, and
+          <code>measurements[2:]</code> gathers all but the first two elements.
+          Now we can subtract one from the other to find the pairwise
+          difference between each before and after point, and divide
+          by two times the time interval <code>dt</code>:
+        </p>
+        <p>
+          <code>(measurements[2:] - measurements[:-2]) / (2 * dt)</code>
+        </p>
+
+        <h3>When to use which</h3>
+        <p style="text-align:center;">
+        <img title="Difference method comparison"
+          src="images/rate_of_change/difference_comparison.png"
+          alt="Difference method_comparison"
+          style="width: 600px;">
+        </p>
+        <p>
+          Notice that these three methods generate very different results.
+          According to the backward difference, temperature is decreasing
+          rapidly. According to the forward difference, temperature is
+          increasing rapidly. And according to the center difference,
+          temperature is increasing at a modest pace. Which method you choose
+          matters, especially when the phenomenon you're measuring is
+          changing on the timescale of your measurement period.
+        </p>
+        <p>
+          The center difference has a lot to recommend it. It's my
+          first choice whenever I can use it. Because it is centered around
+          the time of interest, it’s not biased in the direction of future
+          or past events. And because it incorporates measurements over
+          a longer time period, it’s more accurate.
+        </p>
+        <p>
+          Sometimes, center difference isn’t an option. If you are at
+          the beginning or the end of your time series, then you will be
+          stuck With forward or backward difference. A common situation is
+          when you want to estimate the rate of change of something
+          going on right now. In that case, we don’t have any future
+          measurements because they haven’t happened yet. When you’re in
+          that situation, backward difference is a fine way to go.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>

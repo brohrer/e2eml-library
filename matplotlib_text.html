@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+
+  <script type="text/javascript">var blog_title = "Text in Matplotlib";</script>
+  <script type="text/javascript">var publication_date = "April 1, 2019";</script>
+  <head>
+    <link rel="icon" href="images/ml_logo.png">
+    <meta charset='utf-8'>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <base target="_blank">
+    <script type="text/javascript" src="javascripts/blog_head.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="javascripts/blog_header.js"></script>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h4>part of Course 133
+          <a href="https://e2eml.school/133">
+          Navigating Matplotlib</a></h4>
+        <br>
+
+        <table>
+          <tr>
+            <td>
+              <a href="#xytitle" target="_self">
+                <img title="xlabel ylabel and title"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_xy_labels_title.png"
+                  alt="x-axis label, y-axis label, and title"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+
+            <td>
+              <a target="_self" href="#xytitle">
+<pre><code>ax.set_xlabel("The x-axis label")
+ax.set_ylabel("The y-axis label")
+ax.set_title("The Title")</code></pre>
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#anytext">
+                <img title="text on a plot"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_any_text.png"
+                  alt="some text on a plot"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#anytext">
+<pre><code>ax.text(x_text, y_text, "Some text")</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+            <td>
+              <a target="_self" href="#alignment">
+                <img title="alignment"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_alignment.png"
+                  alt="text alignment examples"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#alignment">
+<pre><code>ax.text(x_text, y_text, "plot text",
+        horizontalalignment="left",
+        verticalalignment="top")</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#styles">
+                <img title="gallery of text styles"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_styles.png"
+                  alt="a variety of text styles"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#styles">
+<pre><code>ax.text(x_text, y_text,
+        "fontsize=20", fontsize=20)</code></pre>
+              </a>
+            </td>
+
+          </tr>
+
+          <tr>
+            <td>
+              <a target="_self" href="#bbox">
+                <img title="text in a box"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_bbox.png"
+                  alt="text in a bounding box"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+
+            <td>
+              <a target="_self" href="#bbox">
+<pre><code>ax.text(x_text, y_text, "Text in a box",
+        bbox=dict(boxstyle = "square",
+                  facecolor = "white"))</code></pre>
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+
+            <td>
+              <a target="_self" href="#annotate">
+                <img title="gallery of annotations"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_annotate.png"
+                  alt="a variety of annotation styles"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#annotate">
+<pre><code>ax.annotate(
+    "an annotation note",
+    (x_point, y_point),
+    (x_text, y_text),
+    arrowprops=dict(arrowstyle = "-|>"))</code></pre>
+              </a>
+            </td>
+
+         </tr>
+          <tr>
+            <td>
+              <a target="_self" href="#equation">
+                <img title="a LaTeX equation"
+                  src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_equation_thumbnail.png"
+                  alt="a LaTeX equation"
+                  style="height: 220px;">
+              </a>
+            </td>
+
+            <td>
+              <a target="_self" href="#equation">
+<pre><code>matplotlib.rcParams['text.usetex'] = True
+ax.text(0, 0, r"$E = mc^2$")</code></pre>
+              </a>
+            </td>
+
+         </tr>
+
+        </table>
+
+        <p>
+          Text is one of the trickiest things to get right on a plot because
+          there are so many options and permutations. Anyone who's honest will
+          tell you that they Google the syntax every time when doing Matplotlib
+          text formatting. I can't change that, but I at least want to give you
+          a one-stop shop for your searches.
+        </p>
+
+        <p>
+          By the way, if you're looking for how to customize axis tick labels,
+          <a href="matplotlib_ticks.html"> there's an entire lesson dedicated
+          to that here</a>.
+        </p>
+        
+        <p>
+          First we set the stage for our examples. For an explanation of any part
+          of this, <a href="matplotlib_going_deeper.html">look here</a>.
+        </p>
+
+<pre><code>import matplotlib
+matplotlib.use("agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Create the curve data.
+x = np.linspace(-6, 6, 500)
+y = np.sinc(x)
+fig = plt.figure()
+ax = fig.gca()
+ax.plot(x, y)</code></pre>
+        <h3 id="xytitle">Add axis labels and a title</h3>
+
+        <p>
+          The most popular text to add is axis labels and a plot title. The
+          calls for doing this are fairly intuitive. (Much more so than some
+          we'll see further down the page.)
+        </p>
+
+<pre><code>ax.set_xlabel("The x-axis label")
+ax.set_ylabel("The y-axis label")
+ax.set_title("The Title")</code></pre>
+
+        <p>
+          The text these commands create is of a generic style, but don't worry.
+          Keep reading, and you'll          
+          get a chance later to customize the heck out it.
+
+        <img title="xlabel ylabel and title"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_xy_labels_title.png"
+          alt="x-axis label, y-axis label, and title"
+          style="height: 440px;">
+
+        <h3 id="anytext">Put any text anywhere</h3>
+        <p>
+          You're not limited to axis labels and a title. You can add any text
+          you want to any location on the plot.
+        </p>
+
+<pre><code>ax.text(-5, .8, "Some text")</code></pre>
+
+        <p>
+          The incantation of <code>text(x, y, "some text")</code> lets you
+          arbitrarily place your note anywhere in the plot, using plot
+          coordinates.
+        </p>
+
+        <img title="text on a plot"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_any_text.png"
+          alt="some text on a plot"
+          style="height: 440px;">
+
+        <h3 id="alignment">Fine-tune text placement</h3>
+
+        <p>
+          You may have noticed that choosing an x and a y for the text position
+          is a little ambiguous. Are you choosing the location for the bottom of
+          the text or the top? For the left or the right? Your system will have
+          default answers to these questions in place, but sometimes you'll
+          want more control.
+        </p>
+
+<pre><code>ax.text(-1, -1, "right-top",
+        horizontalalignment="right",
+        verticalalignment="top")</code></pre>
+
+        <p>
+          The <code>horizontalalignment</code> argument lets you specify
+          whether the x position you feed it should be fall just to the
+          <code>right</code>
+          of the text, to the <code>left</code>, or in the <code>center</code>.
+        </p>
+
+        <p>
+          As you probably guessed, the <code>verticalalignment</code> argument
+          lets you specify where the y position you supply should fall: at the
+          <code>top</code> of the text, at the <code>bottom</code>, or in the
+          <code>center</code>. There is also a <code>baseline</code> option,
+          the position of the bottoms of most of the letters except for things
+          with tails like y, g, p, and q.
+        </p>
+
+        <img title="alignment"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_alignment.png"
+          alt="text alignment examples"
+          style="height: 440px;">
+
+        <h3 id="styles">Customize your text style</h3>
+
+        <p>
+          Now that we have our text precisely located, we can go wild on the
+          formatting. Size, font, style, color - it's a free-for-all.
+        </p>
+
+<pre><code>ax.text(-1, 1, 'fontsize=16', fontsize=16)
+ax.text(-1, 0, 'fontstyle="italic"', fontstyle="italic")
+ax.text(-1, -1, 'fontweight="bold"', fontweight="bold")
+ax.text(1, -1, "rotation=15", rotation=15)
+ax.text(1, 0, 'color="red"', color="red")
+ax.text(1, 1, 'family="serif"', family="serif")</code></pre>
+
+        <p>
+          If this still doesn't satisfy your textual creativity, take a look
+          at 
+          <a href="https://matplotlib.org/users/text_props.html">
+          the full list of text properties</a> in the Matplotlib API.
+        </p>
+
+        <img title="gallery of text styles"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_styles.png"
+          alt="a variety of text styles"
+          style="height: 440px;">
+
+        <p>
+          Keep in mind, as with most of the text modifications here, you can
+          apply these to axis labels and titles too.
+        </p>
+
+        <h3 id="bbox">Put your text in a box</h3>
+        <p>
+          Occasionally it's helpful to draw a box around some text.
+        </p>
+
+<pre><code>ax.text(2, .4, "Text in a box",
+        bbox=dict(boxstyle = "square",
+                  facecolor = "white"))</code></pre>
+
+        <p>
+          Doing this requires a bit more complex incantation.
+          <code>text()</code> accepts a <code>bbox</code> argument, which
+          takes a dictionary of keywords that describe the bounding box.
+          A square <code>boxstyle</code> is a good place to start. It comes
+          colorful by default, but if you specify a white box
+          <code>facecolor</code>, it will blend in nicely.
+        </p>
+
+        <p>
+          If on the other hand you'd like to explore the limits of what's
+          possible in bounding boxes, take a look at
+          <a
+          href="https://matplotlib.org/gallery/pyplots/whats_new_98_4_fancy.html#sphx-glr-gallery-pyplots-whats-new-98-4-fancy-py">
+            the fancy gallery in Matplotlib</a>. You won't be disappointed.
+        </p>
+
+        <img title="text in a box"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_bbox.png"
+          alt="text in a bounding box"
+          style="height: 440px;">
+
+
+        <h3 id="annotate">Point your text at something</h3>
+        <p>
+          A powerful way to turn a picture into a story is with annotation,
+          bits of text pointing to something in a plot. Annotation can be used
+          to call out surprising features, label separate curves, add
+          auxiliiary information, or explain the significance of a wiggle.
+        </p>
+
+        <p>
+          Returning to our <code>sinc()</code> example, we can show annotations
+          pointing to various aspects of the curve.
+        </p>
+
+<pre><code>ax.annotate(
+    "Some annotation text",
+    (x_point, y_point),
+    (x_text, y_text),
+    arrowprops=dict(arrowstyle = "-|>"))</code></pre>
+
+        <p>
+          The pattern for calling out an annotation has several parts, and
+          they're
+          all mixed up from what we've seen before. Now the <em>first</em>
+          argument to <code>annotate()</code> is the text.
+          Then a Tuple of the x- and
+          y-positions for the <em>end</em> of the pointer line. And only then,
+          a Tuple of the x- and y-positions of the text. And note the use of
+          Tuples here, where <code>text()</code> accepts x and y as separate arguments.
+        </p>
+
+        <p>
+          And after getting through all that, specifying the arrow has it's own
+          quirky syntax. The <code>arrowprops</code> argument takes a
+          dictionary of arrow properties. <code>arrowstyle</code> is the most
+          important one to call out. Here, <code>-|></code> denotes a line with
+          a triangular arrow head at the non-text end. There are several others
+          (take a close look at the example plot) and even the ability to draw
+          your own custom arrow designs. Visit 
+          <a
+          href="https://matplotlib.org/gallery/pyplots/whats_new_98_4_fancy.html#sphx-glr-gallery-pyplots-whats-new-98-4-fancy-py">
+            the fancy gallery</a> to get a sense of the choices on tap.
+        </p>
+
+        <img title="gallery of annotations"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_annotate.png"
+          alt="a variety of annotation styles"
+          style="height: 440px;">
+
+          <p>
+            For a deeper dig into everything that's possible with annotations,
+            <a
+          href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.annotate.html">
+              take a look through the API for <code>annotate()</code></a>.
+          </p>
+
+        <h3 id="equation">Make beautiful equations</h3>
+        <p>
+          If you really want to communicate precisely, or just make yourself
+          look smart, there's nothing quite like a complex equation. And
+          nothing takes the wind out of an equation's sails like terrible
+          typesetting.
+        </p>
+
+        <p>
+          Luckily for all of us,
+          <a href="https://en.wikipedia.org/wiki/Donald_Knuth">Donald Knuth</a>
+          became obsessed with this, and
+          <a href="https://en.wikipedia.org/wiki/Leslie_Lamport">
+            Leslie Lamport</a>
+          jumped in too, and between them
+          they solved the problem.
+          If you happen to have
+          <a href="https://www.latex-project.org/">LaTeX</a> on your
+          computer, you can use it to typeset your equations right in your
+          plots. Your symbols will be crisp. Your placements will be correct. 
+          Your equations will be legible and, even when unitelligible,
+          aesthetically pleasing.
+        </p>
+
+<pre><code>matplotlib.rcParams['text.usetex'] = True
+ax.text(
+    0, 0,
+    r"$f(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}" +
+    r"e^{- \frac{(x - \mu)^2}{2\sigma^2}}$")</code></pre>
+        
+        <p>
+          There are a couple little tricks to getting this working.
+          <ul>
+            <li>
+              First, you need to make sure that the setting
+          <code>usetex</code> is set to <code>True</code>.
+            </li>
+            <li>
+              Then you need to make sure to use r-strings (string literals)
+              so that python doesn't try to convert escape characters in your
+              string.
+            </li>
+            <li>
+              Also, don't forget to enclose your equation in dollar signs ($).
+              That tells LaTeX to enter math mode.
+            </li>
+          </ul>
+        </p>
+
+        <img title="a LaTeX equation"
+          src="https://github.com/brohrer/taming_matplotlib/raw/master/images/text_equation.png"
+          alt="a LaTeX equation"
+          style="height: 440px;">
+
+        <p>
+          You can drop these attractive expressions anywhere you put text - in
+          axis labels and titles and in annotations. If you'd like a full
+          tour of the wild things you can do with LaTeX in plots,
+          check out
+          <a href="https://matplotlib.org/3.1.1/gallery/text_labels_and_annotations/usetex_demo.html">
+            this demo page</a>.
+        </p>
+        <br>
+        <p>
+          Now you are off to the races!
+          My sincere hope is that this little reference page takes
+          90% of the Google goose chase out of getting your plot
+          text just right. If you want to explore the
+          other plot magic you can do,
+          <a href="https://end-to-end-machine-learning.teachable.com/p/navigating-matplotlib-tutorial-how-to/">
+          come take a look at the full set of tutorials</a>.
+        </p>
+
+        <script type="text/javascript" src="javascripts/blog_signature.js"></script>
+      </section>
+    </div>
+    <script type="text/javascript" src="javascripts/blog_footer.js"></script>
+  </body>
+</html>
